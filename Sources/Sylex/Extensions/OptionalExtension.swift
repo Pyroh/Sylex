@@ -6,7 +6,6 @@
 //
 
 public extension Optional {
-    
     /// Returns `true` if `self` is `nil`, `false` otherwise.
     public var isNil: Bool {
         return self == nil
