@@ -2,14 +2,60 @@ import XCTest
 @testable import Sylex
 
 final class SylexTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(Sylex().text, "Hello, World!")
+    func testBinaryIntegerPrefix() {
+        var i: Int = 0
+        XCTAssertEqual(++i, 0)
+        XCTAssertEqual(i, 1)
+        XCTAssertEqual(--i, 1)
+        XCTAssertEqual(i, 0)
+        
+        XCTAssertEqual(1 + ++i, 1)
+        XCTAssertEqual(i, 1)
+        XCTAssertEqual(1 + --i, 2)
+        XCTAssertEqual(i, 0)
+    }
+    
+    func testBinaryFloatingPointPrefix() {
+        var i: CGFloat = 0.0
+        XCTAssertEqual(++i, 0.0)
+        XCTAssertEqual(i, 1.0)
+        XCTAssertEqual(--i, 1.0)
+        XCTAssertEqual(i, 0.0)
+        
+        XCTAssertEqual(1.0 + ++i, 1.0)
+        XCTAssertEqual(i, 1.0)
+        XCTAssertEqual(1.0 + --i, 2.0)
+        XCTAssertEqual(i, 0.0)
+    }
+    
+    func testBinaryIntegerPostfix() {
+        var i: Int = 0
+        XCTAssertEqual(i++, 1)
+        XCTAssertEqual(i, 1)
+        XCTAssertEqual(i--, 0)
+        XCTAssertEqual(i, 0)
+        
+        XCTAssertEqual(1 + i++, 2)
+        XCTAssertEqual(i, 1)
+        XCTAssertEqual(1 + i--, 1)
+        XCTAssertEqual(i, 0)
+    }
+    
+    func testBinaryFloatingPointPostfix() {
+        var i: CGFloat = 0.0
+        XCTAssertEqual(i++, 1.0)
+        XCTAssertEqual(i, 1.0)
+        XCTAssertEqual(i--, 0.0)
+        XCTAssertEqual(i, 0.0)
+        
+        XCTAssertEqual(1.0 + i++, 2.0)
+        XCTAssertEqual(i, 1.0)
+        XCTAssertEqual(1.0 + i--, 1.0)
+        XCTAssertEqual(i, 0.0)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testBinaryIntegerPrefix", testBinaryIntegerPrefix),
+        ("testBinaryFloatingPointPrefix", testBinaryFloatingPointPrefix)
     ]
 }
