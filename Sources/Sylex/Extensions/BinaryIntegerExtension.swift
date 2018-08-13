@@ -4,6 +4,7 @@
 //
 //  Created by Pierre TACCHI on 13/08/2018.
 //
+import CoreGraphics
 
 extension BinaryInteger {
     /// Increment `self` by one unit.
@@ -36,5 +37,15 @@ extension BinaryInteger {
     public prefix static func --(rhs: inout Self) -> Self {
         defer { rhs -= 1 }
         return rhs
+    }
+}
+
+extension BinaryInteger {
+    public static func **<T: BinaryInteger>(lhs: Self, rhs: T) -> Self {
+        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
+    }
+    
+    public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
+        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
 }
