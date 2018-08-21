@@ -76,6 +76,8 @@ final class SylexTests: XCTestCase {
         XCTAssertEqual(i ** 3.0, 8)
         XCTAssertEqual(i ** 3.0 + 2, 10)
         XCTAssertEqual(i ** 0.0, 1)
+        
+        XCTAssertEqual(2.5 ** 3.4, pow(2.5, 3.4))
     }
 
     static var allTests = [
