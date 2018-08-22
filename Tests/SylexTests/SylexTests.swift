@@ -82,6 +82,10 @@ final class SylexTests: XCTestCase {
 
     static var allTests = [
         ("testBinaryIntegerPrefix", testBinaryIntegerPrefix),
-        ("testBinaryFloatingPointPrefix", testBinaryFloatingPointPrefix)
+        ("testBinaryFloatingPointPrefix", testBinaryFloatingPointPrefix),
+        ("testBinaryIntegerPostfix", testBinaryIntegerPostfix),
+        ("testBinaryFloatingPointPostfix", testBinaryFloatingPointPostfix),
+        ("testExpononentBinaryInteger", testExpononentBinaryInteger),
+        ("testExpononentBinaryFloatingPoint", testExpononentBinaryFloatingPoint)
     ]
 }
