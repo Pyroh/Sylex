@@ -6,10 +6,11 @@
 //
 import CoreGraphics
 
-extension BinaryInteger {
+public extension BinaryInteger {
     /// Increment `self` by one unit.
     ///
     /// - Returns: `self` incremented by one unit.
+    @discardableResult
     public postfix static func ++(lhs: inout Self) -> Self  {
         lhs += 1
         return lhs
@@ -18,6 +19,7 @@ extension BinaryInteger {
     /// Decrement `self` by one unit.
     ///
     /// - Returns: `self` decrement by one unit.
+    @discardableResult
     public postfix static func --(lhs: inout Self) -> Self  {
         lhs -= 1
         return lhs
