@@ -38,17 +38,26 @@ internal struct ArrayDiff {
         self.pass4()
         self.pass5()
         
+        var deletedCounts = [Int](repeating: 0, count: self.sourceReferences.count)
+        var offset = 0
+        
         let resultSource = self.sourceReferences.lazy.enumerated().compactMap { (i, entry) -> DiffResult? in
+            deletedCounts[i] = offset
             guard case .pointer(_) = entry else { return nil }
+            offset++
             return .removed(i)
         }
         
+        offset = 0
+        
         let resultTarget = self.targetReferences.lazy.enumerated().compactMap { (i, entry) -> DiffResult? in
             switch entry {
-            case .index(let index):
-                guard i != index else { return nil }
-                return .moved(from: index, to: i)
+            case .index(let j):
+                let deletedCount = deletedCounts[j]
+                guard i != j - deletedCount + offset else { return nil }
+                return .moved(from: j, to: i)
             case .pointer(_):
+                offset++
                 return .inserted(i)
             }
         }

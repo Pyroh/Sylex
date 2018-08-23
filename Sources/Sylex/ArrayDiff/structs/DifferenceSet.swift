@@ -10,7 +10,7 @@ import Foundation
 public struct DifferenceSet {
     let removedIndices: [Int]
     let insertedIndices: [Int]
-    let movedIndices: [(from: Int, to: Int)]
+    let movedIndices: [SwappedIndicesPair]
     
     var removedIndexSet: IndexSet {
         return IndexSet(self.removedIndices)
@@ -20,19 +20,25 @@ public struct DifferenceSet {
     }
     
     internal init(from results: [DiffResult]) {
-        let output = results.reduce(into: (removed: [Int](), inserted: [Int](), moved: [(Int, Int)]())) { (output, result) in
+        let output = results.reduce(into: (removed: [Int](), inserted: [Int](), moved: [SwappedIndicesPair]())) { (output, result) in
             switch result {
             case .removed(let i):
                 output.removed.append(i)
             case .inserted(let i):
                 output.inserted.append(i)
             case let .moved(i, j):
-                output.moved.append((i, j))
+                output.moved.append(SwappedIndicesPair(from: i, to: j))
             }
         }
         
         self.removedIndices = output.removed
         self.insertedIndices = output.inserted
         self.movedIndices = output.moved
+    }
+    
+    internal init(removedIndices: [Int] = [], insertedIndices: [Int] = [], movedIndices: [SwappedIndicesPair] = []) {
+        self.removedIndices = removedIndices
+        self.insertedIndices = insertedIndices
+        self.movedIndices = movedIndices
     }
 }
