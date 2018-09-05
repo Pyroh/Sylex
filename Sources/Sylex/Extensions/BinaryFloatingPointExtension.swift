@@ -4,7 +4,7 @@
 //
 //  Created by Pierre TACCHI on 13/08/2018.
 //
-import CoreGraphics
+import Foundation
 
 extension BinaryFloatingPoint {
     /// Increment `self` by one unit.
@@ -49,5 +49,15 @@ extension BinaryFloatingPoint {
     
     public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
         return Self(pow(CGFloat(lhs), CGFloat(rhs)))
+    }
+}
+
+extension BinaryFloatingPoint {
+    public postfix static func %(lhs: Self) -> Self {
+        return lhs / 100.0
+    }
+    
+    public postfix static func %(lhs: Self) -> CGFloat {
+        return CGFloat(lhs) / 100.0
     }
 }

@@ -4,7 +4,7 @@
 //
 //  Created by Pierre TACCHI on 13/08/2018.
 //
-import CoreGraphics
+import Foundation
 
 public extension BinaryInteger {
     /// Increment `self` by one unit.
@@ -44,10 +44,28 @@ public extension BinaryInteger {
 
 extension BinaryInteger {
     public static func **<T: BinaryInteger>(lhs: Self, rhs: T) -> Self {
-        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
+        return Self(pow(Double(lhs), Double(rhs)))
     }
     
     public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
-        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
+        return Self(pow(Double(lhs), Double(rhs)))
+    }
+}
+
+extension BinaryInteger {
+    public postfix static func %(lhs: Self) -> Float {
+        return Float(lhs) / 100.0
+    }
+    
+    public postfix static func %(lhs: Self) -> Float80 {
+        return Float80(lhs) / 100.0
+    }
+    
+    public postfix static func %(lhs: Self) -> Double {
+        return Double(lhs) / 100.0
+    }
+    
+    public postfix static func %(lhs: Self) -> CGFloat {
+        return CGFloat(lhs) / 100.0
     }
 }
