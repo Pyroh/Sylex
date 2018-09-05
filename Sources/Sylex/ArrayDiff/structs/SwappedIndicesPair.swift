@@ -6,19 +6,19 @@
 //
 
 public struct SwappedIndicesPair {
-    let from: Int
-    let to: Int
+    public let from: Int
+    public let to: Int
     
     internal init(from: Int, to: Int) {
         self.from = from
         self.to = to
     }
     
-    func reversed() -> SwappedIndicesPair {
+    public func reversed() -> SwappedIndicesPair {
         return SwappedIndicesPair(from: self.to, to: self.from)
     }
     
-    mutating func reverse() {
+    public mutating func reverse() {
         self = self.reversed()
     }
 }

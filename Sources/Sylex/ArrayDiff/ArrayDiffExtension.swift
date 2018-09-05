@@ -6,7 +6,7 @@
 //
 
 public extension Array where Element: Hashable {
-    func diff(from rhs: [Element]) -> DifferenceSet {
+    public func diff(from rhs: [Element]) -> DifferenceSet {
         var differentiator = ArrayDiff(source: rhs, target: self)
         return DifferenceSet(from: differentiator.computeDiff())
     }

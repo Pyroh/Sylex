@@ -11,7 +11,7 @@ internal struct ArrayDiff {
     private var sourceReferences: [DiffEntryKind]
     private var targetReferences: [DiffEntryKind]
     
-    init<T: Hashable>(source: [T], target: [T]) {
+    internal init<T: Hashable>(source: [T], target: [T]) {
         var table = [AnyHashable: DiffTableEntry]()
         
         let oa = source.lazy.map(AnyHashable.init).enumerated().map { (i, item) -> DiffEntryKind in
@@ -33,7 +33,7 @@ internal struct ArrayDiff {
         self.targetReferences = na
     }
     
-    mutating func computeDiff() -> [DiffResult] {
+    internal mutating func computeDiff() -> [DiffResult] {
         self.pass3()
         self.pass4()
         self.pass5()

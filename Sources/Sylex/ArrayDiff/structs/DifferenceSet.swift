@@ -8,14 +8,14 @@
 import Foundation
 
 public struct DifferenceSet {
-    let removedIndices: [Int]
-    let insertedIndices: [Int]
-    let movedIndices: [SwappedIndicesPair]
+    public let removedIndices: [Int]
+    public let insertedIndices: [Int]
+    public let movedIndices: [SwappedIndicesPair]
     
-    var removedIndexSet: IndexSet {
+    public var removedIndexSet: IndexSet {
         return IndexSet(self.removedIndices)
     }
-    var insertedIndexSet: IndexSet {
+    public var insertedIndexSet: IndexSet {
         return IndexSet(self.insertedIndices)
     }
     
