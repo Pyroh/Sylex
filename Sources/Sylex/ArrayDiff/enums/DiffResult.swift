@@ -8,7 +8,7 @@
 enum DiffResult {
     case removed(Int)
     case inserted(Int)
-    case moved(from: Int, to: Int)
+    case moved(global: (from: Int, to: Int), local: (from: Int, to: Int))
 }
 
 extension DiffResult: CustomStringConvertible {
@@ -18,8 +18,8 @@ extension DiffResult: CustomStringConvertible {
             return "inserted \(i)"
         case .removed(let i):
             return "removed \(i)"
-        case let .moved(from: i, to: j):
-            return "moved \(i) to \(j)"
+        case let .moved((i, j), (k, l)):
+            return "moved global \(i) to \(j) local \(k) to \(l)"
         }
     }
 }

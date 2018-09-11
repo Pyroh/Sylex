@@ -26,8 +26,8 @@ public struct DifferenceSet {
                 output.removed.append(i)
             case .inserted(let i):
                 output.inserted.append(i)
-            case let .moved(i, j):
-                output.moved.append(SwappedIndicesPair(from: i, to: j))
+            case let .moved(g, l):
+                output.moved.append(SwappedIndicesPair(g: g, l: l))
             }
         }
         

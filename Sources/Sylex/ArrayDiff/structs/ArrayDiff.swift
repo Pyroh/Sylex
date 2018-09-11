@@ -55,7 +55,8 @@ internal struct ArrayDiff {
             case .index(let j):
                 let deletedCount = deletedCounts[j]
                 guard i != j - deletedCount + offset else { return nil }
-                return .moved(from: j, to: i)
+                let k = j - deletedCount + offset
+                return .moved(global: (j, i), local: (k, i))
             case .pointer(_):
                 offset++
                 return .inserted(i)
