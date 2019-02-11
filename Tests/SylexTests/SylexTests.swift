@@ -3,20 +3,20 @@ import XCTest
 
 extension DifferenceSet: Equatable {
     public static func == (lhs: DifferenceSet, rhs: DifferenceSet) -> Bool {
-        return lhs.removedIndices == rhs.removedIndices && lhs.insertedIndices == rhs.insertedIndices && lhs.movedIndices.count == rhs.movedIndices.count && lhs.movedIndices.lazy.reduce(into: true, { (res, item) in
+        return lhs.removedIndices == rhs.removedIndices && lhs.insertedIndices == rhs.insertedIndices && lhs.removedIndices.count == rhs.movedIndices.count && lhs.movedIndices.lazy.reduce(into: true, { (res, item) in
             res = res && rhs.movedIndices.contains(item)
         })
     }
     
     public static func == (lhs: DifferenceSet, rhs: ([Int], [Int], [(from: Int, to: Int)])) -> Bool {
         var equals = lhs.removedIndices == rhs.0 && lhs.insertedIndices == rhs.1
-        equals = equals && lhs.movedIndices.count == rhs.2.count
+        equals = equals && lhs.removedIndices.count == rhs.2.count
         
         return equals
     }
 }
 
-typealias S = SwappedIndicesPair
+typealias S = SwappedIndexPair
 
 final class SylexTests: XCTestCase {
     func testBinaryIntegerPrefix() {
@@ -108,7 +108,7 @@ final class SylexTests: XCTestCase {
         let s1 = [1, 2, 3, 4, 5]
         let t1 = [5, 4, 3, 2, 1]
         let r1 = t1.diff(from: s1)
-        let sb1 = DifferenceSet(movedIndices: [S(from: 4, to: 0), S(from: 3, to: 1), S(from: 1, to: 3), S(from: 0, to: 4)])
+        let sb1 = DifferenceSet(movedIndices: [S(g: 4, l: 0), S(from: 3, to: 1), S(from: 1, to: 3), S(from: 0, to: 4)])
         XCTAssertEqual(r1, sb1)
         
         let s2 = ["a", "b", "c", "d"]

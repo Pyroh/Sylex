@@ -19,10 +19,10 @@ public struct DifferenceSet {
         return IndexSet(self.insertedIndices)
     }
     public var localMovedIndexPairSet: Set<SwappedIndexPair.IndexPair> {
-        return self.movedIndexPair.lazy.map { $0.local }.set()
+        return self.movedIndexPair.lazy.map { $0.local }.set
     }
     public var globalMovedIndexPairSet: Set<SwappedIndexPair.IndexPair> {
-        return self.movedIndexPair.lazy.map { $0.global }.set()
+        return self.movedIndexPair.lazy.map { $0.global }.set
     }
     
     internal init(from results: [DiffResult]) {
