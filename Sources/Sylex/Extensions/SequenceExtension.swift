@@ -6,7 +6,7 @@
 //
 
 public extension Sequence {
-    public func wholeMap<T>(_ transform: (Self) throws -> T) rethrows -> T {
+    func wholeMap<T>(_ transform: (Self) throws -> T) rethrows -> T {
         return try transform(self)
     }
 }

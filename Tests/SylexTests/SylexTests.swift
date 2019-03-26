@@ -101,7 +101,7 @@ final class SylexTests: XCTestCase {
         let s0 = ["Hello", "World"]
         let t0 = ["World", "Hello"]
         let r0 = t0.diff(from: s0)
-        let sb0 = DifferenceSet(movedIndices: [S(from: 1, to: 0), S(from: 0, to: 1)])
+        let sb0 = DifferenceSet(movedIndices: [S(g: 1, l: 0), S(from: 0, to: 1)])
         XCTAssertEqual(r0, sb0)
         
         

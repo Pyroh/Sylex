@@ -7,12 +7,12 @@
 
 public extension Optional {
     /// Returns `true` if `self` is `nil`, `false` otherwise.
-    public var isNil: Bool {
+    var isNil: Bool {
         return self == nil
     }
     
     /// Makes `self` equals to `nil`.
-    public mutating func nilify() {
+    mutating func nilify() {
         self = nil
     }
 }

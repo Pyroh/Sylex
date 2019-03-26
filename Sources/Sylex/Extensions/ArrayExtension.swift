@@ -9,7 +9,7 @@ public extension Array where Element: Equatable {
     /// Produces a copy of `self` where all duplicates have been removed.
     ///
     /// - Returns: A copy of `self` where all items are garanteed unique.
-    public func removingDuplicates() -> Array {
+    func removingDuplicates() -> Array {
         return self.reduce(into: []) { result, element in
             if !result.contains(element) {
                 result.append(element)
@@ -19,26 +19,26 @@ public extension Array where Element: Equatable {
     
     
     /// Removes all the duplicates from `self`.
-    public mutating func removeDuplicates() {
+    mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
 }
 
 public extension Array where Element: Hashable {
     /// An instance of `Set<Element>` from `self`.
-    public var set: Set<Element> {
+    var set: Set<Element> {
         return Set(self)
     }
     
     /// Produces a copy of `self` where all duplicates have been removed.
     ///
     /// - Returns: A copy of `self` where all items are garanteed unique.
-    public func removingDuplicates() -> [Element] {
+    func removingDuplicates() -> [Element] {
         return self.set.array
     }
     
     /// Removes all the duplicates from `self`.
-    public mutating func removeDuplicates() {
+    mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
 }
