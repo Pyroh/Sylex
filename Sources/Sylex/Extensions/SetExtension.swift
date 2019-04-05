@@ -7,7 +7,7 @@
 
 public extension Set {
     /// An instance of `[Element]` from `self`.
-    public var array: [Element] {
+    var array: [Element] {
         return Array(self)
     }
 }
