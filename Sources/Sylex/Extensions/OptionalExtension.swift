@@ -15,4 +15,8 @@ public extension Optional {
     mutating func nilify() {
         self = nil
     }
+    
+    prefix static func !!(rhs: Self) -> Bool {
+        return !rhs.isNil
+    }
 }

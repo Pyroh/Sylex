@@ -11,6 +11,7 @@ precedencegroup ExponentationPrecedence {
 
 prefix operator ++
 prefix operator --
+prefix operator !!
 
 postfix operator %
 postfix operator ++
