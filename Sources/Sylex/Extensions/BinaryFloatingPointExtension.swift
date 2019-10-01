@@ -5,6 +5,9 @@
 //  Created by Pierre TACCHI on 13/08/2018.
 //
 import Foundation
+#if !os(macOS)
+import CoreGraphics
+#endif
 
 extension BinaryFloatingPoint {
     /// Increment `self` by one unit.

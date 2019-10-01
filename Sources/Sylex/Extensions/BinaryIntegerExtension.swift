@@ -5,6 +5,7 @@
 //  Created by Pierre TACCHI on 13/08/2018.
 //
 import Foundation
+import CoreGraphics
 
 public extension BinaryInteger {
     /// Increment `self` by one unit.
@@ -62,10 +63,6 @@ extension BinaryInteger {
 extension BinaryInteger {
     public postfix static func %(lhs: Self) -> Float {
         return Float(lhs) / 100.0
-    }
-    
-    public postfix static func %(lhs: Self) -> Float80 {
-        return Float80(lhs) / 100.0
     }
     
     public postfix static func %(lhs: Self) -> Double {
