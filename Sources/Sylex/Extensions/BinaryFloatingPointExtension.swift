@@ -43,16 +43,24 @@ extension BinaryFloatingPoint {
 }
 
 extension BinaryFloatingPoint {
+    
+    /// Returns the exponentiation of `lhs` by `rhs`.
+    /// - Parameter lhs: The value to exponentiate.
+    /// - Parameter rhs: The exponent.
     public static func **<T: BinaryInteger>(lhs: Self, rhs: T) -> Self {
         return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
     
+    /// Returns the exponentiation of `lhs` by `rhs`.
+    /// - Parameter lhs: The value to exponentiate.
+    /// - Parameter rhs: The exponent.
     public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
         return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
 }
 
 extension BinaryFloatingPoint {
+    
     public postfix static func %(lhs: Self) -> Self {
         return lhs / 100.0
     }

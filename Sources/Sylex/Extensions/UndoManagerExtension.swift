@@ -5,7 +5,7 @@
 
 import Foundation
 
-@available(OSX 10.11, *)
+@available(OSX 10.11, iOS 9.0, *)
 public extension UndoManager {
     func registerUndo<TargetType: AnyObject, ValueType>(for key: ReferenceWritableKeyPath<TargetType, ValueType>, of target: TargetType, with actionName: String? = nil) {
         let value: ValueType = target[keyPath: key]

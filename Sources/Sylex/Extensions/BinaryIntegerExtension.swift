@@ -43,10 +43,17 @@ public extension BinaryInteger {
 }
 
 extension BinaryInteger {
+    
+    /// Returns the exponentiation of `lhs` by `rhs`.
+    /// - Parameter lhs: The value to exponentiate.
+    /// - Parameter rhs: The exponent.
     public static func **<T: BinaryInteger>(lhs: Self, rhs: T) -> Self {
         return Self(pow(Double(lhs), Double(rhs)))
     }
     
+    /// Returns the exponentiation of `lhs` by `rhs`.
+    /// - Parameter lhs: The value to exponentiate.
+    /// - Parameter rhs: The exponent.
     public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
         return Self(pow(Double(lhs), Double(rhs)))
     }

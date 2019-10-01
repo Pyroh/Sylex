@@ -114,6 +114,25 @@ final class SylexTests: XCTestCase {
         XCTAssertEqual((nil as Int?)..sometimesAdd2, nil)
         XCTAssertEqual(1..add2..mayAdd2..alwaysAdd2..sometimesAdd2, 9)
     }
+    
+    func testOptionals() {
+        let a: Int? = 1
+        let b: Int? = nil
+        var c: Int? = 1
+        
+        XCTAssertTrue(!!a)
+        XCTAssertFalse(!!b)
+        XCTAssertTrue(!!c)
+        
+        XCTAssertFalse(a.isNil)
+        XCTAssertTrue(b.isNil)
+        XCTAssertFalse(c.isNil)
+        
+        c.nilify()
+        
+        XCTAssertTrue(c.isNil)
+        XCTAssertFalse(!!c)
+    }
 
     static var allTests = [
         ("testBinaryIntegerPrefix", testBinaryIntegerPrefix),
