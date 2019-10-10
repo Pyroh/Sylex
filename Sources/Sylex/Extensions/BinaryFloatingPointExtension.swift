@@ -14,7 +14,7 @@ extension BinaryFloatingPoint {
     ///
     /// - Returns: `self` incremented by one unit.
     @discardableResult
-    public postfix static func ++(lhs: inout Self) -> Self  {
+    public prefix static func ++(lhs: inout Self) -> Self  {
         lhs += 1
         return lhs
     }
@@ -23,7 +23,7 @@ extension BinaryFloatingPoint {
     ///
     /// - Returns: `self` decrement by one unit.
     @discardableResult
-    public postfix static func --(lhs: inout Self) -> Self  {
+    public prefix static func --(lhs: inout Self) -> Self  {
         lhs -= 1
         return lhs
     }
@@ -31,7 +31,7 @@ extension BinaryFloatingPoint {
     /// Increment `self` by one unit.
     ///
     /// - Returns: `self`.
-    public prefix static func ++(rhs: inout Self) -> Self {
+    public postfix static func ++(rhs: inout Self) -> Self {
         defer { rhs += 1 }
         return rhs
     }
@@ -39,7 +39,7 @@ extension BinaryFloatingPoint {
     /// Decrement `self` by one unit.
     ///
     /// - Returns: `self`.
-    public prefix static func --(rhs: inout Self) -> Self {
+    public postfix static func --(rhs: inout Self) -> Self {
         defer { rhs -= 1 }
         return rhs
     }
