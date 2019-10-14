@@ -12,7 +12,7 @@ public extension BinaryInteger {
     ///
     /// - Returns: `self` incremented by one unit.
     @discardableResult
-    postfix static func ++(lhs: inout Self) -> Self  {
+    prefix static func ++(lhs: inout Self) -> Self  {
         lhs += 1
         return lhs
     }
@@ -21,7 +21,7 @@ public extension BinaryInteger {
     ///
     /// - Returns: `self` decrement by one unit.
     @discardableResult
-    postfix static func --(lhs: inout Self) -> Self  {
+    prefix static func --(lhs: inout Self) -> Self  {
         lhs -= 1
         return lhs
     }
@@ -29,7 +29,7 @@ public extension BinaryInteger {
     /// Increment `self` by one unit.
     ///
     /// - Returns: `self`.
-    prefix static func ++(rhs: inout Self) -> Self {
+    postfix static func ++(rhs: inout Self) -> Self {
         defer { rhs += 1 }
         return rhs
     }
@@ -37,7 +37,7 @@ public extension BinaryInteger {
     /// Decrement `self` by one unit.
     ///
     /// - Returns: `self`.
-    prefix static func --(rhs: inout Self) -> Self {
+    postfix static func --(rhs: inout Self) -> Self {
         defer { rhs -= 1 }
         return rhs
     }
