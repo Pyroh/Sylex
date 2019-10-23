@@ -41,11 +41,9 @@ final class FixedBuffer<Element>: ManagedBuffer<Int, Element> {
     
     subscript(i: Int) -> Element {
         get {
-            assert(i < self.capacity, "Index out of range")
             return self.withUnsafeMutablePointerToElements { $0[i] }
         }
         set {
-            assert(i < self.capacity, "Index out of range")
             self.withUnsafeMutablePointerToElements { $0[i] = newValue }
         }
     }
@@ -72,11 +70,6 @@ extension FixedBuffer {
         let count = srcRange.count
         let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
         
-        assert(srcIndex >= 0 && srcIndex < capacity, "Source pointer location is out of range.")
-        assert(dstIndex >= 0 && dstIndex < capacity, "Destination pointer location is out of range.")
-        assert(srcIndex + count <= capacity, "Source range is out of range.")
-        assert(dstIndex + count <= capacity, "Destination range is out of range.")
-        
         let srcRange = srcIndex..<srcIndex + count
         let dstRange = dstIndex..<dstIndex + count
         
@@ -101,9 +94,6 @@ extension FixedBuffer {
     func swapElement(at i: Int, withElementAt j: Int) {
         let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
         
-        assert(i >= 0 && i < capacity, "Index \(i) is out of bounds.")
-        assert(j >= 0 && j < capacity, "Index \(j) is out of bounds.")
-        
         guard i != j else { return }
         
         (self[i], self[j]) = (self[j], self[i])
@@ -118,8 +108,6 @@ extension FixedBuffer {
             return
         }
         let dstRange = dstIndex..<dstIndex + srcRange.count
-        assert(srcRange.lowerBound >= allowedRange.lowerBound && srcRange.upperBound <= allowedRange.upperBound, "Source range out of range.")
-        assert(dstRange.lowerBound >= allowedRange.lowerBound && dstRange.upperBound <= allowedRange.upperBound, "Destination range out of range.")
         
         guard srcRange != dstRange else { return }
         let count = srcRange.count
@@ -143,8 +131,6 @@ extension FixedBuffer {
         let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
         let endCopyIndex = dstIndex + srcArray.count
         
-        assert(endCopyIndex <= capacity, "Not enough room to copy the given elements starting at index \(dstIndex).")
-        
         self.withUnsafeMutablePointerToElements { (elements) in
             srcArray.withUnsafeBufferPointer { (srcElements) in
                 (elements + dstIndex).assign(from: srcElements.baseAddress!, count: srcArray.count)
@@ -155,9 +141,6 @@ extension FixedBuffer {
     private func initialize(range: Range<Int>, with value: Element) {
         self.withUnsafeMutablePointers { (header, elements) in
             let capacity = header.pointee
-            
-            assert(range.lowerBound >= 0 && range.lowerBound < capacity, "Start index out of range.")
-            assert(range.upperBound <= capacity, "Initializing range is out of range")
             
             (elements + range.lowerBound).initialize(repeating: value, count: range.count)
         }
@@ -201,5 +184,25 @@ extension FixedBuffer where Element: ExpressibleByNilLiteral {
     
     func moveElements(fromRange srcRange: Range<Int>, intoCorrespondingRangeStartingAt dstIndex: Int) {
         self.moveElements(fromRange: srcRange, intoCorrespondingRangeStatingAt: dstIndex, fillingGapWith: nil)
+    }
+}
+
+// MARK: - Bool specifics
+extension FixedBuffer where Element == Bool {
+    class func create(withCapacity cap: Int) -> FixedBuffer {
+        let buffer = FixedBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedBuffer
+        buffer.withUnsafeMutablePointerToElements { (elements) in
+            elements.initialize(repeating: false, count: cap)
+        }
+        
+        return buffer
+    }
+    
+    func moveElement(from srcIndex: Int, to dstIndex: Int) {
+        self.moveElements(fromRange: .init(startIndex: srcIndex, count: 1), intoCorrespondingRangeStatingAt: dstIndex, fillingGapWith: false)
+    }
+    
+    func moveElements(fromRange srcRange: Range<Int>, intoCorrespondingRangeStartingAt dstIndex: Int) {
+        self.moveElements(fromRange: srcRange, intoCorrespondingRangeStatingAt: dstIndex, fillingGapWith: false)
     }
 }

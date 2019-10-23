@@ -5,6 +5,8 @@
 //  Created by Pierre TACCHI on 14/10/2019.
 //
 
+import Foundation
+
 public struct FixedDataTable<Element> {
     public enum Dimension {
         case row(Int)
@@ -19,8 +21,8 @@ public struct FixedDataTable<Element> {
         private var endIndex: Int
         
         init(atIndex i: Int, withBuffer buffer: Buffer, columnCount: Int) {
-            assert(i < columnCount, "Column index can't exceed column count.")
-            assert(columnCount > 0, "Column count must be greater than or equal to 1.")
+            precondition(i < columnCount, "Column index can't exceed column count.")
+            precondition(columnCount > 0, "Column count must be greater than or equal to 1.")
             
             self.buffer = buffer
             self.columnCount = columnCount
@@ -39,24 +41,26 @@ public struct FixedDataTable<Element> {
     
     public let columnCount: Int
     public let rowCount: Int
-    public let count: Int
+    public var count: Int { return self.columnCount * self.rowCount }
+    public var size: CGSize { return .init(width: self.columnCount, height: self.rowCount) }
     
     public init(rows: Int, columns: Int) {
-        assert(columns > 0, "Coloumn count must be greater than or equal to 1.")
-        assert(rows > 0, "Row count must be greater than or equal to 1.")
+        precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(rows > 0, "Row count must be greater than or equal to 1.")
         
         self.columnCount = columns
         self.rowCount = rows
-        self.count = columns * rows
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: self.count)
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
     }
     
     public init(fromMultiDimensionalArray array: [[Element]]) {
-        assert(!array.isEmpty, "Can not initialize an empty table.")
+        precondition(!array.isEmpty, "Can not initialize an empty table.")
         let columnsCount = Set(array.lazy.map { $0.count })
-        assert(columnsCount.count == 1, "Each subarray must hold the same number of items.")
-        assert(columnsCount.first! > 0, "Each subarray must hold at least one element.")
+        precondition(columnsCount.count == 1, "Each subarray must hold the same number of items.")
+        precondition(columnsCount.first! > 0, "Each subarray must hold at least one element.")
         let rows = array.count
         
         let buffer = [Element](array.joined())
@@ -65,27 +69,41 @@ public struct FixedDataTable<Element> {
     }
     
     internal init(rows: Int, columns: Int, buffer: [Element]) {
-        assert(columns > 0, "Coloumn count must be greater than or equal to 1.")
-        assert(rows > 0, "Row count must be greater than or equal to 1.")
-        assert(rows * columns == buffer.count, "The buffer must hold the exact number of items.")
+        precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(rows > 0, "Row count must be greater than or equal to 1.")
+        precondition(rows * columns == buffer.count, "The buffer must hold the exact number of items.")
         
         self.columnCount = columns
         self.rowCount = rows
-        self.count = columns * rows
         
         self.storage = .create(fromArray: buffer)
     }
     
-    public subscript(row: Int, col: Int) -> Element {
+    public subscript(col: Int, row: Int) -> Element {
         get {
-            assert(row < self.rowCount, "Row index out of bounds.")
-            assert(col < self.rowCount, "Column index out of bounds.")
+            precondition(row >= 0 && row < self.rowCount, "Row index out of bounds.")
+            precondition(col >= 0 && col < self.rowCount, "Column index out of bounds.")
             return self.storage[self.linearizedIndex(forRow: row, column: col)]
         }
         mutating set {
-            assert(row < self.rowCount, "Row index out of bounds.")
-            assert(col < self.rowCount, "Column index out of bounds.")
+            precondition(row >= 0 && row < self.rowCount, "Row index out of bounds.")
+            precondition(col >= 0 && col < self.rowCount, "Column index out of bounds.")
             self.storage[self.linearizedIndex(forRow: row, column: col)] = newValue
+        }
+    }
+    
+    public subscript(point: CGPoint) -> Element {
+        get {
+            let x = Int(point.x)
+            let y = Int(point.y)
+            
+            return self[x, y]
+        }
+        mutating set {
+            let x = Int(point.x)
+            let y = Int(point.y)
+            
+            self[x, y] = newValue
         }
     }
     
@@ -100,6 +118,15 @@ public struct FixedDataTable<Element> {
         return (row, column)
     }
     
+    private var sequenceStorage: AnySequence<Element> {
+        AnySequence<Element>({ () -> AnyIterator<Element> in
+            var index = 0
+            return AnyIterator<Element> {
+                return index < self.count ? self.storage[index++] : nil
+            }
+        })
+    }
+    
     private mutating func ensureUniqueness() {
         if !isKnownUniquelyReferenced(&self.storage) {
             self.storage = self.storage.clone()
@@ -107,31 +134,82 @@ public struct FixedDataTable<Element> {
     }
 }
 
-// MARK: - Zeroable specific intializer
+// MARK: - Specific intializer
 public extension FixedDataTable where Element: Zeroable {
+    init(size: CGSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
     init(rows: Int, columns: Int) {
-        assert(columns > 0, "Coloumn count must be greater than or equal to 1.")
-        assert(rows > 0, "Row count must be greater than or equal to 1.")
+        precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(rows > 0, "Row count must be greater than or equal to 1.")
 
         self.columnCount = columns
         self.rowCount = rows
-        self.count = columns * rows
+        
+        let count = self.columnCount * self.rowCount
 
-        self.storage = FixedBuffer<Element>.create(withCapacity: self.count)
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
     }
 }
 
-// MARK: - ExpressibleByNilLiteral specific intializer
 public extension FixedDataTable where Element: ExpressibleByNilLiteral {
+    init(size: CGSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
     init(rows: Int, columns: Int) {
-        assert(columns > 0, "Coloumn count must be greater than or equal to 1.")
-        assert(rows > 0, "Row count must be greater than or equal to 1.")
+        precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(rows > 0, "Row count must be greater than or equal to 1.")
 
         self.columnCount = columns
         self.rowCount = rows
-        self.count = columns * rows
+        
+        let count = self.columnCount * self.rowCount
 
-        self.storage = FixedBuffer<Element>.create(withCapacity: self.count)
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+}
+
+public extension FixedDataTable where Element == Bool {
+    init(size: CGSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
+    init(rows: Int, columns: Int) {
+        precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(rows > 0, "Row count must be greater than or equal to 1.")
+
+        self.columnCount = columns
+        self.rowCount = rows
+        
+        let count = self.columnCount * self.rowCount
+
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
     }
 }
 
@@ -143,6 +221,12 @@ public extension FixedDataTable where Element: Zeroable&Comparable {
     
     func max() -> Element {
         self.rows.compactMap { $0.max() }.max() ?? .zero
+    }
+}
+
+public extension FixedDataTable where Element: AdditiveArithmetic {
+    func sum() -> Element {
+        self.sequenceStorage.reduce(.zero, +)
     }
 }
 
@@ -160,10 +244,10 @@ public extension FixedDataTable {
         get {
             switch dimension {
             case .row(let row):
-                assert(row < self.rowCount, "Row index \(row) out of range.")
+                precondition(row < self.rowCount, "Row index \(row) out of range.")
                 return self.row(at: row)
             case .col(let col):
-                assert(col < self.columnCount, "Row index \(col) out of range.")
+                precondition(col < self.columnCount, "Row index \(col) out of range.")
                 return self.column(at: col)
             }
         }
@@ -171,11 +255,11 @@ public extension FixedDataTable {
         mutating set {
             switch dimension {
             case .row(let row):
-                assert(row < self.rowCount, "Row index \(row) out of range.")
+                precondition(row < self.rowCount, "Row index \(row) out of range.")
                 self.ensureUniqueness()
                 self.setRow(newValue, at: row)
             case .col(let col):
-                assert(col < self.columnCount, "Row index \(col) out of range.")
+                precondition(col < self.columnCount, "Row index \(col) out of range.")
                 self.ensureUniqueness()
                 self.setColumn(newValue, at: col)
             }
@@ -193,15 +277,6 @@ public extension FixedDataTable {
 
 // MARK: - Monadics
 public extension FixedDataTable {
-    private var sequenceStorage: AnySequence<Element> {
-        AnySequence<Element>({ () -> AnyIterator<Element> in
-            var index = 0
-            return AnyIterator<Element> {
-                return index < self.count ? self.storage[index++] : nil
-            }
-        })
-    }
-    
     func map<T>(_ transform: (Element) throws -> T) rethrows -> FixedDataTable<T> {
         FixedDataTable<T>(rows: self.rowCount, columns: self.columnCount, buffer: try self.sequenceStorage.map(transform))
     }
@@ -236,11 +311,11 @@ private extension FixedDataTable {
     }
 }
 
-// MARK: - Mutations: Zeroable specifics
+// MARK: - Mutations
 public extension FixedDataTable where Element: Zeroable {
     mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
-        assert(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
-        assert(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
+        precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
         self.ensureUniqueness()
         guard srcIndex != dstIndex else { return }
         
@@ -248,8 +323,8 @@ public extension FixedDataTable where Element: Zeroable {
     }
     
     mutating func moveRows(from srcRange: Range<Int>, to dstIndex: Int) {
-        assert(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.rowCount, "Source range out of range.")
-        assert(srcRange.count + dstIndex <= self.rowCount, "Move not possible as it would overflow.")
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.rowCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.rowCount, "Move not possible as it would overflow.")
         self.ensureUniqueness()
         guard srcRange.lowerBound != dstIndex else { return }
         
@@ -258,8 +333,8 @@ public extension FixedDataTable where Element: Zeroable {
     }
     
     mutating func moveColumn(from srcIndex: Int, to dstIndex: Int) {
-        assert(srcIndex >= 0 && srcIndex < self.columnCount, "Source index out of range.")
-        assert(dstIndex >= 0 && dstIndex < self.columnCount, "Destination index out of range.")
+        precondition(srcIndex >= 0 && srcIndex < self.columnCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.columnCount, "Destination index out of range.")
         self.ensureUniqueness()
         guard srcIndex != dstIndex else { return }
         
@@ -269,8 +344,8 @@ public extension FixedDataTable where Element: Zeroable {
     }
     
     mutating func moveColumns(from srcRange: Range<Int>, to dstIndex: Int) {
-        assert(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.columnCount, "Source range out of range.")
-        assert(srcRange.count + dstIndex <= self.columnCount, "Move not possible as it would overflow.")
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.columnCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.columnCount, "Move not possible as it would overflow.")
         self.ensureUniqueness()
         guard srcRange.lowerBound != dstIndex else { return }
         
@@ -280,11 +355,10 @@ public extension FixedDataTable where Element: Zeroable {
     }
 }
 
-// MARK: - Mutations: ExpressibleByNilLiteral specifics
 public extension FixedDataTable where Element: ExpressibleByNilLiteral {
     mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
-        assert(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
-        assert(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
+        precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
         self.ensureUniqueness()
         guard srcIndex != dstIndex else { return }
         
@@ -292,8 +366,8 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
     }
     
     mutating func moveRows(from srcRange: Range<Int>, to dstIndex: Int) {
-        assert(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.rowCount, "Source range out of range.")
-        assert(srcRange.count + dstIndex <= self.rowCount, "Move not possible as it would overflow.")
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.rowCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.rowCount, "Move not possible as it would overflow.")
         self.ensureUniqueness()
         guard srcRange.lowerBound != dstIndex else { return }
         
@@ -302,8 +376,8 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
     }
     
     mutating func moveColumn(from srcIndex: Int, to dstIndex: Int) {
-        assert(srcIndex >= 0 && srcIndex < self.columnCount, "Source index out of range.")
-        assert(dstIndex >= 0 && dstIndex < self.columnCount, "Destination index out of range.")
+        precondition(srcIndex >= 0 && srcIndex < self.columnCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.columnCount, "Destination index out of range.")
         self.ensureUniqueness()
         guard srcIndex != dstIndex else { return }
         
@@ -313,8 +387,51 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
     }
     
     mutating func moveColumns(from srcRange: Range<Int>, to dstIndex: Int) {
-        assert(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.columnCount, "Source range out of range.")
-        assert(srcRange.count + dstIndex <= self.columnCount, "Move not possible as it would overflow.")
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.columnCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.columnCount, "Move not possible as it would overflow.")
+        self.ensureUniqueness()
+        guard srcRange.lowerBound != dstIndex else { return }
+        
+        (0..<self.columnCount).forEach {
+            self.storage.moveElements(fromRange: .init(startIndex: self.linearizedIndex(forRow: $0, column: srcRange.lowerBound), count: srcRange.count), intoCorrespondingRangeStartingAt: self.linearizedIndex(forRow: $0, column: dstIndex))
+        }
+    }
+}
+
+public extension FixedDataTable where Element == Bool {
+    mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
+        precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
+        self.ensureUniqueness()
+        guard srcIndex != dstIndex else { return }
+        
+        self.storage.moveElements(fromRange: .init(startIndex: self.linearizedIndex(forRow: srcIndex, column: 0), count: self.columnCount), intoCorrespondingRangeStartingAt: self.linearizedIndex(forRow: dstIndex, column: 0))
+    }
+    
+    mutating func moveRows(from srcRange: Range<Int>, to dstIndex: Int) {
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.rowCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.rowCount, "Move not possible as it would overflow.")
+        self.ensureUniqueness()
+        guard srcRange.lowerBound != dstIndex else { return }
+        
+        let moveCount = srcRange.count * self.columnCount
+        self.storage.moveElements(fromRange: .init(startIndex: self.linearizedIndex(forRow: srcRange.lowerBound, column: 0), count: moveCount), intoCorrespondingRangeStartingAt: self.linearizedIndex(forRow: dstIndex, column: 0))
+    }
+    
+    mutating func moveColumn(from srcIndex: Int, to dstIndex: Int) {
+        precondition(srcIndex >= 0 && srcIndex < self.columnCount, "Source index out of range.")
+        precondition(dstIndex >= 0 && dstIndex < self.columnCount, "Destination index out of range.")
+        self.ensureUniqueness()
+        guard srcIndex != dstIndex else { return }
+        
+        (0..<self.rowCount).forEach {
+            self.storage.moveElement(from: self.linearizedIndex(forRow: $0, column: srcIndex), to: self.linearizedIndex(forRow: $0, column: dstIndex))
+        }
+    }
+    
+    mutating func moveColumns(from srcRange: Range<Int>, to dstIndex: Int) {
+        precondition(srcRange.lowerBound >= 0 && srcRange.lowerBound < self.columnCount, "Source range out of range.")
+        precondition(srcRange.count + dstIndex <= self.columnCount, "Move not possible as it would overflow.")
         self.ensureUniqueness()
         guard srcRange.lowerBound != dstIndex else { return }
         
