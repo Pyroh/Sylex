@@ -68,7 +68,6 @@ extension FixedBuffer {
         
         let srcIndex = srcRange.lowerBound
         let count = srcRange.count
-        let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
         
         let srcRange = srcIndex..<srcIndex + count
         let dstRange = dstIndex..<dstIndex + count
@@ -92,17 +91,12 @@ extension FixedBuffer {
     }
     
     func swapElement(at i: Int, withElementAt j: Int) {
-        let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
-        
         guard i != j else { return }
         
         (self[i], self[j]) = (self[j], self[i])
     }
     
     func swapElements(in srcRange: Range<Int>, withElementsInCorrespondingRangeStatingAt dstIndex: Int) {
-        let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
-        let allowedRange = 0..<capacity
-        
         guard srcRange.count > 1 else {
             self.swapElement(at: srcRange.lowerBound, withElementAt: dstIndex)
             return
@@ -128,9 +122,6 @@ extension FixedBuffer {
     }
     
     func copyElements(from srcArray: [Element], at dstIndex: Int) {
-        let capacity = self.withUnsafeMutablePointerToHeader { $0.pointee }
-        let endCopyIndex = dstIndex + srcArray.count
-        
         self.withUnsafeMutablePointerToElements { (elements) in
             srcArray.withUnsafeBufferPointer { (srcElements) in
                 (elements + dstIndex).assign(from: srcElements.baseAddress!, count: srcArray.count)
@@ -140,8 +131,6 @@ extension FixedBuffer {
     
     private func initialize(range: Range<Int>, with value: Element) {
         self.withUnsafeMutablePointers { (header, elements) in
-            let capacity = header.pointee
-            
             (elements + range.lowerBound).initialize(repeating: value, count: range.count)
         }
     }

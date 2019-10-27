@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if !os(macOS)
+import CoreGraphics
+#endif
 
 public struct FixedDataTable<Element> {
     public enum Dimension {
