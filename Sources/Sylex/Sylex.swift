@@ -38,6 +38,9 @@ public func .?<T, R>(lhs: T?, rhs: A<T, R>?) rethrows -> R? { return try rhs?(lh
 public func .?<T, R>(lhs: T, rhs: M<T, R>?) rethrows -> R? { return try rhs?(lhs) }
 public func .?<T, R>(lhs: T?, rhs: P<T, R>?) rethrows -> R? { return try rhs?(lhs) }
 
+public typealias CompletionHandler = () -> Void
+public typealias Callback<A> = (A) -> Void
+
 public func clamp<T: Comparable>(_ x: T, _ min: T, _ max: T) -> T {
     return Swift.min(Swift.max(x, min), max)
 }
