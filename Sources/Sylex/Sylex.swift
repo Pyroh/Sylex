@@ -17,6 +17,9 @@ postfix operator %
 postfix operator ++
 postfix operator --
 
+postfix operator -
+postfix operator +
+
 infix operator **: ExponentationPrecedence
 infix operator <?>
 

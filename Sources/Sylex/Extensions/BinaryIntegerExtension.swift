@@ -75,3 +75,14 @@ extension BinaryInteger {
         return CGFloat(lhs) / 100.0
     }
 }
+
+extension BinaryFloatingPoint {
+    
+    public postfix static func -(rhs: Self) -> Self {
+        return rhs - 1
+    }
+    
+    public postfix static func +(rhs: Self) -> Self {
+        return rhs + 1
+    }
+}
