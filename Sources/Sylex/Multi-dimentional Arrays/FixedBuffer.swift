@@ -24,8 +24,9 @@ final class FixedBuffer<Element>: ManagedBuffer<Int, Element> {
     
     deinit {
         self.withUnsafeMutablePointers { (header, elements) -> () in
+            let cap = header.pointee
+            elements.deinitialize(count: cap)
             header.deinitialize(count: 1)
-            elements.deinitialize(count: self.capacity)
         }
     }
     
