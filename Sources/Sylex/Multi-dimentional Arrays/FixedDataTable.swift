@@ -13,6 +13,17 @@ import CoreGraphics
 public struct TableCoordinate: Equatable, Hashable {
     public var column: Int
     public var row: Int
+    
+    public init(column: Int, row: Int) {
+        self.column = column
+        self.row = row
+    }
+}
+
+extension TableCoordinate: Zeroable {
+    public static var zero: TableCoordinate {
+        .init(column: 0, row: 0)
+    }
 }
 
 public struct FixedDataTable<Element> {
