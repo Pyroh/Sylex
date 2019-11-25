@@ -31,23 +31,25 @@ public typealias A<T, R> = (T?) throws -> (R)
 public typealias M<T, R> = (T) throws -> (R?)
 public typealias P<T, R> = (T?) throws -> (R?)
 
-public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R  { return try rhs(lhs) }
-public func ..<T, R>(lhs: T?, rhs: A<T, R>) rethrows -> R { return try rhs(lhs) }
-public func ..<T, R>(lhs: T, rhs: M<T, R>) rethrows -> R? { return try rhs(lhs) }
-public func ..<T, R>(lhs: T?, rhs: P<T, R>) rethrows -> R? { return try rhs(lhs) }
+@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R  { return try rhs(lhs) }
+@inlinable public func ..<T, R>(lhs: T?, rhs: A<T, R>) rethrows -> R { return try rhs(lhs) }
+@inlinable public func ..<T, R>(lhs: T, rhs: M<T, R>) rethrows -> R? { return try rhs(lhs) }
+@inlinable public func ..<T, R>(lhs: T?, rhs: P<T, R>) rethrows -> R? { return try rhs(lhs) }
 
-public func .?<T, R>(lhs: T, rhs: F<T, R>?) rethrows -> R? { return try rhs?(lhs) }
-public func .?<T, R>(lhs: T?, rhs: A<T, R>?) rethrows -> R? { return try rhs?(lhs) }
-public func .?<T, R>(lhs: T, rhs: M<T, R>?) rethrows -> R? { return try rhs?(lhs) }
-public func .?<T, R>(lhs: T?, rhs: P<T, R>?) rethrows -> R? { return try rhs?(lhs) }
+@inlinable public func .?<T, R>(lhs: T, rhs: F<T, R>?) rethrows -> R? { return try rhs?(lhs) }
+@inlinable public func .?<T, R>(lhs: T?, rhs: A<T, R>?) rethrows -> R? { return try rhs?(lhs) }
+@inlinable public func .?<T, R>(lhs: T, rhs: M<T, R>?) rethrows -> R? { return try rhs?(lhs) }
+@inlinable public func .?<T, R>(lhs: T?, rhs: P<T, R>?) rethrows -> R? { return try rhs?(lhs) }
 
 public typealias CompletionHandler = () -> Void
 public typealias Callback<A> = (A) -> Void
 
+@inlinable
 public func clamp<T: Comparable>(_ x: T, _ min: T, _ max: T) -> T {
     return Swift.min(Swift.max(x, min), max)
 }
 
+@inlinable
 public func <?><T>(lhs: Any?, rhs: T) -> T { return lhs as? T ?? rhs }
 
 public func log(_ value: Any) {

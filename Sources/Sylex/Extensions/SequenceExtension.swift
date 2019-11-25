@@ -6,6 +6,7 @@
 //
 
 public extension Sequence {
+    @inlinable
     func wholeMap<T>(_ transform: (Self) throws -> T) rethrows -> T {
         return try transform(self)
     }
