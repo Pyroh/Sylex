@@ -15,6 +15,12 @@ public struct FixedDataTable<Element> {
         case row(Int)
         case col(Int)
     }
+    
+    public struct Coordinate: Equatable, Hashable {
+        public var column: Int
+        public var row: Int
+    }
+    
     private struct FixedDataTableColumnIterator<Element>: IteratorProtocol {
         typealias Buffer = FixedBuffer<Element>
         
@@ -95,6 +101,7 @@ public struct FixedDataTable<Element> {
         }
     }
     
+    @available(*, deprecated, message: "Use the TableCoord one instead")
     public subscript(point: CGPoint) -> Element {
         get {
             let x = Int(point.x)
@@ -108,6 +115,12 @@ public struct FixedDataTable<Element> {
             
             self[x, y] = newValue
         }
+    }
+    
+    public subscript(coord: Coordinate) -> Element {
+        get { self[coord.column, coord.row] }
+        
+        mutating set { self[coord.column, coord.row] = newValue }
     }
     
     private func linearizedIndex(forRow row: Int, column: Int) -> Int {
