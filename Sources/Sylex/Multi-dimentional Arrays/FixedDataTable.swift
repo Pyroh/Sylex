@@ -10,15 +10,15 @@ import Foundation
 import CoreGraphics
 #endif
 
+public struct TableCoordinate: Equatable, Hashable {
+    public var column: Int
+    public var row: Int
+}
+
 public struct FixedDataTable<Element> {
     public enum Dimension {
         case row(Int)
         case col(Int)
-    }
-    
-    public struct Coordinate: Equatable, Hashable {
-        public var column: Int
-        public var row: Int
     }
     
     private struct FixedDataTableColumnIterator<Element>: IteratorProtocol {
@@ -117,7 +117,7 @@ public struct FixedDataTable<Element> {
         }
     }
     
-    public subscript(coord: Coordinate) -> Element {
+    public subscript(coord: TableCoordinate) -> Element {
         get { self[coord.column, coord.row] }
         
         mutating set { self[coord.column, coord.row] = newValue }
