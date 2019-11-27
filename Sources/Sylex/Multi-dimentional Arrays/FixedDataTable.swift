@@ -257,6 +257,13 @@ public extension FixedDataTable where Element: AdditiveArithmetic {
     }
 }
 
+// MARK: Equatable
+extension FixedDataTable: Equatable where Element: Equatable {
+    public static func == (lhs: FixedDataTable<Element>, rhs: FixedDataTable<Element>) -> Bool {
+        lhs.storage.toArray() == rhs.storage.toArray()
+    }
+}
+
 // MARK: - Access rows and columns
 public extension FixedDataTable {
     var rows:[[Element]] {
