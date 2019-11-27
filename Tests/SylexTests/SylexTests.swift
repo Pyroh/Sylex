@@ -133,6 +133,69 @@ final class SylexTests: XCTestCase {
         XCTAssertTrue(c.isNil)
         XCTAssertFalse(!!c)
     }
+    
+    func testTableEquality() {
+        let a = FixedDataTable(fromMultiDimensionalArray: [
+            [1, 2 ,3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ])
+        
+        let b = FixedDataTable(fromMultiDimensionalArray: [
+            [1, 2 ,3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ])
+        
+        let c = FixedDataTable(fromMultiDimensionalArray: [
+            [4, 5, 6],
+            [1, 2 ,3],
+            [7, 8, 9]
+        ])
+        
+        XCTAssert(a == b)
+        XCTAssert(a != c)
+    }
+    
+    func testRange() {
+        let a = Range(startIndex: 0, count: 4)
+        XCTAssert(a == 0..<4)
+        XCTAssert(a.shifted(by: 1) == 1..<5)
+        
+        var b = Range(startIndex: 0, count: 4)
+        XCTAssert(b == 0..<4)
+        b.shift(by: 1)
+        XCTAssert(b == 1..<5)
+        
+        let c = Range(startIndex: 0, count: 4)
+        XCTAssert(c == 0..<4)
+        XCTAssert(c.shifted(by: -1) == -1..<3)
+        
+        var d = Range(startIndex: 0, count: 4)
+        XCTAssert(d == 0..<4)
+        d.shift(by: -1)
+        XCTAssert(d == -1..<3)
+    }
+    
+    func testClosedRange() {
+        let a = ClosedRange(startIndex: 0, count: 4)
+        XCTAssert(a == 0...3)
+        XCTAssert(a.shifted(by: 1) == 1...4)
+        
+        var b = ClosedRange(startIndex: 0, count: 4)
+        XCTAssert(b == 0...3)
+        b.shift(by: 1)
+        XCTAssert(b == 1...4)
+        
+        let c = ClosedRange(startIndex: 0, count: 4)
+        XCTAssert(c == 0...3)
+        XCTAssert(c.shifted(by: -1) == -1...2)
+        
+        var d = ClosedRange(startIndex: 0, count: 4)
+        XCTAssert(d == 0...3)
+        d.shift(by: -1)
+        XCTAssert(d == -1...2)
+    }
 
     static var allTests = [
         ("testBinaryIntegerPrefix", testBinaryIntegerPrefix),
