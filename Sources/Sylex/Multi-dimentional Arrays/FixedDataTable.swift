@@ -138,11 +138,19 @@ public struct FixedDataTable<Element> {
         row * self.columnCount + column
     }
     
+    private func coordinateToIndex(_ coord: TableCoordinate) -> Int {
+        self.linearizedIndex(forRow: coord.row, column: coord.column)
+    }
+    
     private func delinearizedIndex(_ index: Int) -> (row: Int, column: Int) {
         let row = index / self.columnCount
         let column = index % self.columnCount
 
         return (row, column)
+    }
+    
+    private func indexToCoordinate(_ index: Int) -> TableCoordinate {
+        self.delinearizedIndex(index)..{ TableCoordinate(column: $0.column, row: $0.row) }
     }
     
     private var sequenceStorage: AnySequence<Element> {
@@ -323,6 +331,15 @@ public extension FixedDataTable {
         try self.sequenceStorage.enumerated().forEach { (offset: Int, element: Element) in
             try body(self.delinearizedIndex(offset), element)
         }
+    }
+    
+    func enumerated() -> AnySequence<(TableCoordinate, Element)> {
+        AnySequence<(TableCoordinate, Element)>({ () -> AnyIterator<(TableCoordinate, Element)> in
+            var index = 0
+            return AnyIterator<(TableCoordinate, Element)> {
+                return index < self.count ? (self.indexToCoordinate(index), self.storage[index++]) : nil
+            }
+        })
     }
 }
 
