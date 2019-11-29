@@ -327,6 +327,7 @@ public extension FixedDataTable {
         try self.sequenceStorage.forEach(body)
     }
     
+    @available(*, deprecated, message: "Use enumerated() instead.")
     func enumerate(_ body: ((row: Int, column: Int), Element) throws -> Void) rethrows {
         try self.sequenceStorage.enumerated().forEach { (offset: Int, element: Element) in
             try body(self.delinearizedIndex(offset), element)
@@ -489,6 +490,41 @@ public extension FixedDataTable where Element == Bool {
         (0..<self.columnCount).forEach {
             self.storage.moveElements(fromRange: .init(startIndex: self.linearizedIndex(forRow: $0, column: srcRange.lowerBound), count: srcRange.count), intoCorrespondingRangeStartingAt: self.linearizedIndex(forRow: $0, column: dstIndex))
         }
+    }
+}
+
+// MARK: - Rotate & Flip
+extension FixedDataTable {
+    public mutating func rotateLeft() {
+        self = self.rotatedLeft()
+    }
+    
+    public func rotatedLeft() -> FixedDataTable {
+        self.columns.reversed()..Self.init(fromMultiDimensionalArray:)
+    }
+    
+    public mutating func rotateRight() {
+        self = self.rotatedRight()
+    }
+    
+    public func rotatedRight() -> FixedDataTable {
+        self.columns.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
+    }
+    
+    public mutating func flipHorizontally() {
+        self = self.horizontallyFlipped()
+    }
+    
+    public func horizontallyFlipped() -> FixedDataTable {
+        self.rows.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
+    }
+    
+    public mutating func flipVertically() {
+        self = self.verticallyFlipped()
+    }
+    
+    public func verticallyFlipped() -> FixedDataTable {
+        self.rows.reversed()..Self.init(fromMultiDimensionalArray:)
     }
 }
 

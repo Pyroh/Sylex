@@ -196,6 +196,134 @@ final class SylexTests: XCTestCase {
         d.shift(by: -1)
         XCTAssert(d == -1...2)
     }
+    
+    func testDataTableRotations() {
+        let master1x3: [[Int]] = [
+            [1],
+            [2],
+            [3]
+        ]
+        
+        let left3x1: [[Int]] = [
+            [1, 2, 3]
+        ]
+        
+        let right3x1: [[Int]] = [
+            [3, 2, 1]
+        ]
+        
+        let table1x3 = FixedDataTable(fromMultiDimensionalArray: master1x3)
+        XCTAssert(table1x3.rotatedLeft().rows == left3x1)
+        XCTAssert(table1x3.rotatedRight().rows == right3x1)
+        
+        let master3x2: [[Int]] = [
+            [1, 2, 3],
+            [4, 5, 6]
+        ]
+        
+        let left2x3: [[Int]] = [
+            [3, 6],
+            [2, 5],
+            [1, 4]
+        ]
+        
+        let right2x3: [[Int]] = [
+            [4, 1],
+            [5, 2],
+            [6, 3]
+        ]
+        
+        let table3x2 = FixedDataTable(fromMultiDimensionalArray: master3x2)
+        XCTAssert(table3x2.rotatedLeft().rows == left2x3)
+        XCTAssert(table3x2.rotatedRight().rows == right2x3)
+        
+        let master3x3: [[Int]] = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]
+        
+        let left3x3: [[Int]] = [
+            [3, 6, 9],
+            [2, 5, 8],
+            [1, 4, 7]
+        ]
+        
+        let right3x3: [[Int]] = [
+            [7, 4, 1],
+            [8, 5, 2],
+            [9, 6, 3]
+        ]
+        
+        let table3x3 = FixedDataTable(fromMultiDimensionalArray: master3x3)
+        XCTAssert(table3x3.rotatedLeft().rows == left3x3)
+        XCTAssert(table3x3.rotatedRight().rows == right3x3)
+    }
+    
+    func testDataTableFlips() {
+        let master1x3: [[Int]] = [
+            [1],
+            [2],
+            [3]
+        ]
+        
+        let h1x3: [[Int]] = [
+            [1],
+            [2],
+            [3]
+        ]
+        
+        let v1x3: [[Int]] = [
+            [3],
+            [2],
+            [1]
+        ]
+        
+        let table1x3 = FixedDataTable(fromMultiDimensionalArray: master1x3)
+        XCTAssert(table1x3.horizontallyFlipped().rows == h1x3)
+        XCTAssert(table1x3.verticallyFlipped().rows == v1x3)
+        
+        let master3x2: [[Int]] = [
+            [1, 2, 3],
+            [4, 5, 6]
+        ]
+        
+        let h3x2: [[Int]] = [
+            [3, 2, 1],
+            [6, 5, 4]
+        ]
+        
+        let v3x2: [[Int]] = [
+            [4, 5, 6],
+            [1, 2, 3]
+        ]
+        
+        let table3x2 = FixedDataTable(fromMultiDimensionalArray: master3x2)
+        XCTAssert(table3x2.horizontallyFlipped().rows == h3x2)
+        XCTAssert(table3x2.verticallyFlipped().rows == v3x2)
+        
+        let master3x3: [[Int]] = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]
+        
+        let h3x3: [[Int]] = [
+            [3, 2, 1],
+            [6, 5, 4],
+            [9, 8, 7]
+        ]
+        
+        let v3x3: [[Int]] = [
+            [7, 8, 9],
+            [4, 5, 6],
+            [1, 2, 3]
+        ]
+        
+        let table3x3 = FixedDataTable(fromMultiDimensionalArray: master3x3)
+        XCTAssert(table3x3.horizontallyFlipped().rows == h3x3)
+        XCTAssert(table3x3.verticallyFlipped().rows == v3x3)
+    }
 
     static var allTests = [
         ("testBinaryIntegerPrefix", testBinaryIntegerPrefix),
