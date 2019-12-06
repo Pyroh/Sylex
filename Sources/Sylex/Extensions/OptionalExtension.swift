@@ -12,7 +12,7 @@ public extension Optional {
         return self == nil
     }
     
-    /// Makes `self` equals to `nil`.
+    /// Makes `self` equal to `nil`.
     @inlinable
     mutating func nilify() {
         self = nil
@@ -20,7 +20,7 @@ public extension Optional {
     
     
     /// Returns true if `rhs` is not nil.
-    /// - Parameter rhs: The value to test if nil.
+    /// - Parameter rhs: The value to test against nil.
     @inlinable
     prefix static func !!(rhs: Self) -> Bool {
         return !rhs.isNil

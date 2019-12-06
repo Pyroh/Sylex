@@ -10,22 +10,6 @@ import Foundation
 import CoreGraphics
 #endif
 
-public struct TableCoordinate: Equatable, Hashable {
-    public var column: Int
-    public var row: Int
-    
-    public init(column: Int, row: Int) {
-        self.column = column
-        self.row = row
-    }
-}
-
-extension TableCoordinate: Zeroable {
-    public static var zero: TableCoordinate {
-        .init(column: 0, row: 0)
-    }
-}
-
 public struct FixedDataTable<Element> {
     public enum Dimension {
         case row(Int)
@@ -62,7 +46,7 @@ public struct FixedDataTable<Element> {
     public let columnCount: Int
     public let rowCount: Int
     public var count: Int { return self.columnCount * self.rowCount }
-    public var size: CGSize { return .init(width: self.columnCount, height: self.rowCount) }
+    public var size: TableSize { return .init(width: self.columnCount, height: self.rowCount) }
     
     public init(rows: Int, columns: Int) {
         precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
@@ -171,10 +155,24 @@ public struct FixedDataTable<Element> {
 
 // MARK: - Specific intializer
 public extension FixedDataTable where Element: Zeroable {
+    
+    @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
 
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
+    init(size: TableSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+        
         self.columnCount = Int(size.width)
         self.rowCount = Int(size.height)
         
@@ -197,10 +195,23 @@ public extension FixedDataTable where Element: Zeroable {
 }
 
 public extension FixedDataTable where Element: ExpressibleByNilLiteral {
+    @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
 
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
+    init(size: TableSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+        
         self.columnCount = Int(size.width)
         self.rowCount = Int(size.height)
         
@@ -223,10 +234,24 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
 }
 
 public extension FixedDataTable where Element == Bool {
+    
+    @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
 
+        self.columnCount = Int(size.width)
+        self.rowCount = Int(size.height)
+        
+        let count = self.columnCount * self.rowCount
+        
+        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+    }
+    
+    init(size: TableSize) {
+        precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
+        precondition(size.height > 0, "Row count must be greater than or equal to 1.")
+        
         self.columnCount = Int(size.width)
         self.rowCount = Int(size.height)
         
@@ -265,10 +290,10 @@ public extension FixedDataTable where Element: AdditiveArithmetic {
     }
 }
 
-// MARK: Equatable
+// MARK: - Equatable
 extension FixedDataTable: Equatable where Element: Equatable {
     public static func == (lhs: FixedDataTable<Element>, rhs: FixedDataTable<Element>) -> Bool {
-        lhs.storage.toArray() == rhs.storage.toArray()
+        lhs.size == rhs.size && lhs.storage.toArray() == rhs.storage.toArray()
     }
 }
 
