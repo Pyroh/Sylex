@@ -14,14 +14,14 @@ public extension UserDefaults {
     /// - Parameters:
     ///   - value: The enum value to store in the defaults database.
     ///   - defaultName: The key with which to associate the value.
-    func set<T: RawRepresentable>(_ value: T, forKey defaultName: String) where T.RawValue == Int {
+    func set<EnumType: RawRepresentable>(_ value: EnumType, forKey defaultName: String) where EnumType.RawValue == Int {
         self.set(value.rawValue, forKey: defaultName)
     }
     
     /// Returns the enum value associated with the specified key.
     /// - Precondition: The enum must implement `RawReprensentable` and `RawValue` must be `Int`.
     /// - Parameter defaultName: A key in the current user‘s defaults database.
-    func integerEnum<T: RawRepresentable>(forKey defaultName: String) -> T? where T.RawValue == Int {
-        T(rawValue: self.integer(forKey: defaultName))
+    func integerEnum<EnumType: RawRepresentable>(forKey defaultName: String) -> EnumType? where EnumType.RawValue == Int {
+        EnumType(rawValue: self.integer(forKey: defaultName))
     }
 }
