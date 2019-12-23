@@ -135,19 +135,19 @@ final class SylexTests: XCTestCase {
     }
     
     func testTableEquality() {
-        let a = FixedDataTable(fromMultiDimensionalArray: [
+        let a = Matrix(fromMultiDimensionalArray: [
             [1, 2 ,3],
             [4, 5, 6],
             [7, 8, 9]
         ])
         
-        let b = FixedDataTable(fromMultiDimensionalArray: [
+        let b = Matrix(fromMultiDimensionalArray: [
             [1, 2 ,3],
             [4, 5, 6],
             [7, 8, 9]
         ])
         
-        let c = FixedDataTable(fromMultiDimensionalArray: [
+        let c = Matrix(fromMultiDimensionalArray: [
             [4, 5, 6],
             [1, 2 ,3],
             [7, 8, 9]
@@ -212,7 +212,7 @@ final class SylexTests: XCTestCase {
             [3, 2, 1]
         ]
         
-        let table1x3 = FixedDataTable(fromMultiDimensionalArray: master1x3)
+        let table1x3 = Matrix(fromMultiDimensionalArray: master1x3)
         XCTAssert(table1x3.rotatedLeft().rows == left3x1)
         XCTAssert(table1x3.rotatedRight().rows == right3x1)
         
@@ -233,7 +233,7 @@ final class SylexTests: XCTestCase {
             [6, 3]
         ]
         
-        let table3x2 = FixedDataTable(fromMultiDimensionalArray: master3x2)
+        let table3x2 = Matrix(fromMultiDimensionalArray: master3x2)
         XCTAssert(table3x2.rotatedLeft().rows == left2x3)
         XCTAssert(table3x2.rotatedRight().rows == right2x3)
         
@@ -255,7 +255,7 @@ final class SylexTests: XCTestCase {
             [9, 6, 3]
         ]
         
-        let table3x3 = FixedDataTable(fromMultiDimensionalArray: master3x3)
+        let table3x3 = Matrix(fromMultiDimensionalArray: master3x3)
         XCTAssert(table3x3.rotatedLeft().rows == left3x3)
         XCTAssert(table3x3.rotatedRight().rows == right3x3)
     }
@@ -279,7 +279,7 @@ final class SylexTests: XCTestCase {
             [1]
         ]
         
-        let table1x3 = FixedDataTable(fromMultiDimensionalArray: master1x3)
+        let table1x3 = Matrix(fromMultiDimensionalArray: master1x3)
         XCTAssert(table1x3.horizontallyFlipped().rows == h1x3)
         XCTAssert(table1x3.verticallyFlipped().rows == v1x3)
         
@@ -298,7 +298,7 @@ final class SylexTests: XCTestCase {
             [1, 2, 3]
         ]
         
-        let table3x2 = FixedDataTable(fromMultiDimensionalArray: master3x2)
+        let table3x2 = Matrix(fromMultiDimensionalArray: master3x2)
         XCTAssert(table3x2.horizontallyFlipped().rows == h3x2)
         XCTAssert(table3x2.verticallyFlipped().rows == v3x2)
         
@@ -320,7 +320,7 @@ final class SylexTests: XCTestCase {
             [1, 2, 3]
         ]
         
-        let table3x3 = FixedDataTable(fromMultiDimensionalArray: master3x3)
+        let table3x3 = Matrix(fromMultiDimensionalArray: master3x3)
         XCTAssert(table3x3.horizontallyFlipped().rows == h3x3)
         XCTAssert(table3x3.verticallyFlipped().rows == v3x3)
     }

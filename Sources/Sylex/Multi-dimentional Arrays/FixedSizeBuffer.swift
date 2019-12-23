@@ -6,15 +6,15 @@
 //
 
 // MARK: - Main
-final class FixedBuffer<Element>: ManagedBuffer<Int, Element> {
-    class func create(withCapacity cap: Int) -> FixedBuffer {
-        FixedBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedBuffer
+final class FixedSizeBuffer<Element>: ManagedBuffer<Int, Element> {
+    class func create(withCapacity cap: Int) -> FixedSizeBuffer {
+        FixedSizeBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedSizeBuffer
     }
     
-    class func create(fromArray array: [Element]) -> FixedBuffer {
-        array.withUnsafeBufferPointer { (arrayElements) -> FixedBuffer in
+    class func create(fromArray array: [Element]) -> FixedSizeBuffer {
+        array.withUnsafeBufferPointer { (arrayElements) -> FixedSizeBuffer in
             let cap = array.count
-            let buffer = FixedBuffer<Element>.create(withCapacity: cap)
+            let buffer = FixedSizeBuffer<Element>.create(withCapacity: cap)
             buffer.withUnsafeMutablePointerToElements { (elements) in
                 elements.initialize(from: arrayElements.baseAddress!, count: cap)
             }
@@ -30,9 +30,9 @@ final class FixedBuffer<Element>: ManagedBuffer<Int, Element> {
         }
     }
     
-    func clone() -> FixedBuffer {
-        self.withUnsafeMutablePointers { (header, currentElements) -> FixedBuffer in
-            let clone = FixedBuffer<Element>.create(withCapacity: header.pointee)
+    func clone() -> FixedSizeBuffer {
+        self.withUnsafeMutablePointers { (header, currentElements) -> FixedSizeBuffer in
+            let clone = FixedSizeBuffer<Element>.create(withCapacity: header.pointee)
             clone.withUnsafeMutablePointerToElements { (elements) in
                 elements.initialize(from: currentElements, count: self.capacity)
             }
@@ -51,7 +51,7 @@ final class FixedBuffer<Element>: ManagedBuffer<Int, Element> {
 }
 
 // MARK: - Array interaction
-extension FixedBuffer {
+extension FixedSizeBuffer {
     func toArray() -> [Element] {
         self.withUnsafeMutablePointerToHeader { self.contiguousArray(fromIndex: 0, count: $0.pointee) }
     }
@@ -64,7 +64,7 @@ extension FixedBuffer {
 }
 
 // MARK: - Mutations
-extension FixedBuffer {
+extension FixedSizeBuffer {
     func moveElements(fromRange srcRange: Range<Int>, intoCorrespondingRangeStatingAt dstIndex: Int, fillingGapWith value: Element) {
         
         let srcIndex = srcRange.lowerBound
@@ -138,9 +138,9 @@ extension FixedBuffer {
 }
 
 // MARK: - Zeroable specifics
-extension FixedBuffer where Element: Zeroable {
-    class func create(withCapacity cap: Int) -> FixedBuffer {
-        let buffer = FixedBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedBuffer
+extension FixedSizeBuffer where Element: Zeroable {
+    class func create(withCapacity cap: Int) -> FixedSizeBuffer {
+        let buffer = FixedSizeBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedSizeBuffer
         buffer.withUnsafeMutablePointerToElements { (elements) in
             elements.initialize(repeating: .zero, count: cap)
         }
@@ -158,9 +158,9 @@ extension FixedBuffer where Element: Zeroable {
 }
 
 // MARK: - Optionals specifics
-extension FixedBuffer where Element: ExpressibleByNilLiteral {
-    class func create(withCapacity cap: Int) -> FixedBuffer {
-        let buffer = FixedBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedBuffer
+extension FixedSizeBuffer where Element: ExpressibleByNilLiteral {
+    class func create(withCapacity cap: Int) -> FixedSizeBuffer {
+        let buffer = FixedSizeBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedSizeBuffer
         buffer.withUnsafeMutablePointerToElements { (elements) in
             elements.initialize(repeating: nil, count: cap)
         }
@@ -178,9 +178,9 @@ extension FixedBuffer where Element: ExpressibleByNilLiteral {
 }
 
 // MARK: - Bool specifics
-extension FixedBuffer where Element == Bool {
-    class func create(withCapacity cap: Int) -> FixedBuffer {
-        let buffer = FixedBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedBuffer
+extension FixedSizeBuffer where Element == Bool {
+    class func create(withCapacity cap: Int) -> FixedSizeBuffer {
+        let buffer = FixedSizeBuffer.create(minimumCapacity: cap, makingHeaderWith: { _ in cap }) as! FixedSizeBuffer
         buffer.withUnsafeMutablePointerToElements { (elements) in
             elements.initialize(repeating: false, count: cap)
         }

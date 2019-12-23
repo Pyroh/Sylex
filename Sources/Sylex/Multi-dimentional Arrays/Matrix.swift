@@ -10,14 +10,14 @@ import Foundation
 import CoreGraphics
 #endif
 
-public struct FixedDataTable<Element> {
+public struct Matrix<Element> {
     public enum Dimension {
         case row(Int)
         case col(Int)
     }
     
-    private struct FixedDataTableColumnIterator<Element>: IteratorProtocol {
-        typealias Buffer = FixedBuffer<Element>
+    private struct MatrixColumnIterator<Element>: IteratorProtocol {
+        typealias Buffer = FixedSizeBuffer<Element>
         
         private unowned var buffer: Buffer
         private let columnCount: Int
@@ -41,12 +41,12 @@ public struct FixedDataTable<Element> {
         }
     }
     
-    private var storage: FixedBuffer<Element>
+    private var storage: FixedSizeBuffer<Element>
     
     public let columnCount: Int
     public let rowCount: Int
     public var count: Int { return self.columnCount * self.rowCount }
-    public var size: TableSize { return .init(width: self.columnCount, height: self.rowCount) }
+    public var size: MatrixSize { return .init(width: self.columnCount, height: self.rowCount) }
     
     public init(rows: Int, columns: Int) {
         precondition(columns > 0, "Coloumn count must be greater than or equal to 1.")
@@ -57,7 +57,7 @@ public struct FixedDataTable<Element> {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
     public init(fromMultiDimensionalArray array: [[Element]]) {
@@ -112,7 +112,7 @@ public struct FixedDataTable<Element> {
         }
     }
     
-    public subscript(coord: TableCoordinate) -> Element {
+    public subscript(coord: MatrixCoordinate) -> Element {
         get { self[coord.column, coord.row] }
         
         mutating set { self[coord.column, coord.row] = newValue }
@@ -122,7 +122,7 @@ public struct FixedDataTable<Element> {
         row * self.columnCount + column
     }
     
-    private func coordinateToIndex(_ coord: TableCoordinate) -> Int {
+    private func coordinateToIndex(_ coord: MatrixCoordinate) -> Int {
         self.linearizedIndex(forRow: coord.row, column: coord.column)
     }
     
@@ -133,8 +133,8 @@ public struct FixedDataTable<Element> {
         return (row, column)
     }
     
-    private func indexToCoordinate(_ index: Int) -> TableCoordinate {
-        self.delinearizedIndex(index)..{ TableCoordinate(column: $0.column, row: $0.row) }
+    private func indexToCoordinate(_ index: Int) -> MatrixCoordinate {
+        self.delinearizedIndex(index)..{ MatrixCoordinate(column: $0.column, row: $0.row) }
     }
     
     private var sequenceStorage: AnySequence<Element> {
@@ -154,7 +154,7 @@ public struct FixedDataTable<Element> {
 }
 
 // MARK: - Specific intializer
-public extension FixedDataTable where Element: Zeroable {
+public extension Matrix where Element: Zeroable {
     
     @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
@@ -166,10 +166,10 @@ public extension FixedDataTable where Element: Zeroable {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
-    init(size: TableSize) {
+    init(size: MatrixSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
         
@@ -178,7 +178,7 @@ public extension FixedDataTable where Element: Zeroable {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
     init(rows: Int, columns: Int) {
@@ -190,11 +190,11 @@ public extension FixedDataTable where Element: Zeroable {
         
         let count = self.columnCount * self.rowCount
 
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
 }
 
-public extension FixedDataTable where Element: ExpressibleByNilLiteral {
+public extension Matrix where Element: ExpressibleByNilLiteral {
     @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
@@ -205,10 +205,10 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
-    init(size: TableSize) {
+    init(size: MatrixSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
         
@@ -217,7 +217,7 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
     init(rows: Int, columns: Int) {
@@ -229,11 +229,11 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
         
         let count = self.columnCount * self.rowCount
 
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
 }
 
-public extension FixedDataTable where Element == Bool {
+public extension Matrix where Element == Bool {
     
     @available(*, deprecated, message: "Use the TableSize one instead")
     init(size: CGSize) {
@@ -245,10 +245,10 @@ public extension FixedDataTable where Element == Bool {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
-    init(size: TableSize) {
+    init(size: MatrixSize) {
         precondition(size.width > 0, "Coloumn count must be greater than or equal to 1.")
         precondition(size.height > 0, "Row count must be greater than or equal to 1.")
         
@@ -257,7 +257,7 @@ public extension FixedDataTable where Element == Bool {
         
         let count = self.columnCount * self.rowCount
         
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
     
     init(rows: Int, columns: Int) {
@@ -269,12 +269,12 @@ public extension FixedDataTable where Element == Bool {
         
         let count = self.columnCount * self.rowCount
 
-        self.storage = FixedBuffer<Element>.create(withCapacity: count)
+        self.storage = FixedSizeBuffer<Element>.create(withCapacity: count)
     }
 }
 
 // MARK: - Elements boundaries
-public extension FixedDataTable where Element: Zeroable&Comparable {
+public extension Matrix where Element: Zeroable&Comparable {
     func min() -> Element {
         self.rows.compactMap { $0.min() }.min() ?? .zero
     }
@@ -284,27 +284,27 @@ public extension FixedDataTable where Element: Zeroable&Comparable {
     }
 }
 
-public extension FixedDataTable where Element: AdditiveArithmetic {
+public extension Matrix where Element: AdditiveArithmetic {
     func sum() -> Element {
         self.sequenceStorage.reduce(.zero, +)
     }
 }
 
 // MARK: - Equatable
-extension FixedDataTable: Equatable where Element: Equatable {
-    public static func == (lhs: FixedDataTable<Element>, rhs: FixedDataTable<Element>) -> Bool {
+extension Matrix: Equatable where Element: Equatable {
+    public static func == (lhs: Matrix<Element>, rhs: Matrix<Element>) -> Bool {
         lhs.size == rhs.size && lhs.storage.toArray() == rhs.storage.toArray()
     }
 }
 
 // MARK: - Access rows and columns
-public extension FixedDataTable {
+public extension Matrix {
     var rows:[[Element]] {
         (0..<self.rowCount).lazy.map { self.linearizedIndex(forRow: $0, column: 0) }.map { self.storage.contiguousArray(fromIndex: $0, count: self.columnCount) }
     }
     
     var columns: [[Element]] {
-        (0..<self.columnCount).lazy.map { index in AnySequence<Element>({ FixedDataTableColumnIterator(atIndex: index, withBuffer: self.storage, columnCount: self.columnCount) }) }.map([Element].init)
+        (0..<self.columnCount).lazy.map { index in AnySequence<Element>({ MatrixColumnIterator(atIndex: index, withBuffer: self.storage, columnCount: self.columnCount) }) }.map([Element].init)
     }
     
     subscript(dimension: Dimension) -> [Element] {
@@ -334,7 +334,7 @@ public extension FixedDataTable {
     }
     
     private func column(at index: Int) -> [Element] {
-        [Element](AnySequence<Element>({ FixedDataTableColumnIterator(atIndex: index, withBuffer: self.storage, columnCount: self.columnCount) }))
+        [Element](AnySequence<Element>({ MatrixColumnIterator(atIndex: index, withBuffer: self.storage, columnCount: self.columnCount) }))
     }
     
     private func row(at index: Int) -> [Element] {
@@ -343,9 +343,11 @@ public extension FixedDataTable {
 }
 
 // MARK: - Monadics
-public extension FixedDataTable {
-    func map<T>(_ transform: (Element) throws -> T) rethrows -> FixedDataTable<T> {
-        FixedDataTable<T>(rows: self.rowCount, columns: self.columnCount, buffer: try self.sequenceStorage.map(transform))
+public extension Matrix {
+    typealias EnumeratedElement = (coordinate: MatrixCoordinate, element: Element)
+    
+    func map<T>(_ transform: (Element) throws -> T) rethrows -> Matrix<T> {
+        Matrix<T>(rows: self.rowCount, columns: self.columnCount, buffer: try self.sequenceStorage.map(transform))
     }
     
     func forEach(_ body: (Element) throws -> Void) rethrows {
@@ -359,10 +361,10 @@ public extension FixedDataTable {
         }
     }
     
-    func enumerated() -> AnySequence<(TableCoordinate, Element)> {
-        AnySequence<(TableCoordinate, Element)>({ () -> AnyIterator<(TableCoordinate, Element)> in
+    func enumerated() -> AnySequence<EnumeratedElement> {
+        AnySequence<EnumeratedElement>({ () -> AnyIterator<EnumeratedElement> in
             var index = 0
-            return AnyIterator<(TableCoordinate, Element)> {
+            return AnyIterator<EnumeratedElement> {
                 return index < self.count ? (self.indexToCoordinate(index), self.storage[index++]) : nil
             }
         })
@@ -370,7 +372,7 @@ public extension FixedDataTable {
 }
 
 // MARK: - Mutate rows and columns
-private extension FixedDataTable {
+private extension Matrix {
     private func setRow(_ array: [Element], at index: Int) {
         if array.count > self.columnCount {
             self.storage.copyElements(from: [Element](array[0..<self.columnCount]), at: self.linearizedIndex(forRow: index, column: 0))
@@ -389,7 +391,7 @@ private extension FixedDataTable {
 }
 
 // MARK: - Mutations
-public extension FixedDataTable where Element: Zeroable {
+public extension Matrix where Element: Zeroable {
     mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
         precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
         precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
@@ -432,7 +434,7 @@ public extension FixedDataTable where Element: Zeroable {
     }
 }
 
-public extension FixedDataTable where Element: ExpressibleByNilLiteral {
+public extension Matrix where Element: ExpressibleByNilLiteral {
     mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
         precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
         precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
@@ -475,7 +477,7 @@ public extension FixedDataTable where Element: ExpressibleByNilLiteral {
     }
 }
 
-public extension FixedDataTable where Element == Bool {
+public extension Matrix where Element == Bool {
     mutating func moveRow(from srcIndex: Int, to dstIndex: Int) {
         precondition(srcIndex >= 0 && srcIndex < self.rowCount, "Source index out of range.")
         precondition(dstIndex >= 0 && dstIndex < self.rowCount, "Destination index out of range.")
@@ -519,12 +521,12 @@ public extension FixedDataTable where Element == Bool {
 }
 
 // MARK: - Rotate & Flip
-extension FixedDataTable {
+extension Matrix {
     public mutating func rotateLeft() {
         self = self.rotatedLeft()
     }
     
-    public func rotatedLeft() -> FixedDataTable {
+    public func rotatedLeft() -> Matrix {
         self.columns.reversed()..Self.init(fromMultiDimensionalArray:)
     }
     
@@ -532,7 +534,7 @@ extension FixedDataTable {
         self = self.rotatedRight()
     }
     
-    public func rotatedRight() -> FixedDataTable {
+    public func rotatedRight() -> Matrix {
         self.columns.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
     }
     
@@ -540,7 +542,7 @@ extension FixedDataTable {
         self = self.horizontallyFlipped()
     }
     
-    public func horizontallyFlipped() -> FixedDataTable {
+    public func horizontallyFlipped() -> Matrix {
         self.rows.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
     }
     
@@ -548,13 +550,13 @@ extension FixedDataTable {
         self = self.verticallyFlipped()
     }
     
-    public func verticallyFlipped() -> FixedDataTable {
+    public func verticallyFlipped() -> Matrix {
         self.rows.reversed()..Self.init(fromMultiDimensionalArray:)
     }
 }
 
 // MARK: - CustomDebugStringConvertible
-extension FixedDataTable: CustomDebugStringConvertible {
+extension Matrix: CustomDebugStringConvertible {
     public var debugDescription: String {
         """
         FixedDataTable<\(type(of: Element.self))>
@@ -568,7 +570,7 @@ extension FixedDataTable: CustomDebugStringConvertible {
 }
 
 // MARK: - CustomStringConvertible
-extension FixedDataTable: CustomStringConvertible {
+extension Matrix: CustomStringConvertible {
     public var description: String {
         let maxSize = self.storage.toArray().map { String(reflecting: $0).count }.max() ?? 0
         func overflow(_ item: Element) -> Int { maxSize - String(reflecting: item).count }

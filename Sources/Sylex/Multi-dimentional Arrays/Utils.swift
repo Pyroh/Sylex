@@ -5,7 +5,9 @@
 //  Created by Pierre TACCHI on 06/12/2019.
 //
 
-public struct TableCoordinate: Equatable, Hashable, Codable {
+
+
+public struct MatrixCoordinate: Equatable, Hashable, Codable, Zeroable {
     public var column: Int
     public var row: Int
     
@@ -13,9 +15,11 @@ public struct TableCoordinate: Equatable, Hashable, Codable {
         self.column = column
         self.row = row
     }
+    
+    public static var zero: MatrixCoordinate { .init(column: .zero, row: .zero) }
 }
 
-public struct TableSize: Equatable, Hashable, Codable {
+public struct MatrixSize: Equatable, Hashable, Codable, Zeroable {
     public var width: Int
     public var height: Int
     
@@ -30,17 +34,8 @@ public struct TableSize: Equatable, Hashable, Codable {
         self.width = amount
         self.height = amount
     }
+    
+    public static var zero: MatrixSize { .init(square: .zero) }
 }
 
-extension TableCoordinate: Zeroable {
-    public static var zero: TableCoordinate {
-        .init(column: 0, row: 0)
-    }
-}
-
-extension TableSize: Zeroable {
-    public static var zero: TableSize {
-        .init(square: .zero)
-    }
-}
 
