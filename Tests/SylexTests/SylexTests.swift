@@ -113,6 +113,18 @@ final class SylexTests: XCTestCase {
         XCTAssertEqual((1 as Int?)..sometimesAdd2, 3)
         XCTAssertEqual((nil as Int?)..sometimesAdd2, nil)
         XCTAssertEqual(1..add2..mayAdd2..alwaysAdd2..sometimesAdd2, 9)
+        
+        var i: Int? = nil
+        var j = i..sometimesAdd2(a:)
+        
+        XCTAssert(i.isNil)
+        XCTAssert(j.isNil)
+        
+        i = 42
+        j = i..sometimesAdd2(a:)
+        
+        XCTAssert(i == 42)
+        XCTAssert(j == 44)
     }
     
     func testOptionals() {

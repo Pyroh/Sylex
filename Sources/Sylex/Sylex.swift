@@ -31,10 +31,18 @@ public typealias A<T, R> = (T?) throws -> (R)
 public typealias M<T, R> = (T) throws -> (R?)
 public typealias P<T, R> = (T?) throws -> (R?)
 
-@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R  { return try rhs(lhs) }
-@inlinable public func ..<T, R>(lhs: T?, rhs: A<T, R>) rethrows -> R { return try rhs(lhs) }
-@inlinable public func ..<T, R>(lhs: T, rhs: M<T, R>) rethrows -> R? { return try rhs(lhs) }
-@inlinable public func ..<T, R>(lhs: T?, rhs: P<T, R>) rethrows -> R? { return try rhs(lhs) }
+@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R  {
+    try rhs(lhs)
+}
+@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R where T: OptionalType {
+    try rhs(lhs)
+}
+@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R where R: OptionalType {
+    try rhs(lhs)
+}
+@inlinable public func ..<T, R>(lhs: T, rhs: F<T, R>) rethrows -> R where T: OptionalType, R: OptionalType {
+    try rhs(lhs)
+}
 
 @inlinable public func .?<T, R>(lhs: T, rhs: F<T, R>?) rethrows -> R? { return try rhs?(lhs) }
 @inlinable public func .?<T, R>(lhs: T?, rhs: A<T, R>?) rethrows -> R? { return try rhs?(lhs) }
