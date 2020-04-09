@@ -15,7 +15,7 @@ extension BinaryInteger {
     /// - Parameter rhs: The exponent.
     @inlinable
     public static func **<T: BinaryInteger>(lhs: Self, rhs: T) -> Self {
-        return Self(pow(Double(lhs), Double(rhs)))
+        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
     
     /// Returns the exponentiation of `lhs` by `rhs`.
@@ -23,7 +23,7 @@ extension BinaryInteger {
     /// - Parameter rhs: The exponent.
     @inlinable
     public static func **<T: BinaryFloatingPoint>(lhs: Self, rhs: T) -> Self {
-        return Self(pow(Double(lhs), Double(rhs)))
+        return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
 }
 

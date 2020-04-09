@@ -47,6 +47,7 @@ import CoreGraphics
 //    }
 //}
 //
+
 extension BinaryFloatingPoint {
 
     /// Returns the exponentiation of `lhs` by `rhs`.
@@ -64,29 +65,3 @@ extension BinaryFloatingPoint {
         return Self(pow(CGFloat(lhs), CGFloat(rhs)))
     }
 }
-
-//extension BinaryFloatingPoint {
-//    
-//    @inlinable
-//    public postfix static func %(lhs: Self) -> Self {
-//        return lhs / 100.0
-//    }
-//    
-//    @inlinable
-//    public postfix static func %(lhs: Self) -> CGFloat {
-//        return CGFloat(lhs) / 100.0
-//    }
-//}
-
-//extension BinaryFloatingPoint {
-//    
-//    @inlinable
-//    public postfix static func -(rhs: Self) -> Self {
-//        return rhs - 1
-//    }
-//    
-//    @inlinable
-//    public postfix static func +(rhs: Self) -> Self {
-//        return rhs + 1
-//    }
-//}
