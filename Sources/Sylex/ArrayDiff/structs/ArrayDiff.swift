@@ -5,6 +5,8 @@
 //  Created by Pierre TACCHI on 22/08/2018.
 //
 
+import SmoothOperators
+
 internal struct ArrayDiff {
     private var symbolTable: [AnyHashable: DiffTableEntry]
     

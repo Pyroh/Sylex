@@ -17,12 +17,4 @@ public extension Optional {
     mutating func nilify() {
         self = nil
     }
-    
-    
-    /// Returns true if `rhs` is not nil.
-    /// - Parameter rhs: The value to test against nil.
-    @inlinable
-    prefix static func !!(rhs: Self) -> Bool {
-        return !rhs.isNil
-    }
 }

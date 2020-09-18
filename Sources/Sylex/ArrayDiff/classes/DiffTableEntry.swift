@@ -5,6 +5,8 @@
 //  Created by Pierre TACCHI on 22/08/2018.
 //
 
+import SmoothOperators
+
 internal class DiffTableEntry {
     private var targetCount: Int = 0
     private var sourceCount: Int = 0

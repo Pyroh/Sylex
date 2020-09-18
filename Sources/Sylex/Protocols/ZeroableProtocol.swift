@@ -2,10 +2,10 @@
 //  ZeroableProtocol.swift
 //  Sylex
 //
-//  Created by Pierre TACCHI on 11/10/2019.
-//
+
 
 import Foundation
+import SwiftUI
 #if !os(macOS)
 import CoreGraphics
 #endif
@@ -50,15 +50,10 @@ extension NSDirectionalEdgeInsets: Zeroable { }
 
 // MARK: - SwiftUI Related
 #if canImport(SwiftUI)
-import SwiftUI
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension Angle: Zeroable { }
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension AnimatablePair: Zeroable { }
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension EmptyAnimatableData: Zeroable { }
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension UnitPoint: Zeroable { }
 #endif
 

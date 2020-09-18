@@ -8,13 +8,14 @@
 import Foundation
 
 public extension Comparable {
-    @inlinable
-    func clamped(to range: ClosedRange<Self>) -> Self {
+    
+    /// Returns the receiver clamped to the given range.
+    @inlinable func clamped(to range: ClosedRange<Self>) -> Self {
         Sylex.clamp(self, range.lowerBound, range.upperBound)
     }
     
-    @inlinable
-    mutating func clamp(to range: ClosedRange<Self>) {
+    /// Clamps the receiver to the given range.
+    @inlinable mutating func clamp(to range: ClosedRange<Self>) {
         self = self.clamped(to: range)
     }
 }

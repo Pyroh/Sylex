@@ -2,8 +2,6 @@
 //  ArrayExtension.swift
 //  Sylex
 //
-//  Created by Pierre TACCHI on 25/07/2018.
-//
 
 public extension Array where Element: Equatable {
     /// Produces a copy of `self` where all duplicates have been removed.
@@ -16,7 +14,6 @@ public extension Array where Element: Equatable {
             }
         }
     }
-    
     
     /// Removes all the duplicates from `self`.
     mutating func removeDuplicates() {
@@ -40,5 +37,31 @@ public extension Array where Element: Hashable {
     /// Removes all the duplicates from `self`.
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
+    }
+}
+
+public extension Array {
+    mutating func sort<T: Comparable>(by key: KeyPath<Element, T>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key] < rhs[keyPath: key] }
+    }
+    
+    mutating func sort(alphabeticallyBy key: KeyPath<Element, String>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key].compare(rhs[keyPath: key]) == .orderedAscending }
+    }
+    
+    mutating func sort(caseInsensitiveBy key: KeyPath<Element, String>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key].caseInsensitiveCompare(rhs[keyPath: key]) == .orderedAscending }
+    }
+    
+    mutating func sort(localizedBy key: KeyPath<Element, String>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key].localizedCompare(rhs[keyPath: key]) == .orderedAscending }
+    }
+    
+    mutating func sort(localizedCaseInsensitiveBy key: KeyPath<Element, String>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key].localizedCaseInsensitiveCompare(rhs[keyPath: key]) == .orderedAscending }
+    }
+    
+    mutating func sort(localizedStandardBy key: KeyPath<Element, String>) {
+        sort { (lhs, rhs) -> Bool in lhs[keyPath: key].localizedStandardCompare(rhs[keyPath: key]) == .orderedAscending }
     }
 }

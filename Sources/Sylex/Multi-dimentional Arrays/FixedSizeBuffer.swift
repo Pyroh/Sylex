@@ -2,8 +2,7 @@
 //  FixedBuffer.swift
 //  Sylex
 //
-//  Created by Pierre TACCHI on 14/10/2019.
-//
+
 
 // MARK: - Main
 final class FixedSizeBuffer<Element>: ManagedBuffer<Int, Element> {

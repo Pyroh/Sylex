@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SmoothOperators",
+        "repositoryURL": "https://github.com/Pyroh/SmoothOperators.git",
+        "state": {
+          "branch": null,
+          "revision": "54e67c41fd6296cfb1ce190cd1b0ba8b919ea3b6",
+          "version": "0.5.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

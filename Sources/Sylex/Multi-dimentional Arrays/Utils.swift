@@ -16,6 +16,11 @@ public struct MatrixCoordinate: Equatable, Hashable, Codable, Zeroable {
         self.row = row
     }
     
+    init(_ pair: (row: Int, column: Int)) {
+        self.column = pair.column
+        self.row = pair.row
+    }
+    
     public static var zero: MatrixCoordinate { .init(column: .zero, row: .zero) }
 }
 

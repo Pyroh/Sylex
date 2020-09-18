@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SmoothOperators
 #if !os(macOS)
 import CoreGraphics
 #endif
@@ -134,7 +135,7 @@ public struct Matrix<Element> {
     }
     
     private func indexToCoordinate(_ index: Int) -> MatrixCoordinate {
-        self.delinearizedIndex(index)..{ MatrixCoordinate(column: $0.column, row: $0.row) }
+        .init(delinearizedIndex(index))
     }
     
     private var sequenceStorage: AnySequence<Element> {
@@ -527,7 +528,7 @@ extension Matrix {
     }
     
     public func rotatedLeft() -> Matrix {
-        self.columns.reversed()..Self.init(fromMultiDimensionalArray:)
+        .init(fromMultiDimensionalArray: columns.reversed())
     }
     
     public mutating func rotateRight() {
@@ -535,7 +536,7 @@ extension Matrix {
     }
     
     public func rotatedRight() -> Matrix {
-        self.columns.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
+        .init(fromMultiDimensionalArray: columns.map { $0.reversed() })
     }
     
     public mutating func flipHorizontally() {
@@ -543,7 +544,7 @@ extension Matrix {
     }
     
     public func horizontallyFlipped() -> Matrix {
-        self.rows.map { $0.reversed() }..Self.init(fromMultiDimensionalArray:)
+        .init(fromMultiDimensionalArray: rows.map { $0.reversed() })
     }
     
     public mutating func flipVertically() {
@@ -551,7 +552,7 @@ extension Matrix {
     }
     
     public func verticallyFlipped() -> Matrix {
-        self.rows.reversed()..Self.init(fromMultiDimensionalArray:)
+        .init(fromMultiDimensionalArray: rows.reversed())
     }
 }
 
