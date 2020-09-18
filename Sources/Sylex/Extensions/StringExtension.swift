@@ -6,7 +6,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     
     /// Base64 encodes the receiver.
     func base64Encoded() -> String {
