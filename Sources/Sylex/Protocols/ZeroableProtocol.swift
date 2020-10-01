@@ -25,9 +25,6 @@ extension UInt64: Zeroable { }
 extension UInt32: Zeroable { }
 extension UInt16: Zeroable { }
 extension UInt8: Zeroable { }
-#if os(macOS)
-extension Float80: Zeroable { }
-#endif
 
 // MARK: - Core Graphics Related
 extension CGFloat: Zeroable { }
