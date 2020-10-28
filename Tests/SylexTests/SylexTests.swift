@@ -19,6 +19,22 @@ final class SylexTests: XCTestCase {
         XCTAssertTrue(c.isNil)
     }
     
+    func testOptionalWrapping() {
+        let a: Int? = 1
+        let b: Int? = nil
+        var c: Int? = 1
+        var d: Int? = nil
+        
+        XCTAssert((a ?? b) == 1)
+        XCTAssert((b ?? c) == 1)
+        XCTAssert((b ?? d).isNil)
+        
+        c = b ?? c
+        XCTAssert(a == 1)
+        d = d ?? b
+        XCTAssert(b.isNil)
+    }
+    
     func testTableEquality() {
         let a = Matrix(fromMultiDimensionalArray: [
             [1, 2 ,3],

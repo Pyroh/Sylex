@@ -24,20 +24,30 @@
 //  SOFTWARE.
 //
 
-
 public protocol OptionalType {
     associatedtype Wrapped
     
     var wrapped: Wrapped? { get }
+    mutating func wrap(_ wrapping: Wrapped)
     static var `nil`: Self { get }
     static func wrap(_ wrapping: Wrapped) -> Self
+}
+
+public extension OptionalType {
+    static func ??(_ lhs: Self, _ rhs: Self) -> Self {
+        lhs.wrapped.isNil ? rhs : lhs
+    }
 }
 
 extension Optional: OptionalType {
     public var wrapped: Wrapped? { self }
     public static var `nil`: Optional<Wrapped> { nil }
     
+    public mutating func wrap(_ wrapping: Wrapped) {
+        self = Self(wrapping)
+    }
+    
     public static func wrap(_ wrapping: Wrapped) -> Optional<Wrapped> {
         Self(wrapping)
-    }    
+    }
 }
