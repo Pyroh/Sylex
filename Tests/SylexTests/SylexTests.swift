@@ -225,6 +225,21 @@ final class SylexTests: XCTestCase {
         XCTAssert(table3x3.horizontallyFlipped().rows == h3x3)
         XCTAssert(table3x3.verticallyFlipped().rows == v3x3)
     }
+    
+    func testRounding() {
+        let a = 1.321
+        XCTAssert(a.rounded(digits: 2) == 1.32)
+        XCTAssert(a.rounded(digits: 1) == 1.3)
+        XCTAssert(a.rounded(digits: 0) == 1)
+        
+        var b = 1.321
+        b.round(digits: 2)
+        XCTAssert(b == 1.32)
+        b.round(digits: 1)
+        XCTAssert(b == 1.3)
+        b.round(digits: 0)
+        XCTAssert(b == 1)
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),
