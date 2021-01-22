@@ -19,3 +19,9 @@ public extension String {
         Data(base64Encoded: self).flatMap { String(data: $0, encoding: .utf8) }
     }
 }
+
+public extension StringProtocol {
+    var lineCount: Int {
+        filter(equalTo: "\n").count + 1
+    }
+}
