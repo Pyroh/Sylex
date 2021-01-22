@@ -240,6 +240,22 @@ final class SylexTests: XCTestCase {
         b.round(digits: 0)
         XCTAssert(b == 1)
     }
+    
+    func testStringExtension() {
+        let str1 = "Hello World !"
+        XCTAssert(str1.lineCount == 1)
+        let str2 = """
+        Hello
+        World
+        !
+        """
+        XCTAssert(str2.lineCount == 3)
+        
+        XCTAssert(str1.base64Encoded() == "SGVsbG8gV29ybGQgIQ==")
+        
+        let base64Str = "SGVsbG8gV29ybGQgIQ=="
+        XCTAssert(base64Str.base64Decoded() == str1)
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),

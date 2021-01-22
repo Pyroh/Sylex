@@ -27,6 +27,32 @@ public extension Sequence {
         filter { $0[keyPath: key] >= value }
     }
 }
+
+public extension Sequence where Element: Equatable {
+    
+    func filter(equalTo value: Element) -> [Element] {
+        filter { $0 == value }
+    }
+}
+   
+public extension Sequence where Element: Comparable {
+    
+    func filter(lessThan value: Element) -> [Element] {
+        filter { $0 < value }
+    }
+    
+    func filter(greaterThan value: Element) -> [Element] {
+        filter { $0 > value }
+    }
+    
+    func filter(lessThanOrEqualTo value: Element) -> [Element] {
+        filter { $0 <= value }
+    }
+    
+    func filter(greaterThanOrEqualTo value: Element) -> [Element] {
+        filter { $0 >= value }
+    }
+}
     
 public extension Sequence {
     
@@ -59,6 +85,7 @@ public extension Sequence {
 }
 
 public extension Sequence {
+    
     func first<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Element? {
         first { $0[keyPath: key] == value }
     }
@@ -81,6 +108,7 @@ public extension Sequence {
 }
 
 public extension LazySequence {
+    
     func filter<T: Equatable>(on key: KeyPath<Element, T>, equal value: T) -> LazyFilterSequence<Elements> {
         filter { $0[keyPath: key] == value }
     }
@@ -95,6 +123,7 @@ public extension LazySequence {
 }
 
 public extension Sequence {
+    
     func sorted<T: Comparable>(by key: KeyPath<Element, T>) -> [Element] {
         sorted { (lhs, rhs) -> Bool in lhs[keyPath: key] < rhs[keyPath: key] }
     }
