@@ -33,6 +33,11 @@ extension CGRect: Zeroable { }
 extension CGSize: Zeroable { }
 extension CGVector: Zeroable { }
 
+// MARK: - Foundation Related
+extension NSRange: Zeroable {
+    public static var zero: NSRange { .init(location: 0, length: 0) }
+}
+
 // MARK: - UIKit Related
 #if canImport(UIKit)
 import UIKit
