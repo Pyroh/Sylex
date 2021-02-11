@@ -26,3 +26,15 @@ public extension BinaryFloatingPoint {
     var approximated: Self { (self * 1_000_000).rounded() / 1_000_000 }
     mutating func approximate() { self = approximated }
 }
+
+public extension Double {
+    @inlinable static var phi: Double { .init(bitPattern: 4609965796441453736) }
+}
+
+public extension Float {
+    @inlinable static var phi: Float { .init(bitPattern: 1070537661) }
+}
+
+public extension CGFloat {
+    @inlinable static var phi: NativeType { NativeType.phi }
+}
