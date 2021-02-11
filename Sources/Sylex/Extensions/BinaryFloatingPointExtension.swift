@@ -36,5 +36,5 @@ public extension Float {
 }
 
 public extension CGFloat {
-    @inlinable static var phi: NativeType { NativeType.phi }
+    @inlinable static var phi: CGFloat { .init(NativeType.phi) }
 }
