@@ -5,6 +5,12 @@
 
 import Foundation
 
+extension Sequence where Element: AdditiveArithmetic {
+    @inlinable public func sum() -> Element {
+        reduce(Element.zero, +)
+    }
+}
+
 public extension Sequence {
     
     func filter<T: Equatable>(on key: KeyPath<Element, T>, equalTo value: T) -> [Element] {
