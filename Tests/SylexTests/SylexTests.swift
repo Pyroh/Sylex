@@ -33,6 +33,11 @@ final class SylexTests: XCTestCase {
         XCTAssert(a == 1)
         d = d ?? b
         XCTAssert(b.isNil)
+        
+        let a1: [Int?] = [1, 2, nil, 3]
+        let a2: [Int] = [1, 2, 3]
+        
+        XCTAssert(a1.compact() == a2)
     }
     
     func testTableEquality() {

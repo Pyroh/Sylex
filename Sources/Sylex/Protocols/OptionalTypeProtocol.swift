@@ -33,12 +33,6 @@ public protocol OptionalType {
     static func wrap(_ wrapping: Wrapped) -> Self
 }
 
-public extension OptionalType {
-    static func ??(_ lhs: Self, _ rhs: Self) -> Self {
-        lhs.wrapped.isNil ? rhs : lhs
-    }
-}
-
 extension Optional: OptionalType {
     public var wrapped: Wrapped? { self }
     public static var `nil`: Optional<Wrapped> { nil }
@@ -49,5 +43,17 @@ extension Optional: OptionalType {
     
     public static func wrap(_ wrapping: Wrapped) -> Optional<Wrapped> {
         Self(wrapping)
+    }
+}
+
+public extension Sequence where Element: OptionalType {
+    func compact() -> [Element.Wrapped] {
+        compactMap { $0.wrapped }
+    }
+}
+
+public extension OptionalType {
+    static func ??(_ lhs: Self, _ rhs: Self) -> Self {
+        lhs.wrapped.isNil ? rhs : lhs
     }
 }
