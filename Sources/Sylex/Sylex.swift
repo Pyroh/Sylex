@@ -20,5 +20,7 @@ public func clamp<T: Comparable>(_ x: T, _ min: T, _ max: T) -> T {
 @inlinable
 public func <?><T>(lhs: Any?, rhs: T) -> T { return lhs as? T ?? rhs }
 
-
-
+@inlinable
+public func address<T>(of object: T) -> Int {
+    unsafeBitCast(object, to: Int.self)
+}
