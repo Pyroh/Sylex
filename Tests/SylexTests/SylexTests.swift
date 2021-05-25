@@ -271,6 +271,14 @@ final class SylexTests: XCTestCase {
         
         XCTAssert(shifted == "Ifmmp")
     }
+    
+    func testMutableProxy() {
+        let p1 = CGPoint.zero
+        let p2 = withMutable(p1) { $0.x = 42 }
+        let p3 = Sylex.copy(p2, replacing: \.y, with: 42)
+        XCTAssert(p2 == .init(x: 42, y: 0))
+        XCTAssert(p3 == .init(x: 42, y: 42))
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),

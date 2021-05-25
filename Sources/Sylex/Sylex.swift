@@ -24,3 +24,16 @@ public func <?><T>(lhs: Any?, rhs: T) -> T { return lhs as? T ?? rhs }
 public func address<T>(of object: T) -> Int {
     unsafeBitCast(object, to: Int.self)
 }
+
+@inlinable
+public func withMutable<T>(_ subject: T, transform: @escaping (inout T) throws -> ()) rethrows -> T {
+    var proxy = subject
+    try transform(&proxy)
+    
+    return proxy
+}
+
+@inlinable
+public func copy<T, U>(_ subject: T, replacing keyPath: WritableKeyPath<T, U>, with value: U) -> T {
+    withMutable(subject) { $0[keyPath: keyPath] = value }
+}
