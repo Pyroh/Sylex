@@ -261,6 +261,16 @@ final class SylexTests: XCTestCase {
         let base64Str = "SGVsbG8gV29ybGQgIQ=="
         XCTAssert(base64Str.base64Decoded() == str1)
     }
+    
+    func testWholeMap() {
+        let shifted  = "Hello".unicodeScalars.lazy
+            .map { $0.value + 1 }
+            .compactMap(String.UnicodeScalarView.Element.init)
+            .wholeMap(String.UnicodeScalarView.init)
+            .wholeMap(String.init)
+        
+        XCTAssert(shifted == "Ifmmp")
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),

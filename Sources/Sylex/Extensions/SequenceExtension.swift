@@ -12,6 +12,12 @@ extension Sequence where Element: AdditiveArithmetic {
 }
 
 public extension Sequence {
+    func wholeMap<Output>(_ transform: (Self) throws -> Output) rethrows -> Output {
+        try transform(self)
+    }
+}
+
+public extension Sequence {
     
     func filter<T: Equatable>(on key: KeyPath<Element, T>, equalTo value: T) -> [Element] {
         filter { $0[keyPath: key] == value }
