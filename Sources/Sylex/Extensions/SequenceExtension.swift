@@ -6,14 +6,37 @@
 import Foundation
 
 extension Sequence where Element: AdditiveArithmetic {
+    
+    /// Computes the sum of all elements in the Sequence.
     @inlinable public func sum() -> Element {
         reduce(Element.zero, +)
     }
 }
 
 public extension Sequence {
+    
+    /// Transforms the whole Sequence.
     func wholeMap<Output>(_ transform: (Self) throws -> Output) rethrows -> Output {
         try transform(self)
+    }
+}
+
+public extension Sequence {
+    func flattened() -> [Element] { .init(self) }
+}
+
+public extension Sequence where Element == Any {
+    func flattened() -> [Any] {
+        reduce(into: []) {
+            if let seq = $1 as? Self { $0.append(contentsOf: seq.flattened()) }
+            else { $0.append($1) }
+        }
+    }
+}
+
+public extension Sequence where Element: Sequence {
+    func flattened() -> [Element.Element] {
+        reduce(into: []) { $0.append(contentsOf: $1) }.flattened()
     }
 }
 
