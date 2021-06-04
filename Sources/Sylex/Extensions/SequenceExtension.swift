@@ -41,6 +41,20 @@ public extension Sequence where Element: Sequence {
 }
 
 public extension Sequence {
+    func zip<OtherSequence: Sequence>(_ otherSequence: OtherSequence) -> Zip2Sequence<Self, OtherSequence> {
+        Swift.zip(self, otherSequence)
+    }
+    
+    func zip<OtherSequence: Sequence, AnotherSequence: Sequence>(_ otherSequence: OtherSequence, _ anotherSequence: AnotherSequence) -> Zip3Sequence<Self, OtherSequence, AnotherSequence> {
+        zip3(self, otherSequence, anotherSequence)
+    }
+    
+    func zip<OtherSequence: Sequence, AnotherSequence: Sequence, NotThisSequence: Sequence>(_ otherSequence: OtherSequence, _ anotherSequence: AnotherSequence, _ notThisSequence: NotThisSequence) -> Zip4Sequence<Self, OtherSequence, AnotherSequence, NotThisSequence> {
+        zip4(self, otherSequence, anotherSequence, notThisSequence)
+    }
+}
+
+public extension Sequence {
     
     func filter<T: Equatable>(on key: KeyPath<Element, T>, equalTo value: T) -> [Element] {
         filter { $0[keyPath: key] == value }
