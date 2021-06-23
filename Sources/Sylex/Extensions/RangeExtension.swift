@@ -22,6 +22,11 @@ public extension Range where Bound: Strideable {
         
         return .init(uncheckedBounds: (lower, upper))
     }
+    
+    /// Returns a sequence from the lower bound value to, but not including, the upper bound value of the receiver, stepping by the specified amount.
+    func stride(by amount: Bound.Stride) -> StrideTo<Bound> {
+        Swift.stride(from: lowerBound, to: upperBound, by: amount)
+    }
 }
 
 public extension ClosedRange where Bound: Strideable {
@@ -40,5 +45,10 @@ public extension ClosedRange where Bound: Strideable {
         let upper = self.upperBound.advanced(by: amount)
         
         return .init(uncheckedBounds: (lower, upper))
+    }
+    
+    /// Returns a sequence from the lower bound value toward, and possibly including, the upper bound value of the receiver, stepping by the specified amount.
+    func stride(by amount: Bound.Stride) -> StrideThrough<Bound> {
+        Swift.stride(from: lowerBound, through: upperBound, by: amount)
     }
 }
