@@ -17,3 +17,39 @@ public extension BinaryInteger {
         return Int(self) / Int(pow(CGFloat(radix), CGFloat(index))) % Int(radix)
     }
 }
+
+public extension BinaryInteger {
+    @inlinable mutating func cycle(in range: Range<Self>) {
+        self = Sylex.cycle(self, in: range)
+    }
+    
+    @inlinable func cycled(in range: Range<Self>) -> Self {
+        Sylex.cycle(self, in: range)
+    }
+    
+//    @inlinable mutating func cycle(in range: ClosedRange<Self>) {
+//        self = Sylex.cycle(self, in: range)
+//    }
+//    
+//    @inlinable func cycled(in range: ClosedRange<Self>) -> Self {
+//        Sylex.cycle(self, in: range)
+//    }
+}
+
+//@inlinable public func cycle<T: BinaryInteger>(_ value: T, in range: ClosedRange<T>) -> T {
+//    let proxyValue = Double(value)
+//    let proxyLowerBound = Double(range.lowerBound)
+//    let proxyUpperBound = Double(range.upperBound)
+//    let proxyRange = ClosedRange(uncheckedBounds: (lower: proxyLowerBound, upper: proxyUpperBound))
+//
+//    return T(cycle(proxyValue, in: proxyRange))
+//}
+
+@inlinable public func cycle<T: BinaryInteger>(_ value: T, in range: Range<T>) -> T {
+    let proxyValue = Double(value)
+    let proxyLowerBound = Double(range.lowerBound)
+    let proxyUpperBound = Double(range.upperBound)
+    let proxyRange = Range(uncheckedBounds: (lower: proxyLowerBound, upper: proxyUpperBound))
+    
+    return T(cycle(proxyValue, in: proxyRange))
+}

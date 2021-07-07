@@ -23,8 +23,8 @@ public extension BinaryFloatingPoint {
 }
 
 public extension BinaryFloatingPoint {
-    var approximated: Self { (self * 1_000_000).rounded() / 1_000_000 }
-    mutating func approximate() { self = approximated }
+    @inlinable var approximated: Self { (self * 1_000_000).rounded() / 1_000_000 }
+    @inlinable mutating func approximate() { self = approximated }
 }
 
 public extension Double {
@@ -38,3 +38,41 @@ public extension Float {
 public extension CGFloat {
     @inlinable static var phi: CGFloat { .init(NativeType.phi) }
 }
+
+public extension BinaryFloatingPoint {
+    @inlinable mutating func cycle(in range: Range<Self>) {
+        self = Sylex.cycle(self, in: range)
+    }
+    
+    @inlinable func cycled(in range: Range<Self>) -> Self {
+        Sylex.cycle(self, in: range)
+    }
+    
+//    @inlinable mutating func cycle(in range: ClosedRange<Self>) {
+//        self = Sylex.cycle(self, in: range)
+//    }
+//
+//    @inlinable func cycled(in range: ClosedRange<Self>) -> Self {
+//        Sylex.cycle(self, in: range)
+//    }
+}
+
+//@inlinable public func cycle<T: BinaryFloatingPoint>(_ value: T, in range: ClosedRange<T>) -> T {
+//    let start = range.lowerBound
+//    let width = range.upperBound - start + 1
+//    let offset = value - range.lowerBound
+//    
+//    return (offset - (floor(offset / width) * width)) + start
+//}
+
+@inlinable public func cycle<T: BinaryFloatingPoint>(_ value: T, in range: Range<T>) -> T {
+    let start = range.lowerBound
+    let width = range.upperBound - start
+    let offset = value - range.lowerBound
+    
+    return (offset - (floor(offset / width) * width)) + start
+}
+
+
+
+

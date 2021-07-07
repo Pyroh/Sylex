@@ -279,6 +279,10 @@ final class SylexTests: XCTestCase {
         XCTAssert(p2 == .init(x: 42, y: 0))
         XCTAssert(p3 == .init(x: 42, y: 42))
     }
+    
+    func testCycle() {
+        
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),
