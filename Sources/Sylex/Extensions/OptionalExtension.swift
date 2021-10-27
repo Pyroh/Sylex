@@ -18,3 +18,15 @@ public extension Optional {
         self = nil
     }
 }
+
+public extension Optional where Wrapped: Zeroable {
+    @inlinable static prefix func ??(_ rhs: Self) -> Wrapped {
+        rhs ?? Wrapped.zero
+    }
+}
+
+public extension Optional where Wrapped == String {
+    @inlinable static prefix func ??(_ rhs: Self) -> Wrapped {
+        rhs ?? ""
+    }
+}

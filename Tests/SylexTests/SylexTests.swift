@@ -280,8 +280,17 @@ final class SylexTests: XCTestCase {
         XCTAssert(p3 == .init(x: 42, y: 42))
     }
     
-    func testCycle() {
+    func testZeroColeascing() {
+        let i1: Int? = nil
+        let i2: Int? = 42
         
+        let s1: String? = nil
+        let s2: String? = "42"
+        
+        XCTAssert(??i1 == 0)
+        XCTAssert(??i2 == 42)
+        XCTAssert(??s1 == "")
+        XCTAssert(??s2 == "42")
     }
 
     static var allTests = [
