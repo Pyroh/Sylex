@@ -35,6 +35,7 @@ extension CGVector: Zeroable { }
 
 // MARK: - Foundation Related
 extension NSRange: Zeroable {
+    @inlinable
     public static var zero: NSRange { .init(location: 0, length: 0) }
 }
 
