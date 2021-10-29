@@ -60,6 +60,10 @@ public extension Sequence {
         filter { $0[keyPath: key] == value }
     }
     
+    @inlinable func filter<T: Equatable>(on key: KeyPath<Element, T>, notEqualTo value: T) -> [Element] {
+        filter { $0[keyPath: key] != value }
+    }
+    
     @inlinable func filter<T: Comparable>(on key: KeyPath<Element, T>, lessThan value: T) -> [Element] {
         filter { $0[keyPath: key] < value }
     }
@@ -137,6 +141,10 @@ public extension Sequence {
     
     @inlinable func first<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Element? {
         first { $0[keyPath: key] == value }
+    }
+    
+    @inlinable func first<T: Equatable>(where key: KeyPath<Element, T>, notEqualTo value: T) -> Element? {
+        first { $0[keyPath: key] != value }
     }
     
     @inlinable func first<T: Comparable>(where key: KeyPath<Element, T>, lessThan value: T) -> Element? {
