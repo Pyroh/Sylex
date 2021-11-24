@@ -26,6 +26,16 @@ public func address<T>(of object: T) -> Int {
 }
 
 @inlinable
+public func stride<I: BinaryInteger>(to bound: I) -> StrideTo<I> {
+    stride(from: 0, to: bound, by: 1)
+}
+
+@inlinable
+public func stride<I: BinaryInteger>(through bound: I) -> StrideThrough<I> {
+    stride(from: 0, through: bound, by: 1)
+}
+
+@inlinable
 public func withMutable<T>(_ subject: T, transform: @escaping (inout T) throws -> ()) rethrows -> T {
     var proxy = subject
     try transform(&proxy)

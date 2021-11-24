@@ -24,6 +24,10 @@ public extension Collection {
         firstIndex { $0[keyPath: key] == value }
     }
     
+    @inlinable func firstIndex<T: Equatable>(where key: KeyPath<Element, T>, notEqualTo value: T) -> Index? {
+        firstIndex { $0[keyPath: key] != value }
+    }
+    
     @inlinable func filterIndex<T: Comparable>(where key: KeyPath<Element, T>, lessThan value: T) -> Index? {
         firstIndex { $0[keyPath: key] < value }
     }

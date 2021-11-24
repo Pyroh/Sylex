@@ -41,6 +41,14 @@ public extension Sequence where Element: Sequence {
 }
 
 public extension Sequence {
+    @inlinable var signal: [Void] { map { _ in } }
+}
+
+public extension LazySequence {
+    @inlinable var signal: LazyMapSequence<Base, Void> { map { _ in } }
+}
+
+public extension Sequence {
     @inlinable func zip<OtherSequence: Sequence>(_ otherSequence: OtherSequence) -> Zip2Sequence<Self, OtherSequence> {
         Swift.zip(self, otherSequence)
     }
@@ -120,18 +128,35 @@ public extension Sequence {
 }
 
 public extension Sequence {
-    
+    @available(*, deprecated)
     @inlinable func filter<S: StringProtocol>(_ key: KeyPath<Element, String>, contains substring: S, containsEmpty flag: Bool = true) -> [Element] {
         guard !(substring.isEmpty && flag) else { return .init(self) }
         return filter { $0[keyPath: key].contains(substring) }
     }
     
+    @available(*, deprecated)
     @inlinable func filter<S: StringProtocol>(_ key: KeyPath<Element, String>, localizedCaseInsensitiveContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
         guard !(substring.isEmpty && flag) else { return .init(self) }
         return filter { $0[keyPath: key].localizedCaseInsensitiveContains(substring) }
     }
     
+    @available(*, deprecated)
     @inlinable func filter<S: StringProtocol>(_ key: KeyPath<Element, String>, localizedStandardContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key].localizedStandardContains(substring) }
+    }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String>, contains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key].contains(substring) }
+    }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String>, localizedCaseInsensitiveContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
+        guard !(substring.isEmpty && flag) else { return .init(self) }
+        return filter { $0[keyPath: key].localizedCaseInsensitiveContains(substring) }
+    }
+    
+    @inlinable func filter<S: StringProtocol>(on key: KeyPath<Element, String>, localizedStandardContains substring: S, containsEmpty flag: Bool = true) -> [Element] {
         guard !(substring.isEmpty && flag) else { return .init(self) }
         return filter { $0[keyPath: key].localizedStandardContains(substring) }
     }
@@ -161,6 +186,20 @@ public extension Sequence {
     
     @inlinable func first<T: Comparable>(where key: KeyPath<Element, T>, greaterThanOrEqualTo value: T) -> Element? {
         first { $0[keyPath: key] >= value }
+    }
+}
+
+public extension Sequence {
+    @inlinable func first<S: StringProtocol>(where key: KeyPath<Element, String>, contains substring: S) -> Element? {
+        first { $0[keyPath: key].contains(substring) }
+    }
+    
+    @inlinable func first<S: StringProtocol>(where key: KeyPath<Element, String>, localizedCaseInsensitiveContains substring: S) -> Element? {
+        first { $0[keyPath: key].localizedCaseInsensitiveContains(substring) }
+    }
+    
+    @inlinable func first<S: StringProtocol>(where key: KeyPath<Element, String>, localizedStandardContains substring: S) -> Element? {
+        first { $0[keyPath: key].localizedStandardContains(substring) }
     }
 }
 
