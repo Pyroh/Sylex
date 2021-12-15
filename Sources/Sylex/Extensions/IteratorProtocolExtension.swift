@@ -8,5 +8,5 @@
 import Foundation
 
 public extension IteratorProtocol {
-    func eraseToAnyIterator() -> AnyIterator<Element> { .init(self) }
+    @inlinable func eraseToAnyIterator() -> AnyIterator<Element> { .init(self) }
 }

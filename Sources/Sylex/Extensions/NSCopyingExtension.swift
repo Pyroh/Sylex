@@ -8,5 +8,5 @@
 import Foundation
 
 public extension NSCopying {
-    func clone() -> Self { copy() as! Self }
+    @inlinable func clone() -> Self { copy() as! Self }
 }

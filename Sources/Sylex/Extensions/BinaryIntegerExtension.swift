@@ -26,14 +26,6 @@ public extension BinaryInteger {
     @inlinable func cycled(in range: Range<Self>) -> Self {
         Sylex.cycle(self, in: range)
     }
-    
-//    @inlinable mutating func cycle(in range: ClosedRange<Self>) {
-//        self = Sylex.cycle(self, in: range)
-//    }
-//    
-//    @inlinable func cycled(in range: ClosedRange<Self>) -> Self {
-//        Sylex.cycle(self, in: range)
-//    }
 }
 
 //@inlinable public func cycle<T: BinaryInteger>(_ value: T, in range: ClosedRange<T>) -> T {

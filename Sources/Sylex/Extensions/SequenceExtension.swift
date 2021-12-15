@@ -9,7 +9,7 @@ extension Sequence where Element: AdditiveArithmetic {
     
     /// Computes the sum of all elements in the Sequence.
     @inlinable public func sum() -> Element {
-        reduce(Element.zero, +)
+        reduce(.zero, +)
     }
 }
 
@@ -116,7 +116,6 @@ public extension Sequence where Element: Comparable {
 }
     
 public extension Sequence {
-    
     @inlinable func filter(on key: KeyPath<Element, Bool>) -> [Element] {
         filter(on: key, equalTo: true)
     }

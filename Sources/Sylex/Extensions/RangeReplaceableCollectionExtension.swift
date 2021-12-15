@@ -7,6 +7,8 @@
 
 import Foundation
 
+import ZeroableProtocol
+
 public extension RangeReplaceableCollection where Element: Zeroable {
-    init(count: Int) { self.init(repeating: .zero, count: count) }
+    @inlinable init(count: Int) { self.init(repeating: .zero, count: count) }
 }

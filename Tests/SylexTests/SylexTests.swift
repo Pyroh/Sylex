@@ -3,41 +3,112 @@ import XCTest
 
 typealias S = SwappedIndexPair
 
-final class SylexTests: XCTestCase {
+struct SomethingIdentifiable: Identifiable, Hashable {
+    let id: UUID = .init()
+    let value: Int = (-1000...1000).randomElement()!
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
 
-    func testOptionals() {
-        let a: Int? = 1
-        let b: Int? = nil
-        var c: Int? = 1
+final class SylexTests: XCTestCase {
+    let n = 2500
+    let m = 300
+    
+    func testFindOne() {
+        let items: [SomethingIdentifiable] = stride(to: n)
+            .lazy.signal
+            .map(SomethingIdentifiable.init)
         
-        XCTAssertFalse(a.isNil)
-        XCTAssertTrue(b.isNil)
-        XCTAssertFalse(c.isNil)
+        let searchableItem = items.randomElement()!
+        var foundItem: SomethingIdentifiable?
         
-        c.nilify()
+        measure {
+            foundItem = items
+                .filter(on: \.id, equalTo: searchableItem.id)
+                .first
+        }
         
-        XCTAssertTrue(c.isNil)
+        XCTAssertEqual(searchableItem, foundItem)
     }
     
-    func testOptionalWrapping() {
-        let a: Int? = 1
-        let b: Int? = nil
-        var c: Int? = 1
-        var d: Int? = nil
+    func testFindOneAlternative() {
+        let items: [SomethingIdentifiable] = stride(to: n)
+            .lazy.signal
+            .map(SomethingIdentifiable.init)
         
-        XCTAssert((a ?? b) == 1)
-        XCTAssert((b ?? c) == 1)
-        XCTAssert((b ?? d).isNil)
+        let searchableItem = items.randomElement()!
+        var foundItem: SomethingIdentifiable?
         
-        c = b ?? c
-        XCTAssert(a == 1)
-        d = d ?? b
-        XCTAssert(b.isNil)
+        measure {
+            foundItem = items
+                .firstIndex(where: \.id, equalTo: searchableItem.id)
+                .map { items[$0] }
+        }
         
-        let a1: [Int?] = [1, 2, nil, 3]
-        let a2: [Int] = [1, 2, 3]
+        XCTAssertEqual(searchableItem, foundItem)
+    }
+    
+    func testFindOneAlternative2() {
+        let items: [SomethingIdentifiable] = stride(to: n)
+            .lazy.signal
+            .map(SomethingIdentifiable.init)
         
-        XCTAssert(a1.compact() == a2)
+        let searchableItem = items.randomElement()!
+        var foundItem: SomethingIdentifiable?
+        
+        measure {
+            foundItem = items
+                .first(where: \.id, equalTo: searchableItem.id)
+        }
+        
+        XCTAssertEqual(searchableItem, foundItem)
+    }
+    
+    func testFindMany() {
+        let items: [SomethingIdentifiable] = stride(to: n)
+            .lazy.signal
+            .map(SomethingIdentifiable.init)
+        
+        let searchableItems = stride(to: m)
+            .signal
+            .compactMap { items.randomElement() }
+            .set
+        var foundItems = Set<SomethingIdentifiable>()
+        
+        measure {
+            foundItems = searchableItems
+                .compactMap { items.filter(on: \.id, equalTo: $0.id).first }
+                .set
+        }
+    }
+    
+    func testFindManyAlternative() {
+        let items: [SomethingIdentifiable] = stride(to: n)
+            .lazy.signal
+            .map(SomethingIdentifiable.init)
+        
+        let searchableItems = stride(to: m)
+            .signal
+            .compactMap { items.randomElement() }
+            .set
+        var foundItems = Set<SomethingIdentifiable>()
+        
+        measure {
+            foundItems = searchableItems
+                .compactMap { items.firstIndex(where: \.id, equalTo: $0.id) }
+                .map { items[$0] }
+                .set
+        }
+    }
+    
+    func testOptionals() {
+        var a: Int? = 1
+        
+        a.nilify()
+        
+        XCTAssertTrue(a == nil)
     }
     
     func testTableEquality() {

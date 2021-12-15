@@ -7,6 +7,7 @@
 
 import Foundation
 import SmoothOperators
+import ZeroableProtocol
 #if !os(macOS)
 import CoreGraphics
 #endif

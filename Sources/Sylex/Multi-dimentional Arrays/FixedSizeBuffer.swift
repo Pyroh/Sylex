@@ -3,6 +3,7 @@
 //  Sylex
 //
 
+import ZeroableProtocol
 
 // MARK: - Main
 final class FixedSizeBuffer<Element>: ManagedBuffer<Int, Element> {

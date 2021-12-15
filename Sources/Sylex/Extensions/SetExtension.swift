@@ -7,7 +7,7 @@
 
 public extension Set {
     /// An instance of `[Element]` from `self`.
-    var array: [Element] {
+    @inlinable var array: [Element] {
         return Array(self)
     }
 }

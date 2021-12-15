@@ -6,16 +6,17 @@
 //  Copyright © 2020 Pierre TACCHI. All rights reserved.
 //
 
+@inlinable
 public func zip3<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence>(_ sequence1: Sequence1, _ sequence2: Sequence2, _ sequence3: Sequence3) -> Zip3Sequence<Sequence1, Sequence2, Sequence3> {
     Zip3Sequence(sequence1, sequence2, sequence3)
 }
 
-public struct Zip3Sequence<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence> {
-    private let sequence1: Sequence1
-    private let sequence2: Sequence2
-    private let sequence3: Sequence3
+@frozen public struct Zip3Sequence<Sequence1: Sequence, Sequence2: Sequence, Sequence3: Sequence> {
+    @usableFromInline let sequence1: Sequence1
+    @usableFromInline let sequence2: Sequence2
+    @usableFromInline let sequence3: Sequence3
     
-    init(_ sequence1: Sequence1, _ sequence2: Sequence2, _ sequence3: Sequence3) {
+    @inlinable init(_ sequence1: Sequence1, _ sequence2: Sequence2, _ sequence3: Sequence3) {
         self.sequence1 = sequence1
         self.sequence2 = sequence2
         self.sequence3 = sequence3
@@ -23,14 +24,14 @@ public struct Zip3Sequence<Sequence1: Sequence, Sequence2: Sequence, Sequence3: 
 }
 
 extension Zip3Sequence {
-    public struct Iterator {
-        var iterator1: Sequence1.Iterator
-        var iterator2: Sequence2.Iterator
-        var iterator3: Sequence3.Iterator
+    @frozen public struct Iterator {
+        @usableFromInline var iterator1: Sequence1.Iterator
+        @usableFromInline var iterator2: Sequence2.Iterator
+        @usableFromInline var iterator3: Sequence3.Iterator
         
-        var reachedEnd: Bool = false
+        @usableFromInline var reachedEnd: Bool = false
         
-        init(_ iterator1: Sequence1.Iterator, _ iterator2: Sequence2.Iterator, _ iterator3: Sequence3.Iterator) {
+        @inlinable init(_ iterator1: Sequence1.Iterator, _ iterator2: Sequence2.Iterator, _ iterator3: Sequence3.Iterator) {
             self.iterator1 = iterator1
             self.iterator2 = iterator2
             self.iterator3 = iterator3
@@ -41,7 +42,7 @@ extension Zip3Sequence {
 extension Zip3Sequence.Iterator: IteratorProtocol {
     public typealias Element = (Sequence1.Element, Sequence2.Element, Sequence3.Element)
     
-    mutating public func next() -> (Sequence1.Element, Sequence2.Element, Sequence3.Element)? {
+    @inlinable mutating public func next() -> (Sequence1.Element, Sequence2.Element, Sequence3.Element)? {
         if reachedEnd { return nil }
         guard let item1 = iterator1.next(),
             let item2 = iterator2.next(),
@@ -57,11 +58,11 @@ extension Zip3Sequence.Iterator: IteratorProtocol {
 extension Zip3Sequence: Sequence {
     public typealias Element = (Sequence1.Element, Sequence2.Element, Sequence3.Element)
     
-    public func makeIterator() -> Iterator {
+    @inlinable public func makeIterator() -> Iterator {
         .init(sequence1.makeIterator(), sequence2.makeIterator(), sequence3.makeIterator())
     }
     
-    public var underestimatedCount: Int {
+    @inlinable public var underestimatedCount: Int {
         Swift.min(Swift.min(sequence1.underestimatedCount, sequence2.underestimatedCount), sequence3.underestimatedCount)
     }
 }
