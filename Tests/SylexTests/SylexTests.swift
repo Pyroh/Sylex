@@ -12,6 +12,15 @@ struct SomethingIdentifiable: Identifiable, Hashable {
     }
 }
 
+struct IndexedProxy<Index, Subject>: DynamicProxy {
+    let index: Index
+    let subject: Subject
+}
+
+struct IntHolder {
+    let value: Int
+}
+
 final class SylexTests: XCTestCase {
     let n = 2500
     let m = 300
@@ -362,6 +371,17 @@ final class SylexTests: XCTestCase {
         XCTAssert(??i2 == 42)
         XCTAssert(??s1 == "")
         XCTAssert(??s2 == "42")
+    }
+    
+    func testDynamicWrapper() {
+        let r = stride(to: 10)
+            .lazy
+            .map(IntHolder.init)
+            .enumerated()
+            .map(IndexedProxy.init)
+            .reduce(true) { $0 && ($1.index == $1.value) }
+        
+        XCTAssertTrue(r)
     }
 
     static var allTests = [
