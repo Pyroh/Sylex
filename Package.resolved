@@ -6,8 +6,17 @@
         "repositoryURL": "https://github.com/Pyroh/SmoothOperators.git",
         "state": {
           "branch": null,
-          "revision": "d8e665dea818d52cd4de935060f66db78989c3ae",
-          "version": "0.8.1"
+          "revision": "b09aae334efe1585da01ce84952c98c99e70fbfa",
+          "version": "0.13.0"
+        }
+      },
+      {
+        "package": "ZeroableProtocol",
+        "repositoryURL": "https://github.com/Pyroh/ZeroableProtocol.git",
+        "state": {
+          "branch": null,
+          "revision": "bc6aacd216cebab522feb84afc129a9bbdb846c2",
+          "version": "1.0.0"
         }
       }
     ]

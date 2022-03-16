@@ -32,3 +32,19 @@ public typealias Callback<A> = (A) -> Void
 @inlinable public func copy<T, U>(_ subject: T, replacing keyPath: WritableKeyPath<T, U>, with value: U) -> T {
     withMutable(subject) { $0[keyPath: keyPath] = value }
 }
+
+@inlinable public func bridge<T: AnyObject>(_ object: T) -> UnsafeRawPointer {
+    .init(Unmanaged.passUnretained(object).toOpaque())
+}
+
+@inlinable public func mutableBridge<T: AnyObject>(_ object: T) -> UnsafeMutableRawPointer {
+    .init(mutating: bridge(object))
+}
+
+@inlinable public func bridge<T:AnyObject>(_ ptr: UnsafeRawPointer) -> T {
+    Unmanaged.fromOpaque(ptr).takeUnretainedValue()
+}
+
+@inlinable public func mutableBridge<T: AnyObject>(_ ptr: UnsafeMutableRawPointer) -> T {
+    bridge(UnsafeRawPointer(ptr))
+}
