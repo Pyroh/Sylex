@@ -45,7 +45,7 @@ public extension LazySequenceProtocol where Element: Equatable {
     }
     
     @inlinable func filter(notEqualTo value: Element) -> LazyFilterSequence<Elements> {
-        filter { $0 == value }
+        filter { $0 != value }
     }
 }
 
