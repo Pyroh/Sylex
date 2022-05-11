@@ -94,7 +94,7 @@ public extension Sequence where Element: Equatable {
     }
     
     @inlinable func filter(notEqualTo value: Element) -> [Element] {
-        filter { $0 == value }
+        filter { $0 != value }
     }
 }
    
@@ -172,6 +172,14 @@ public extension Sequence {
         first { $0[keyPath: key] != value }
     }
     
+    @inlinable func first<T: Equatable>(where key: KeyPath<Element, T?>, equalTo value: T) -> Element? {
+        first { $0[keyPath: key] == value }
+    }
+    
+    @inlinable func first<T: Equatable>(where key: KeyPath<Element, T?>, notEqualTo value: T) -> Element? {
+        first { $0[keyPath: key] != value }
+    }
+    
     @inlinable func first<T: Comparable>(where key: KeyPath<Element, T>, lessThan value: T) -> Element? {
         first { $0[keyPath: key] < value }
     }
@@ -227,5 +235,73 @@ public extension Sequence {
     
     @inlinable func sorted(localizedStandardBy key: KeyPath<Element, String>) -> [Element] {
         sorted { (lhs, rhs) -> Bool in lhs[keyPath: key].localizedStandardCompare(rhs[keyPath: key]) == .orderedAscending }
+    }
+}
+
+public extension Sequence {
+    
+    @inlinable func sorted<T: Comparable>(by key: KeyPath<Element, T?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)): return l < r
+            default: return true
+            }
+        }
+    }
+    
+    @inlinable func sorted(alphabetically key: KeyPath<Element, String?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)):
+                return l.compare(r) == .orderedAscending
+            default: return true
+            }
+        }
+    }
+
+    @inlinable func sorted(caseInsensitiveBy key: KeyPath<Element, String?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)):
+                return l.caseInsensitiveCompare(r) == .orderedAscending
+            default: return true
+            }
+        }
+    }
+
+    @inlinable func sorted(localizedBy key: KeyPath<Element, String?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)):
+                return l.localizedCompare(r) == .orderedAscending
+            default: return true
+            }
+        }
+    }
+
+    @inlinable func sorted(localizedCaseInsensitiveBy key: KeyPath<Element, String?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)):
+                return l.localizedCaseInsensitiveCompare(r) == .orderedAscending
+            default: return true
+            }
+        }
+    }
+
+    @inlinable func sorted(localizedStandardBy key: KeyPath<Element, String?>) -> [Element] {
+        sorted { (lhs, rhs) -> Bool in
+            switch (lhs[keyPath: key], rhs[keyPath: key]) {
+            case (.some, .none): return false
+            case (.some(let l), .some(let r)):
+                return l.localizedStandardCompare(r) == .orderedAscending
+            default: return true
+            }
+        }
     }
 }
