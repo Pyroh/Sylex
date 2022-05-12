@@ -86,6 +86,14 @@ public extension Sequence {
     @inlinable func filter<T: Comparable>(on key: KeyPath<Element, T>, greaterThanOrEqualTo value: T) -> [Element] {
         filter { $0[keyPath: key] >= value }
     }
+    
+    @inlinable func filter<T: Comparable>(onNotNil key: KeyPath<Element, T?>) -> [Element] {
+        filter { $0[keyPath: key] != nil }
+    }
+    
+    @inlinable func filter<T: Comparable>(onNil key: KeyPath<Element, T?>) -> [Element] {
+        filter { $0[keyPath: key] == nil }
+    }
 }
 
 public extension Sequence where Element: Equatable {
