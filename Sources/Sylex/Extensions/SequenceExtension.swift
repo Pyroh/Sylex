@@ -87,11 +87,11 @@ public extension Sequence {
         filter { $0[keyPath: key] >= value }
     }
     
-    @inlinable func filter<T: Comparable>(onNotNil key: KeyPath<Element, T?>) -> [Element] {
+    @inlinable func filter<T>(onNotNil key: KeyPath<Element, T?>) -> [Element] {
         filter { $0[keyPath: key] != nil }
     }
     
-    @inlinable func filter<T: Comparable>(onNil key: KeyPath<Element, T?>) -> [Element] {
+    @inlinable func filter<T>(onNil key: KeyPath<Element, T?>) -> [Element] {
         filter { $0[keyPath: key] == nil }
     }
 }

@@ -38,11 +38,11 @@ public extension LazySequenceProtocol {
         filter { $0[keyPath: key] >= value }
     }
     
-    @inlinable func filter<T: Comparable>(onNotNil key: KeyPath<Element, T?>) -> some LazySequenceProtocol {
+    @inlinable func filter<T>(onNotNil key: KeyPath<Element, T?>) -> LazyFilterSequence<Elements> {
         filter { $0[keyPath: key] != nil }
     }
     
-    @inlinable func filter<T: Comparable>(onNil key: KeyPath<Element, T?>) -> some LazySequenceProtocol {
+    @inlinable func filter<T>(onNil key: KeyPath<Element, T?>) -> LazyFilterSequence<Elements> {
         filter { $0[keyPath: key] == nil }
     }
 }
