@@ -2,12 +2,39 @@
   "object": {
     "pins": [
       {
+        "package": "CoreGeometry",
+        "repositoryURL": "https://github.com/Pyroh/CoreGeometry.git",
+        "state": {
+          "branch": null,
+          "revision": "cb889693a49504f4abd7f5f3fe0f84553750948f",
+          "version": "6.0.0"
+        }
+      },
+      {
+        "package": "OptionalType",
+        "repositoryURL": "https://github.com/Pyroh/OptionalType.git",
+        "state": {
+          "branch": null,
+          "revision": "118c5144c97c4bf718a2f304a02976dbd94e0103",
+          "version": "1.2.1"
+        }
+      },
+      {
         "package": "SmoothOperators",
         "repositoryURL": "https://github.com/Pyroh/SmoothOperators.git",
         "state": {
           "branch": null,
           "revision": "b09aae334efe1585da01ce84952c98c99e70fbfa",
           "version": "0.13.0"
+        }
+      },
+      {
+        "package": "SwizzleIMD",
+        "repositoryURL": "https://github.com/Pyroh/SwizzleIMD.git",
+        "state": {
+          "branch": null,
+          "revision": "e0a9c238494883aac91782fa54c64a89f2697476",
+          "version": "1.2.0"
         }
       },
       {

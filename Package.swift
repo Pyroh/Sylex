@@ -21,14 +21,17 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/Pyroh/SmoothOperators.git", .upToNextMajor(from: "0.4.0")),
-        .package(name: "ZeroableProtocol", url: "https://github.com/Pyroh/ZeroableProtocol.git", from: "1.0.0")
+        .package(url: "https://github.com/Pyroh/ZeroableProtocol.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/Pyroh/OptionalType.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/Pyroh/SwizzleIMD.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/Pyroh/CoreGeometry.git", .upToNextMajor(from: "6.0.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Sylex",
-            dependencies: ["SmoothOperators", "ZeroableProtocol"]),
+            dependencies: ["SmoothOperators", "ZeroableProtocol", "CoreGeometry", "OptionalType", "SwizzleIMD"]),
         .testTarget(
             name: "SylexTests",
             dependencies: ["Sylex"]),

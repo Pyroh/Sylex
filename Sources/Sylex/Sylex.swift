@@ -1,5 +1,10 @@
 import Foundation
 
+@_exported import CoreGeometry
+@_exported import OptionalType
+@_exported import SmoothOperators
+@_exported import SwizzleIMD
+@_exported import ZeroableProtocol
 
 prefix operator ??
 
