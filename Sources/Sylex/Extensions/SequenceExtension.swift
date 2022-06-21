@@ -313,3 +313,29 @@ public extension Sequence {
         }
     }
 }
+
+public extension Sequence {
+    @inlinable func contains<T: Equatable>(where key: KeyPath<Element, T>, equalTo value: T) -> Bool {
+        contains { $0[keyPath: key] == value }
+    }
+    
+    @inlinable func contains<T: Equatable>(where key: KeyPath<Element, T>, notEqualTo value: T) -> Bool {
+        contains { $0[keyPath: key] != value }
+    }
+    
+    @inlinable func contains<T: Comparable>(on key: KeyPath<Element, T>, lessThan value: T) -> Bool {
+        contains { $0[keyPath: key] < value }
+    }
+    
+    @inlinable func contains<T: Comparable>(on key: KeyPath<Element, T>, greaterThan value: T) -> Bool {
+        contains { $0[keyPath: key] > value }
+    }
+    
+    @inlinable func contains<T: Comparable>(on key: KeyPath<Element, T>, lessThanOrEqualTo value: T) -> Bool {
+        contains { $0[keyPath: key] <= value }
+    }
+    
+    @inlinable func contains<T: Comparable>(on key: KeyPath<Element, T>, greaterThanOrEqualTo value: T) -> Bool {
+        contains { $0[keyPath: key] >= value }
+    }
+}
