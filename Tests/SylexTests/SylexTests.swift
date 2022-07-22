@@ -296,6 +296,20 @@ final class SylexTests: XCTestCase {
         
         XCTAssertTrue(r)
     }
+    
+    func testAdditiveArray() {
+        let a = [1, 2, 3]
+        
+        XCTAssert(a + 4 == [1, 2, 3, 4])
+        XCTAssert(a + [4, 5] == [1, 2, 3, 4, 5])
+        
+        var b = [1, 2, 3]
+        
+        b += 4
+        XCTAssert(b == [1, 2, 3, 4])
+        b += [5, 6]
+        XCTAssert(b == [1, 2, 3, 4, 5, 6])
+    }
 
     static var allTests = [
         ("testTableEquality", testTableEquality),

@@ -40,4 +40,20 @@ public extension Array where Element: Hashable {
     }
 }
 
-
+public extension Array {
+    static func +(lhs: Self, rhs: Self.Element) -> Self {
+        withMutable(lhs) { $0.append(rhs) }
+    }
+    
+    static func +<S>(lhs: Self, rhs: S) -> Self where S: Sequence, S.Element == Element {
+        withMutable(lhs) { $0.append(contentsOf: rhs) }
+    }
+    
+    static func +=(lhs: inout Self, rhs: Self.Element) {
+        lhs.append(rhs)
+    }
+    
+    static func +<S>(lhs: inout Self, rhs: S) where S: Sequence, S.Element == Element {
+        lhs.append(contentsOf: rhs)
+    }
+}
