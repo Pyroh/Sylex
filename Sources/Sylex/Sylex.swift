@@ -10,6 +10,8 @@ prefix operator ??
 
 public typealias CompletionHandler = () -> Void
 public typealias Callback<A> = (A) -> Void
+public typealias CallbackDuo<A, B> = (A, B) -> Void
+public typealias CallbackTrio<A, B, C> = (A, B, C) -> Void
 
 @inlinable public func clamp<T: Comparable>(_ x: T, _ min: T, _ max: T) -> T {
     return Swift.min(Swift.max(x, min), max)
