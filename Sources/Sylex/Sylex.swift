@@ -13,6 +13,17 @@ public typealias Callback<A> = (A) -> Void
 public typealias CallbackDuo<A, B> = (A, B) -> Void
 public typealias CallbackTrio<A, B, C> = (A, B, C) -> Void
 
+@inlinable public func completion<A>(_ block: @escaping () -> ()) -> (A) -> () { { _ in block() } }
+@inlinable public func completion<A, B>(_ block: @escaping () -> ()) -> (A, B) -> () { { _,_ in block() } }
+@inlinable public func completion<A, B, C>(_ block: @escaping () -> ()) -> (A, B, C) -> () { { _,_,_ in block() } }
+@inlinable public func completion<A, B, C, D>(_ block: @escaping () -> ()) -> (A, B, C, D) -> () { { _,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E>(_ block: @escaping () -> ()) -> (A, B, C, D, E) -> () { { _,_,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E, F>(_ block: @escaping () -> ()) -> (A, B, C, D, E, F) -> () { { _,_,_,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E, F, G>(_ block: @escaping () -> ()) -> (A, B, C, D, E, F, G) -> () { { _,_,_,_,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E, F, G, H>(_ block: @escaping () -> ()) -> (A, B, C, D, E, F, G, H) -> () { { _,_,_,_,_,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E, F, G, H, I>(_ block: @escaping () -> ()) -> (A, B, C, D, E, F, G, H, I) -> () { { _,_,_,_,_,_,_,_,_ in block() } }
+@inlinable public func completion<A, B, C, D, E, F, G, H, I, J>(_ block: @escaping () -> ()) -> (A, B, C, D, E, F, G, H, I, J) -> () { { _,_,_,_,_,_,_,_,_,_ in block() } }
+
 @inlinable public func clamp<T: Comparable>(_ x: T, _ min: T, _ max: T) -> T {
     return Swift.min(Swift.max(x, min), max)
 }
