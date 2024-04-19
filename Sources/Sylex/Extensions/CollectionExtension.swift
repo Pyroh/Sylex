@@ -15,7 +15,7 @@ extension Collection where Element: BinaryInteger {
 
 extension Collection where Element: BinaryFloatingPoint {
     @inlinable public func avg() -> Element {
-        sum() * Element(1 / count)
+        sum() * 1 / Element(count)
     }
 }
 

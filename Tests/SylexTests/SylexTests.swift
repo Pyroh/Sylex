@@ -25,6 +25,12 @@ final class SylexTests: XCTestCase {
     let n = 2500
     let m = 300
     
+    func testAVG() {
+        XCTAssert([1, 2, 3, 4, 5].avg() == 3)
+        XCTAssert([2.0, 3.0, 4.0, 5.0].avg() == 3.5)
+        
+    }
+    
     func testOptionals() {
         var a: Int? = 1
         

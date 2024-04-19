@@ -49,15 +49,15 @@ public extension LazySequence {
 }
 
 public extension Sequence {
-    @inlinable func zip<OtherSequence: Sequence>(_ otherSequence: OtherSequence) -> Zip2Sequence<Self, OtherSequence> {
+    @inlinable func zip<Sequence2: Sequence>(_ otherSequence: Sequence2) -> Zip2Sequence<Self, Sequence2> {
         Swift.zip(self, otherSequence)
     }
     
-    @inlinable func zip<OtherSequence: Sequence, AnotherSequence: Sequence>(_ otherSequence: OtherSequence, _ anotherSequence: AnotherSequence) -> Zip3Sequence<Self, OtherSequence, AnotherSequence> {
+    @inlinable func zip<Sequence2: Sequence, Sequence3: Sequence>(_ otherSequence: Sequence2, _ anotherSequence: Sequence3) -> Zip3Sequence<Self, Sequence2, Sequence3> {
         zip3(self, otherSequence, anotherSequence)
     }
     
-    @inlinable func zip<OtherSequence: Sequence, AnotherSequence: Sequence, NotThisSequence: Sequence>(_ otherSequence: OtherSequence, _ anotherSequence: AnotherSequence, _ notThisSequence: NotThisSequence) -> Zip4Sequence<Self, OtherSequence, AnotherSequence, NotThisSequence> {
+    @inlinable func zip<Sequence2: Sequence, Sequence3: Sequence, Sequence4: Sequence>(_ otherSequence: Sequence2, _ anotherSequence: Sequence3, _ notThisSequence: Sequence4) -> Zip4Sequence<Self, Sequence2, Sequence3, Sequence4> {
         zip4(self, otherSequence, anotherSequence, notThisSequence)
     }
 }
