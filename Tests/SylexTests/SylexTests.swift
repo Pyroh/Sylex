@@ -80,6 +80,9 @@ final class SylexTests: XCTestCase {
         XCTAssert(d == 0..<4)
         d.shift(by: -1)
         XCTAssert(d == -1..<3)
+        
+        let e = Range(endIndex: 14, count: 6)
+        XCTAssert(e == 8..<14)
     }
     
     func testClosedRange() {
@@ -100,6 +103,9 @@ final class SylexTests: XCTestCase {
         XCTAssert(d == 0...3)
         d.shift(by: -1)
         XCTAssert(d == -1...2)
+        
+        let e = ClosedRange(endIndex: 14, count: 7)
+        XCTAssert(e == 8...14)
     }
     
     func testDataTableRotations() {

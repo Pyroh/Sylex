@@ -11,6 +11,11 @@ public extension Range where Bound: Strideable {
         self = .init(uncheckedBounds: (startIndex, endIndex))
     }
     
+    @inlinable init(endIndex: Bound, count: Bound.Stride) {
+        let startIndex = endIndex.advanced(by: -count)
+        self = .init(uncheckedBounds: (startIndex, endIndex))
+    }
+    
     @inlinable mutating func shift(by amount: Bound.Stride) {
         self = self.shifted(by: amount)
     }
@@ -31,6 +36,11 @@ public extension Range where Bound: Strideable {
 public extension ClosedRange where Bound: Strideable {
     @inlinable init(startIndex: Bound, count: Bound.Stride) {
         let endIndex = startIndex.advanced(by: count - 1)
+        self = .init(uncheckedBounds: (startIndex, endIndex))
+    }
+    
+    @inlinable init(endIndex: Bound, count: Bound.Stride) {
+        let startIndex = endIndex.advanced(by: -(count - 1))
         self = .init(uncheckedBounds: (startIndex, endIndex))
     }
     
