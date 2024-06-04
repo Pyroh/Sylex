@@ -18,7 +18,7 @@ public struct Matrix<Element> {
         case col(Int)
     }
     
-    private struct MatrixColumnIterator<Element>: IteratorProtocol {
+    private struct MatrixColumnIterator: IteratorProtocol {
         typealias Buffer = FixedSizeBuffer<Element>
         
         private unowned var buffer: Buffer

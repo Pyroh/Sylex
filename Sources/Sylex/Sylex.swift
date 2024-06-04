@@ -9,8 +9,11 @@ import Foundation
 prefix operator ??
 
 public typealias CompletionHandler = () -> Void
-public typealias Callback<A> = (A) -> Void
+public typealias Callback<each T> = (repeat each T) -> Void
+
+@available(*, deprecated, renamed: "Callback", message: "")
 public typealias CallbackDuo<A, B> = (A, B) -> Void
+@available(*, deprecated, renamed: "Callback", message: "")
 public typealias CallbackTrio<A, B, C> = (A, B, C) -> Void
 
 @inlinable public func completion<A>(_ block: @escaping () -> ()) -> (A) -> () { { _ in block() } }

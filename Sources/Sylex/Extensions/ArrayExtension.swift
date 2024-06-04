@@ -3,6 +3,7 @@
 //  Sylex
 //
 
+@available(*, deprecated, message: "Use Swift Collection")
 public extension Array where Element: Equatable {
     /// Produces a copy of `self` where all duplicates have been removed.
     ///
@@ -21,6 +22,7 @@ public extension Array where Element: Equatable {
     }
 }
 
+@available(*, deprecated, message: "Use Swift Collection")
 public extension Array where Element: Hashable {
     /// An instance of `Set<Element>` from `self`.
     @inlinable var set: Set<Element> {

@@ -11,7 +11,7 @@ import SmoothOperators
 public extension BinaryFloatingPoint {
     @inlinable func rounded(digits: Int) -> Self {
         guard digits >= 0 else {
-            fatalError("Floating point numbers can't be rounded to a negative number of digits. Dumbass...")
+            fatalError("Floating point numbers can't be rounded to a negative number of digits.")
         }
         let f: Self = 10 ** digits
         return (self * f).rounded() / f

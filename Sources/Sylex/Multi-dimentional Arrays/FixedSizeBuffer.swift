@@ -77,11 +77,11 @@ extension FixedSizeBuffer {
             self.withUnsafeMutablePointerToElements {
                 let tmp = UnsafeMutablePointer<Element>.allocate(capacity: count)
                 tmp.initialize(from: $0 + srcIndex, count: count)
-                ($0 + dstIndex).moveAssign(from: tmp, count: count)
+                ($0 + dstIndex).moveUpdate(from: tmp, count: count)
                 tmp.deallocate()
             }
         } else {
-            self.withUnsafeMutablePointerToElements { ($0 + dstIndex).moveAssign(from: ($0 + srcIndex), count: count) }
+            self.withUnsafeMutablePointerToElements { ($0 + dstIndex).moveUpdate(from: ($0 + srcIndex), count: count) }
         }
         
         let emptyied = Set(srcRange).subtracting(Set(dstRange))
@@ -114,8 +114,8 @@ extension FixedSizeBuffer {
             srcTmp.initialize(from: $0 + srcRange.lowerBound, count: count)
             dstTmp.initialize(from: $0 + dstRange.lowerBound, count: count)
             
-            ($0 + dstRange.lowerBound).moveAssign(from: srcTmp, count: count)
-            ($0 + srcRange.lowerBound).moveAssign(from: dstTmp, count: count)
+            ($0 + dstRange.lowerBound).moveUpdate(from: srcTmp, count: count)
+            ($0 + srcRange.lowerBound).moveUpdate(from: dstTmp, count: count)
             
             srcTmp.deallocate()
             dstTmp.deallocate()
@@ -125,7 +125,7 @@ extension FixedSizeBuffer {
     func copyElements(from srcArray: [Element], at dstIndex: Int) {
         self.withUnsafeMutablePointerToElements { (elements) in
             srcArray.withUnsafeBufferPointer { (srcElements) in
-                (elements + dstIndex).assign(from: srcElements.baseAddress!, count: srcArray.count)
+                (elements + dstIndex).update(from: srcElements.baseAddress!, count: srcArray.count)
             }
         }
     }
