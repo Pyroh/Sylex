@@ -47,8 +47,7 @@ public extension Range where Bound: Strideable {
     ///   ```
     ///
     /// - SeeAlso: `Range`, `advanced(by:)`
-    @inlinable
-    init(endIndex: Bound, count: Bound.Stride) {
+    @inlinable init(endIndex: Bound, count: Bound.Stride) {
         let startIndex = endIndex.advanced(by: -count)
         self = .init(uncheckedBounds: (startIndex, endIndex))
     }

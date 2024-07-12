@@ -1,52 +1,86 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "CoreGeometry",
-        "repositoryURL": "https://github.com/Pyroh/CoreGeometry.git",
-        "state": {
-          "branch": null,
-          "revision": "cb889693a49504f4abd7f5f3fe0f84553750948f",
-          "version": "6.0.0"
-        }
-      },
-      {
-        "package": "OptionalType",
-        "repositoryURL": "https://github.com/Pyroh/OptionalType.git",
-        "state": {
-          "branch": null,
-          "revision": "118c5144c97c4bf718a2f304a02976dbd94e0103",
-          "version": "1.2.1"
-        }
-      },
-      {
-        "package": "SmoothOperators",
-        "repositoryURL": "https://github.com/Pyroh/SmoothOperators.git",
-        "state": {
-          "branch": null,
-          "revision": "b09aae334efe1585da01ce84952c98c99e70fbfa",
-          "version": "0.13.0"
-        }
-      },
-      {
-        "package": "SwizzleIMD",
-        "repositoryURL": "https://github.com/Pyroh/SwizzleIMD.git",
-        "state": {
-          "branch": null,
-          "revision": "e0a9c238494883aac91782fa54c64a89f2697476",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "ZeroableProtocol",
-        "repositoryURL": "https://github.com/Pyroh/ZeroableProtocol.git",
-        "state": {
-          "branch": null,
-          "revision": "bc6aacd216cebab522feb84afc129a9bbdb846c2",
-          "version": "1.0.0"
-        }
+  "pins" : [
+    {
+      "identity" : "consequences",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/Consequences.git",
+      "state" : {
+        "revision" : "a0f82b26377d0f167da8de5aa305dff3ea98c8e5",
+        "version" : "2.0.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "coregeometry",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/CoreGeometry.git",
+      "state" : {
+        "revision" : "cb889693a49504f4abd7f5f3fe0f84553750948f",
+        "version" : "6.0.0"
+      }
+    },
+    {
+      "identity" : "optionaltype",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/OptionalType.git",
+      "state" : {
+        "revision" : "118c5144c97c4bf718a2f304a02976dbd94e0103",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "smoothoperators",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/SmoothOperators.git",
+      "state" : {
+        "revision" : "b09aae334efe1585da01ce84952c98c99e70fbfa",
+        "version" : "0.13.0"
+      }
+    },
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms.git",
+      "state" : {
+        "revision" : "f6919dfc309e7f1b56224378b11e28bab5bccc42",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
+        "version" : "1.1.2"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics.git",
+      "state" : {
+        "revision" : "0a5bc04095a675662cf24757cc0640aa2204253b",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swizzleimd",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/SwizzleIMD.git",
+      "state" : {
+        "revision" : "e0a9c238494883aac91782fa54c64a89f2697476",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "zeroableprotocol",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Pyroh/ZeroableProtocol.git",
+      "state" : {
+        "revision" : "bc6aacd216cebab522feb84afc129a9bbdb846c2",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
 }

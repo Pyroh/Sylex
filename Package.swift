@@ -25,6 +25,7 @@ let package = Package(
         .package(url: "https://github.com/Pyroh/OptionalType.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Pyroh/SwizzleIMD.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Pyroh/CoreGeometry.git", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/Pyroh/Consequences.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/apple/swift-algorithms.git", .upToNextMajor(from: "1.2.0")),
     ],
     targets: [
@@ -32,7 +33,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Sylex",
-            dependencies: ["SmoothOperators", "ZeroableProtocol", "CoreGeometry", "OptionalType", "SwizzleIMD", .product(name: "Algorithms", package: "swift-algorithms")]),
+            dependencies: ["SmoothOperators", "ZeroableProtocol", "CoreGeometry", "Consequences", "OptionalType", "SwizzleIMD", .product(name: "Algorithms", package: "swift-algorithms")]),
         .testTarget(
             name: "SylexTests",
             dependencies: ["Sylex"]),

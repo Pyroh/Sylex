@@ -5,6 +5,7 @@ import Foundation
 @_exported import SmoothOperators
 @_exported import SwizzleIMD
 @_exported import ZeroableProtocol
+@_exported import Consequences
 
 prefix operator ??
 
