@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated)
 @dynamicMemberLookup
 public protocol DynamicProxy {
     associatedtype Proxied
@@ -14,6 +15,7 @@ public protocol DynamicProxy {
     var subject: Proxied { get }
 }
 
+@available(*, deprecated)
 public extension DynamicProxy {
     @inlinable subscript<T>(dynamicMember k: KeyPath<Proxied, T>) -> T {
         subject[keyPath: k]

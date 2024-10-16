@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated)
 public struct Keycode {
     
     // Layout-independent Keys

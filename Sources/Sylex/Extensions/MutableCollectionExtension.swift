@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use Consequences")
 extension MutableCollection where Self: RandomAccessCollection {
     @inlinable mutating func sort<T: Comparable>(by key: KeyPath<Element, T>) {
         sort { (lhs, rhs) -> Bool in lhs[keyPath: key] < rhs[keyPath: key] }
