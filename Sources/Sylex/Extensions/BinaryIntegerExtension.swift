@@ -109,25 +109,3 @@ public extension BinaryInteger {
     let wrappedOffset = ((offset % width) + width) % width
     return wrappedOffset + range.lowerBound
 }
-
-public extension BinaryInteger {
-    @available(*, deprecated, renamed: "wrap")
-    @inlinable mutating func cycle(in range: Range<Self>) {
-        self = Sylex.cycle(self, in: range)
-    }
-    
-    @available(*, deprecated, renamed: "wrapped")
-    @inlinable func cycled(in range: Range<Self>) -> Self {
-        Sylex.cycle(self, in: range)
-    }
-}
-
-@available(*, deprecated, renamed: "wrap")
-@inlinable public func cycle<T: BinaryInteger>(_ value: T, in range: Range<T>) -> T {
-    let proxyValue = Double(value)
-    let proxyLowerBound = Double(range.lowerBound)
-    let proxyUpperBound = Double(range.upperBound)
-    let proxyRange = Range(uncheckedBounds: (lower: proxyLowerBound, upper: proxyUpperBound))
-    
-    return T(cycle(proxyValue, in: proxyRange))
-}

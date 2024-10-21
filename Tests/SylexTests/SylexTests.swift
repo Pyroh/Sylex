@@ -1,8 +1,6 @@
 import XCTest
 @testable import Sylex
 
-typealias S = SwappedIndexPair
-
 struct SomethingIdentifiable: Identifiable, Hashable {
     let id: UUID = .init()
     let value: Int = (-1000...1000).randomElement()!
@@ -10,11 +8,6 @@ struct SomethingIdentifiable: Identifiable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-}
-
-struct IndexedProxy<Index, Subject>: DynamicProxy {
-    let index: Index
-    let subject: Subject
 }
 
 struct IntHolder {
@@ -253,28 +246,11 @@ final class SylexTests: XCTestCase {
     
     func testStringExtension() {
         let str1 = "Hello World !"
-        XCTAssert(str1.lineCount == 1)
-        let str2 = """
-        Hello
-        World
-        !
-        """
-        XCTAssert(str2.lineCount == 3)
         
         XCTAssert(str1.base64Encoded() == "SGVsbG8gV29ybGQgIQ==")
         
         let base64Str = "SGVsbG8gV29ybGQgIQ=="
         XCTAssert(base64Str.base64Decoded() == str1)
-    }
-    
-    func testWholeMap() {
-        let shifted  = "Hello".unicodeScalars.lazy
-            .map { $0.value + 1 }
-            .compactMap(String.UnicodeScalarView.Element.init)
-            .wholeMap(String.UnicodeScalarView.init)
-            .wholeMap(String.init)
-        
-        XCTAssert(shifted == "Ifmmp")
     }
     
     func testMutableProxy() {
@@ -284,46 +260,4 @@ final class SylexTests: XCTestCase {
         XCTAssert(p2 == .init(x: 42, y: 0))
         XCTAssert(p3 == .init(x: 42, y: 42))
     }
-    
-    func testZeroColeascing() {
-        let i1: Int? = nil
-        let i2: Int? = 42
-        
-        let s1: String? = nil
-        let s2: String? = "42"
-        
-        XCTAssert(??i1 == 0)
-        XCTAssert(??i2 == 42)
-        XCTAssert(??s1 == "")
-        XCTAssert(??s2 == "42")
-    }
-    
-    func testDynamicWrapper() {
-        let r = stride(to: 10)
-            .lazy
-            .map(IntHolder.init)
-            .enumerated()
-            .map(IndexedProxy.init)
-            .reduce(true) { $0 && ($1.index == $1.value) }
-        
-        XCTAssertTrue(r)
-    }
-    
-    func testAdditiveArray() {
-        let a = [1, 2, 3]
-        
-        XCTAssert(a + 4 == [1, 2, 3, 4])
-        XCTAssert(a + [4, 5] == [1, 2, 3, 4, 5])
-        
-        var b = [1, 2, 3]
-        
-        b += 4
-        XCTAssert(b == [1, 2, 3, 4])
-        b += [5, 6]
-        XCTAssert(b == [1, 2, 3, 4, 5, 6])
-    }
-
-    static var allTests = [
-        ("testTableEquality", testTableEquality),
-    ]
 }

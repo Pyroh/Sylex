@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "Sylex",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6)
+        .iOS(.v16),
+        .macOS(.v13),
+        .tvOS(.v16),
+        .watchOS(.v9)
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.

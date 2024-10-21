@@ -70,7 +70,7 @@ import Foundation
 /// A result builder for creating `Equalator` instances.
 ///
 /// This builder allows for a declarative syntax when defining `Equalator` instances.
-@resultBuilder
+@resultBuilder @frozen
 public enum EqualatorBuilder {
     /// Builds an `Equalator.Unit` from a key path.
     ///

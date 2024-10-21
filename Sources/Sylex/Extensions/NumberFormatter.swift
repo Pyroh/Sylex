@@ -1,5 +1,5 @@
 //
-//  OptionalExtension.swift
+//  Untitled.swift
 //  Sylex
 //
 //  MIT License
@@ -25,26 +25,36 @@
 //  SOFTWARE.
 //
 
-import ZeroableProtocol
+import Foundation
 
-public extension Optional {
-    /// Sets the optional value to nil.
+public extension NumberFormatter {
+    /// Creates a new `NumberFormatter` instance and configures it using the provided closure.
     ///
-    /// This method provides a convenient way to set an optional value to nil,
-    /// which can be particularly useful in certain programming patterns or to
-    /// improve code readability.
+    /// This convenience initializer allows for a more concise and expressive way to create and configure
+    /// a `NumberFormatter` instance in a single step.
     ///
-    /// - Note: This method modifies the optional in place.
+    /// - Parameter configurator: A closure that takes a `NumberFormatter` instance as its parameter
+    ///   and configures it. The closure has no return value.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Note: The configurator closure is called immediately after the `NumberFormatter` is initialized.
     ///
     /// - Example:
     ///   ```swift
-    ///   var optionalValue: Int? = 5
-    ///   print(optionalValue) // Prints: Optional(5)
+    ///   let formatter = NumberFormatter { formatter in
+    ///       formatter.numberStyle = .decimal
+    ///       formatter.maximumFractionDigits = 2
+    ///       formatter.minimumFractionDigits = 2
+    ///   }
     ///
-    ///   optionalValue.nilify()
-    ///   print(optionalValue) // Prints: nil
+    ///   let number = 123.456
+    ///   let formattedString = formatter.string(from: NSNumber(value: number))
+    ///   // formattedString will be "123.46"
     ///   ```
-    ///
-    /// - SeeAlso: `Optional`
-    @inlinable mutating func nilify() { self = nil }
+    @inlinable
+    convenience init(_ configurator: (NumberFormatter) -> ()) {
+        self.init()
+        configurator(self)
+    }
 }

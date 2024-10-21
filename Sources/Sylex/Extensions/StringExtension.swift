@@ -59,14 +59,6 @@ public extension String {
     }
 }
 
-@available(*, deprecated)
-public extension StringProtocol {
-    /// The number of lines in the receiver.
-    @inlinable var lineCount: Int {
-        filter(equalTo: "\n").count + 1
-    }
-}
-
 /// Extends String to provide custom initializers for integer representations.
 public extension String {
     
