@@ -285,3 +285,55 @@ public typealias CallbackTrio<A, B, C> = (A, B, C) -> Void
 @inlinable public func mutableBridge<T: AnyObject>(_ ptr: UnsafeMutableRawPointer) -> T {
     bridge(UnsafeRawPointer(ptr))
 }
+
+/// Checks if all the given boolean terms are true.
+///
+/// This function takes a variadic number of boolean arguments and returns true only if all of them are true.
+/// It short-circuits and returns false as soon as it encounters a false value.
+///
+/// - Parameters:
+///   - terms: A variadic list of boolean values to be evaluated.
+///
+/// - Returns: `true` if all the terms are true, `false` otherwise.
+///
+/// - Complexity: O(n), where n is the number of terms. However, due to short-circuiting,
+///   it may return earlier if a false value is encountered.
+///
+/// - Note: An empty list of terms will return `true` (vacuous truth).
+///
+/// - Example:
+///   ```swift
+///   let result1 = all(true, true, true)  // Returns true
+///   let result2 = all(true, false, true) // Returns false
+///   let result3 = all()                  // Returns true
+///   ```
+@inlinable public func all(_ terms: Bool...) -> Bool {
+    for term in terms { if !term { return false } }
+    return true
+}
+
+/// Checks if any of the given boolean terms is true.
+///
+/// This function takes a variadic number of boolean arguments and returns true if at least one of them is true.
+/// It short-circuits and returns true as soon as it encounters a true value.
+///
+/// - Parameters:
+///   - terms: A variadic list of boolean values to be evaluated.
+///
+/// - Returns: `true` if at least one of the terms is true, `false` otherwise.
+///
+/// - Complexity: O(n), where n is the number of terms. However, due to short-circuiting,
+///   it may return earlier if a true value is encountered.
+///
+/// - Note: An empty list of terms will return `false` (vacuous falsehood).
+///
+/// - Example:
+///   ```swift
+///   let result1 = any(false, true, false)  // Returns true
+///   let result2 = any(false, false, false) // Returns false
+///   let result3 = any()                    // Returns false
+///   ```
+@inlinable public func any(_ terms: Bool...) -> Bool {
+    for term in terms { if term { return true } }
+    return false
+}
