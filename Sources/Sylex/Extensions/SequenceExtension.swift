@@ -77,3 +77,10 @@ public extension Sequence where Element: Sequence {
         reduce(into: []) { $0.append(contentsOf: $1) }.flattened()
     }
 }
+
+public extension Sequence {
+    /// Transforms the whole Sequence.
+    @inlinable func transform<Output>(_ transform: (Self) throws -> Output) rethrows -> Output {
+        try transform(self)
+    }
+}
