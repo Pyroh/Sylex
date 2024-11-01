@@ -1,4 +1,5 @@
 {
+  "originHash" : "599551a2cf2ebf4df9a8e45d9da69619ed0f2861fb4e071762c877a45a650e9b",
   "pins" : [
     {
       "identity" : "consequences",
@@ -32,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Pyroh/SmoothOperators.git",
       "state" : {
-        "revision" : "dd013309755d75d8636fd7fb89bb25da34b92c7e",
-        "version" : "0.20.0"
+        "revision" : "55565fd16a8190a271283dcbd7cb4f3a33c52d55",
+        "version" : "1.0.0"
       }
     },
     {
@@ -82,5 +83,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
