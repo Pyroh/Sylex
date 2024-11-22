@@ -199,7 +199,7 @@ public extension Task where Failure == Error {
                                   @_inheritActorContext @_implicitSelfCapture
                                   operations: @Sendable @escaping @isolated(any) () async -> Success) -> Self {
         Task(priority: priority) {
-            try await withTimeout(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
     }
     
@@ -220,8 +220,77 @@ public extension Task where Failure == Error {
                                   @_inheritActorContext @_implicitSelfCapture
                                   operations: @Sendable @escaping @isolated(any) () async throws -> Success) -> Self {
         Task(priority: priority) {
-            try await withTimeout(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
+    }
+}
+
+public extension Task where Failure == Error {
+    /// Executes an operation with a specified timeout duration using a static method.
+    ///
+    /// This static method provides a convenient way to run an async operation with a timeout
+    /// without requiring an existing Task instance.
+    ///
+    /// - Parameters:
+    ///   - duration: The maximum time allowed for the operation to complete
+    ///   - tolerance: Optional tolerance for the timeout timing, defaulting to nil
+    ///   - clock: The clock to use for timing, defaults to ContinuousClock
+    ///   - operations: The async operation to perform
+    ///
+    /// - Returns: The result of type T if the operation completes within the timeout
+    ///
+    /// - Throws: Throws a timeout error if the operation exceeds the specified duration
+    ///
+    /// - Complexity: O(1) for timeout setup, complexity of the operations closure varies
+    ///
+    /// - Note: The operation will be cancelled if it exceeds the timeout duration
+    ///
+    /// ```swift
+    /// let result = try await Task.withTimeout(.seconds(5)) {
+    ///     await someAsyncOperation()
+    /// }
+    /// ```
+    @discardableResult @inlinable
+    static func withTimeout<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
+                                                   tolerance: C.Instant.Duration? = nil,
+                                                   clock: C = ContinuousClock(),
+                                                   @_inheritActorContext @_implicitSelfCapture
+                                                   operations: @Sendable @escaping @isolated(any) () async -> T) async throws -> T {
+        try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+    }
+    
+    /// Executes a throwing operation with a specified timeout duration using a static method.
+    ///
+    /// This static method provides a convenient way to run an async throwing operation with a timeout
+    /// without requiring an existing Task instance.
+    ///
+    /// - Parameters:
+    ///   - duration: The maximum time allowed for the operation to complete
+    ///   - tolerance: Optional tolerance for the timeout timing, defaulting to nil
+    ///   - clock: The clock to use for timing, defaults to ContinuousClock
+    ///   - operations: The async throwing operation to perform
+    ///
+    /// - Returns: The result of type T if the operation completes within the timeout
+    ///
+    /// - Throws: Throws a timeout error if the operation exceeds the specified duration,
+    ///           or any error thrown by the operations closure
+    ///
+    /// - Complexity: O(1) for timeout setup, complexity of the operations closure varies
+    ///
+    /// - Note: The operation will be cancelled if it exceeds the timeout duration
+    ///
+    /// ```swift
+    /// let result = try await Task.withTimeout(.seconds(5)) {
+    ///     try await someAsyncThrowingOperation()
+    /// }
+    /// ```
+    @discardableResult @inlinable
+    static func withTimeout<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
+                                                   tolerance: C.Instant.Duration? = nil,
+                                                   clock: C = ContinuousClock(),
+                                                   @_inheritActorContext @_implicitSelfCapture
+                                                   operations: @Sendable @escaping @isolated(any) () async throws -> T) async throws -> T {
+        try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
     }
 }
 
@@ -239,10 +308,10 @@ public extension Task where Failure == Error {
 /// - Throws: `TaskTimeoutError` if the body doesn't complete within the timeout,
 ///           `CancellationError` if the task is cancelled, or any error thrown by the body.
 @usableFromInline
-func withTimeout<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
-                                        tolerance: C.Instant.Duration?,
-                                        clock: C,
-                                        body: @Sendable @escaping @isolated(any) () async -> T) async throws -> T  {
+func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
+                                             tolerance: C.Instant.Duration?,
+                                             clock: C,
+                                             body: @Sendable @escaping @isolated(any) () async -> T) async throws -> T  {
     try await withThrowingTaskGroup(of: T.self, returning: T.self) { tg in
         guard tg.addTaskUnlessCancelled(operation: {
             let result = await body()
@@ -278,10 +347,10 @@ func withTimeout<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
 /// - Throws: `TaskTimeoutError` if the body doesn't complete within the timeout,
 ///           `CancellationError` if the task is cancelled, or any error thrown by the body.
 @usableFromInline
-func withTimeout<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
-                                        tolerance: C.Instant.Duration?,
-                                        clock: C,
-                                        body: @Sendable @escaping @isolated(any) () async throws -> T) async throws -> T  {
+func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
+                                             tolerance: C.Instant.Duration?,
+                                             clock: C,
+                                             body: @Sendable @escaping @isolated(any) () async throws -> T) async throws -> T  {
     try await withThrowingTaskGroup(of: T.self, returning: T.self) { tg in
         guard tg.addTaskUnlessCancelled(operation: {
             let result = try await body()
