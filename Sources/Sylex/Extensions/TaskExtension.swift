@@ -225,7 +225,7 @@ public extension Task where Failure == Error {
     }
 }
 
-public extension Task where Failure == Error {
+public extension Task where Success == Never, Failure == Never {
     /// Executes an operation with a specified timeout duration using a static method.
     ///
     /// This static method provides a convenient way to run an async operation with a timeout
