@@ -25,7 +25,12 @@
 //  SOFTWARE.
 //
 
+import Foundation
 import CoreGraphics
+
+public extension FixedWidthInteger {
+    var data: Data { .init(self) }
+}
 
 public extension BinaryInteger {
     

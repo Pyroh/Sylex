@@ -18,6 +18,89 @@ final class SylexTests: XCTestCase {
     let n = 2500
     let m = 300
     
+    func testData() {
+        //               0     1     2     3     4     5     6     7
+        let data = Data([0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78])
+        XCTAssert(data.uint8() == 0x12)
+        XCTAssert(data.uint8(at: 1) == 0x34)
+        XCTAssert(data.uint8(at: 2) == 0x56)
+        XCTAssert(data.uint8(at: 3) == 0x78)
+        XCTAssert(data.uint8(at: 4) == 0x12)
+        XCTAssert(data.uint8(at: 5) == 0x34)
+        XCTAssert(data.uint8(at: 6) == 0x56)
+        XCTAssert(data.uint8(at: 7) == 0x78)
+        
+        XCTAssert(data.uint16() == 0x3412)
+        XCTAssert(data.uint16(at: 1) == 0x5634)
+        XCTAssert(data.uint16(at: 2) == 0x7856)
+        XCTAssert(data.uint16(at: 3) == 0x1278)
+        XCTAssert(data.uint16(at: 4) == 0x3412)
+        XCTAssert(data.uint16(at: 5) == 0x5634)
+        XCTAssert(data.uint16(at: 6) == 0x7856)
+        
+        XCTAssert(data.uint16BE() == 0x1234)
+        XCTAssert(data.uint16BE(at: 1) == 0x3456)
+        XCTAssert(data.uint16BE(at: 2) == 0x5678)
+        XCTAssert(data.uint16BE(at: 3) == 0x7812)
+        XCTAssert(data.uint16BE(at: 4) == 0x1234)
+        XCTAssert(data.uint16BE(at: 5) == 0x3456)
+        XCTAssert(data.uint16BE(at: 6) == 0x5678)
+        
+        XCTAssert(data.uint32() == 0x78563412)
+        XCTAssert(data.uint32(at: 1) == 0x12785634)
+        XCTAssert(data.uint32(at: 2) == 0x34127856)
+        XCTAssert(data.uint32(at: 3) == 0x56341278)
+        XCTAssert(data.uint32(at: 4) == 0x78563412)
+        
+        XCTAssert(data.uint32BE() == 0x12345678)
+        XCTAssert(data.uint32BE(at: 1) == 0x34567812)
+        XCTAssert(data.uint32BE(at: 2) == 0x56781234)
+        XCTAssert(data.uint32BE(at: 3) == 0x78123456)
+        XCTAssert(data.uint32BE(at: 4) == 0x12345678)
+        
+        XCTAssert(data.uint64() == 0x7856341278563412)
+        
+        XCTAssert(data.uint64BE() == 0x1234567812345678)
+        
+        XCTAssert(UInt8(0x1f).data == Data([0x1f]))
+        
+        XCTAssert(UInt16(0x1234).data == Data([0x34, 0x12]))
+        XCTAssert(UInt16(0x1234).bigEndian.data == Data([0x12, 0x34]))
+        
+        XCTAssert(UInt32(0x12345678).data == Data([0x78, 0x56, 0x34, 0x12]))
+        XCTAssert(UInt32(0x12345678).bigEndian.data == Data([0x12, 0x34, 0x56, 0x78]))
+        
+        XCTAssert(UInt64(0x12345678abcdef00).data == Data([0x00, 0xef, 0xcd, 0xab, 0x78, 0x56, 0x34, 0x12]))
+        XCTAssert(UInt64(0x12345678abcdef00).bigEndian.data == Data([0x12, 0x34, 0x56, 0x78, 0xab, 0xcd, 0xef, 0x00]))
+    }
+    
+    func testBitfield8() {
+        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+        var bf = Bitfield8()
+        XCTAssert(bf == 0b0000_0000)
+        
+        bf[2] = true
+        XCTAssert(bf == 0b0000_0100)
+        
+        bf[0..<2] = 0b11
+        XCTAssert(bf == 0b0000_0111)
+        
+        bf[5...7] = 0b101
+        XCTAssert(bf == 0b1010_0111)
+        
+        bf[..<2] = 0b00
+        XCTAssert(bf == 0b1010_0100)
+        
+        bf[...3] = 0b1010
+        XCTAssert(bf == 0b1010_1010)
+        
+        bf[5...] = 0b011
+        XCTAssert(bf == 0b0110_1010)
+        
+        bf.toggle(2)
+        XCTAssert(bf == 0b0110_1110)
+    }
+    
     func testAVG() {
         XCTAssert([1, 2, 3, 4, 5].avg() == 3)
         XCTAssert([2.0, 3.0, 4.0, 5.0].avg() == 3.5)

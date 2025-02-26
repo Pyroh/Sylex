@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  NumberFormatterExtension.swift
 //  Sylex
 //
 //  MIT License

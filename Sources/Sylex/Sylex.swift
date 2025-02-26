@@ -1,6 +1,5 @@
 //
 //  Sylex.swift
-//
 //  Sylex
 //
 //  MIT License
