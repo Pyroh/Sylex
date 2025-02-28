@@ -165,30 +165,6 @@ public extension Data {
     /// - Returns: The Double value at the specified offset.
     @inlinable func double(at offset: Index = 0) -> Double { Double(bitPattern: object(at: offset)) }
     
-    /// Returns a substring of the data starting at the specified offset.
-    ///
-    /// - Parameter offset: The starting offset for the substring.
-    /// - Returns: A new Data instance containing the subdata.
-    @inlinable func subdata(at offset: Index) -> Self { subdata(in: offset...) }
-    
-    /// Returns a substring of the data specified by the given range.
-    ///
-    /// - Parameter range: The range of the substring to return.
-    /// - Returns: A new Data instance containing the subdata.
-    @inlinable func subdata<R: RangeExpression>(in range: R) -> Self where R.Bound == Index { subdata(in: range.relative(to: self)) }
-    
-    /// Loads an object of type `T` from the beginning of the data.
-    ///
-    /// This method uses `withUnsafeBytes` to safely access the raw bytes of the data and load them as the specified type.
-    ///
-    /// - Returns: An object of type `T` loaded from the data.
-    ///
-    /// - Note: This method is marked as `@usableFromInline`, allowing it to be used by inlinable public methods
-    ///         while keeping it internal to the module.
-    @usableFromInline internal func object<T>() -> T {
-        withUnsafeBytes { $0.load(as: T.self) }
-    }
-    
     /// Loads an object of type `T` from the specified offset in the data.
     ///
     /// If the offset is 0, this method calls `object()` directly. Otherwise, it creates a subdata starting
@@ -199,8 +175,67 @@ public extension Data {
     ///
     /// - Note: This method is marked as `@usableFromInline`, allowing it to be used by inlinable public methods
     ///         while keeping it internal to the module.
-    @usableFromInline internal func object<T>(at offset: Index) -> T {
-        offset == 0 ? object() : subdata(at: offset).object()
+    @usableFromInline internal func object<T>(at offset: Index = 0) -> T {
+        withUnsafeBytes { $0.loadUnaligned(fromByteOffset: offset, as: T.self) }
+    }
+}
+
+public extension Data {
+    @inlinable func uint8Array(at offset: Index = 0, count: Int? = nil) -> [UInt8] {
+        array(at: offset, count: count)
+    }
+    @inlinable func int8Array(at offset: Index = 0, count: Int? = nil) -> [Int8] {
+        array(at: offset, count: count)
+    }
+    
+    @inlinable func uint16Array(at offset: Index = 0, count: Int? = nil) -> [UInt16] {
+        array(at: offset, count: count)
+    }
+    @inlinable func int16Array(at offset: Index = 0, count: Int? = nil) -> [Int16] {
+        array(at: offset, count: count)
+    }
+    
+    @inlinable func uint32Array(at offset: Index = 0, count: Int? = nil) -> [UInt32] {
+        array(at: offset, count: count)
+    }
+    @inlinable func int32Array(at offset: Index = 0, count: Int? = nil) -> [Int32] {
+        array(at: offset, count: count)
+    }
+    
+    @inlinable func uint64Array(at offset: Index = 0, count: Int? = nil) -> [UInt64] {
+        array(at: offset, count: count)
+    }
+    @inlinable func int64Array(at offset: Index = 0, count: Int? = nil) -> [Int64] {
+        array(at: offset, count: count)
+    }
+    
+    @inlinable func uint16BEArray(at offset: Index = 0, count: Int? = nil) -> [UInt16] {
+        array(at: offset, count: count).map(\UInt16.bigEndian)
+    }
+    @inlinable func int16BEArray(at offset: Index = 0, count: Int? = nil) -> [Int16] {
+        array(at: offset, count: count).map(\Int16.bigEndian)
+    }
+    
+    @inlinable func uint32BEArray(at offset: Index = 0, count: Int? = nil) -> [UInt32] {
+        array(at: offset, count: count).map(\UInt32.bigEndian)
+    }
+    @inlinable func int32BEArray(at offset: Index = 0, count: Int? = nil) -> [Int32] {
+        array(at: offset, count: count).map(\Int32.bigEndian)
+    }
+    
+    @inlinable func uint64BEArray(at offset: Index = 0, count: Int? = nil) -> [UInt64] {
+        array(at: offset, count: count).map(\UInt64.bigEndian)
+    }
+    @inlinable func int64BEArray(at offset: Index = 0, count: Int? = nil) -> [Int64] {
+        array(at: offset, count: count).map(\Int64.bigEndian)
+    }
+    
+    @usableFromInline internal func array<T>(at offset: Index = 0, count: Int? = nil) -> [T] {
+        if let count {
+            withUnsafeBytes { [T]($0.suffix(from: offset).assumingMemoryBound(to: T.self).prefix(upTo: count)) }
+        } else {
+            withUnsafeBytes { [T]($0.suffix(from: offset).assumingMemoryBound(to: T.self)) }
+        }
     }
 }
 
@@ -249,5 +284,16 @@ public extension Data {
     /// - Note: This method is marked as `internal` and is used by the public initializers.
     internal static func data<T>(_ value: T) -> Self {
         withUnsafePointer(to: value) { Data(bytes: .init($0), count: MemoryLayout<T>.size) }
+    }
+}
+
+public extension Data {
+    @_disfavoredOverload
+    init<T: FixedWidthInteger>(_ array: [T]) {
+        self = array.withUnsafeBufferPointer(Data.init(buffer:))
+    }
+    
+    init<T: FixedWidthInteger>(be array: [T]) {
+        self = array.lazy.map(\.bigEndian).withUnsafeBufferPointer(Data.init(buffer:))
     }
 }

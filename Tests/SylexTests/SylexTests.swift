@@ -21,6 +21,7 @@ final class SylexTests: XCTestCase {
     func testData() {
         //               0     1     2     3     4     5     6     7
         let data = Data([0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78])
+        
         XCTAssert(data.uint8() == 0x12)
         XCTAssert(data.uint8(at: 1) == 0x34)
         XCTAssert(data.uint8(at: 2) == 0x56)
@@ -72,6 +73,31 @@ final class SylexTests: XCTestCase {
         
         XCTAssert(UInt64(0x12345678abcdef00).data == Data([0x00, 0xef, 0xcd, 0xab, 0x78, 0x56, 0x34, 0x12]))
         XCTAssert(UInt64(0x12345678abcdef00).bigEndian.data == Data([0x12, 0x34, 0x56, 0x78, 0xab, 0xcd, 0xef, 0x00]))
+        
+        XCTAssert(data.uint16Array() == [0x3412, 0x7856, 0x3412, 0x7856])
+        XCTAssert(data.uint32Array() == [0x78563412, 0x78563412])
+        XCTAssert(data.uint64Array() == [0x7856341278563412])
+        
+        XCTAssert(data.uint16Array(at: 2) == [0x7856, 0x3412, 0x7856])
+        XCTAssert(data.uint16Array(at: 3) == [0x1278, 0x5634])
+        XCTAssert(data.uint16Array(at: 4) == [0x3412, 0x7856])
+        
+        XCTAssert(data.uint16Array(at: 1, count: 2) == [0x5634, 0x1278])
+        XCTAssert(data.uint16Array(at: 1, count: 2) == [0x5634, 0x1278])
+        
+        XCTAssert(data.uint16BEArray() == [0x1234, 0x5678, 0x1234, 0x5678])
+        XCTAssert(data.uint32BEArray() == [0x12345678, 0x12345678])
+        XCTAssert(data.uint64BEArray() == [0x1234567812345678])
+        
+        XCTAssert(data.uint16BEArray(at: 2) == [0x5678, 0x1234, 0x5678])
+        XCTAssert(data.uint16BEArray(at: 3) == [0x7812, 0x3456])
+        XCTAssert(data.uint16BEArray(at: 4) == [0x1234, 0x5678])
+        
+        XCTAssert(data.uint16BEArray(at: 1, count: 2) == [0x3456, 0x7812])
+        XCTAssert(data.uint16BEArray(at: 2, count: 2) == [0x5678, 0x1234])
+        
+        XCTAssert(Data([UInt16]([0x1234, 0x5678])) == Data([0x34, 0x12, 0x78, 0x56]))
+        XCTAssert(Data(be: [UInt16]([0x1234, 0x5678])) == Data([0x12, 0x34, 0x56, 0x78]))
     }
     
     func testBitfield8() {
