@@ -204,6 +204,23 @@ final class SylexTests: XCTestCase {
         XCTAssert(reader.uint16BEArray( count: 2) == [0x5678, 0x1234])
     }
     
+    func testDataCodable() {
+        let a: UInt8 = 0x12
+        let b: UInt8 = 0x34
+        
+        let uuid = UUID()
+        
+        let bw = BufferWritter()
+        bw.append(a)
+        bw.append(uuid)
+        bw.append(b)
+        
+        let br = BufferReader(bw.data)
+        XCTAssert(br.uint8() == a)
+        XCTAssert(try br.subject() as UUID == uuid)
+        XCTAssert(br.uint8() == b)
+    }
+    
     func testBitfield8() {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
         var bf = Bitfield8()

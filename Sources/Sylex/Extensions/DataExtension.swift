@@ -75,6 +75,10 @@ public extension Data {
     /// - Returns: The loaded value of type `T`.
     @inlinable func autoLoad<T>(at offset: Index = 0) -> T { object(at: offset) }
     
+    @inlinable func subject<T: DataDecodable>(at offset: Index = 0) throws -> T {
+        try .init(from: subdata(in: .init(startIndex: offset, count: T.dataReprensationSize)))
+    }
+    
     /// Reads an unsigned 8-bit integer from the data at the given offset.
     ///
     /// - Parameter offset: The offset in the data from which to read. Defaults to 0.

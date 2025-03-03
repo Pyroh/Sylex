@@ -57,4 +57,9 @@ public final class BufferWritter {
     public func append<I: FixedWidthInteger>(be value: [I]) -> Int {
         append(Data(be: value))
     }
+    
+    @discardableResult
+    public func append<T: DataEncodable>(_ subject: T) -> Int {
+        append(subject.dataRepresentation)
+    }
 }

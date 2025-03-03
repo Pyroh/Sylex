@@ -62,6 +62,18 @@ public final class BufferReader {
         precondition((0...count).contains(self.offset + offset), "Offset \(self.offset + offset) out of data bounds.")
     }
     
+    @inlinable public func subject<T: DataDecodable>() throws -> T {
+        checkAdvancePrecondition(T.dataReprensationSize)
+        
+        let subject: T = try data.subject(at: offset)
+        
+        offset += T.dataReprensationSize
+        readItemCount = 1
+        readByteCount = T.dataReprensationSize
+        
+        return subject
+    }
+    
     /// Reads an unsigned 8-bit integer from the data at the given offset.
     ///
     /// - Returns: The UInt8 value at the specified offset.
@@ -204,6 +216,23 @@ extension BufferReader {
     
     @usableFromInline func checkItemAvailablePrecondition(_ count: Int, size: Int) {
         precondition((offset + count * size) <= self.count, "Not enough remaining bytes to read an array of \(count) item(\(count > 1 ? "s" : "").")
+    }
+    
+    @inlinable public func data(count: Int? = nil) -> Data {
+        let data: Data
+        if let count {
+            checkItemAvailablePrecondition(count, size: 1)
+            data = self.data.subdata(in: .init(startIndex: offset, count: count))
+        } else {
+            checkAtleastOnePrecondition(1)
+            data = self.data.subdata(in: .init(startIndex: offset, count: remainingBytes))
+        }
+        
+        readItemCount = data.count
+        readItemCount = data.count
+        offset += readByteCount
+        
+        return data
     }
  
     @inlinable public func uint8Array(count: Int? = nil) -> [UInt8] {
