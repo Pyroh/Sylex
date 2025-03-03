@@ -63,13 +63,13 @@ public final class BufferReader {
     }
     
     @inlinable public func subject<T: DataDecodable>() throws -> T {
-        checkAdvancePrecondition(T.dataReprensationSize)
+        checkAdvancePrecondition(T.dataRepresentationSize)
         
         let subject: T = try data.subject(at: offset)
         
-        offset += T.dataReprensationSize
+        offset += T.dataRepresentationSize
         readItemCount = 1
-        readByteCount = T.dataReprensationSize
+        readByteCount = T.dataRepresentationSize
         
         return subject
     }

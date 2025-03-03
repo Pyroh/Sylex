@@ -33,12 +33,12 @@ public protocol DataEncodable {
 
 public protocol DataDecodable {
     associatedtype DecodeError: Error
-    static var dataReprensationSize: Int { get }
+    static var dataRepresentationSize: Int { get }
     init(from data: Data) throws
 }
 
-public extension DataEncodable {
-    static var dataReprensationSize: Int { MemoryLayout<Self>.size }
+public extension DataDecodable {
+    static var dataRepresentationSize: Int { MemoryLayout<Self>.size }
 }
 
 public typealias DataCodable = DataEncodable&DataDecodable
