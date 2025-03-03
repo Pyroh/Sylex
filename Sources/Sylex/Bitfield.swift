@@ -26,7 +26,6 @@
 //
 
 import Foundation
-import Sylex
 
 public protocol Bitfield: Sendable, Equatable, Hashable, Zeroable {
     associatedtype Storage: UnsignedInteger&FixedWidthInteger

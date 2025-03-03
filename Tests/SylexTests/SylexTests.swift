@@ -83,7 +83,6 @@ final class SylexTests: XCTestCase {
         XCTAssert(data.uint16Array(at: 4) == [0x3412, 0x7856])
         
         XCTAssert(data.uint16Array(at: 1, count: 2) == [0x5634, 0x1278])
-        XCTAssert(data.uint16Array(at: 1, count: 2) == [0x5634, 0x1278])
         
         XCTAssert(data.uint16BEArray() == [0x1234, 0x5678, 0x1234, 0x5678])
         XCTAssert(data.uint32BEArray() == [0x12345678, 0x12345678])
@@ -98,6 +97,111 @@ final class SylexTests: XCTestCase {
         
         XCTAssert(Data([UInt16]([0x1234, 0x5678])) == Data([0x34, 0x12, 0x78, 0x56]))
         XCTAssert(Data(be: [UInt16]([0x1234, 0x5678])) == Data([0x12, 0x34, 0x56, 0x78]))
+    }
+    
+    func testBufferReader() {
+        let data = Data([0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78])
+        let reader = BufferReader(data)
+        
+        XCTAssert(reader.uint8() == 0x12)
+        XCTAssert(reader.uint8() == 0x34)
+        XCTAssert(reader.uint8() == 0x56)
+        XCTAssert(reader.uint8() == 0x78)
+        XCTAssert(reader.uint8() == 0x12)
+        XCTAssert(reader.uint8() == 0x34)
+        XCTAssert(reader.uint8() == 0x56)
+        XCTAssert(reader.uint8() == 0x78)
+        
+        reader.reset()
+        XCTAssert(reader.uint16() == 0x3412)
+        XCTAssert(reader.uint16() == 0x7856)
+        XCTAssert(reader.uint16() == 0x3412)
+        XCTAssert(reader.uint16() == 0x7856)
+        
+        reader.reset()
+        XCTAssert(reader.uint16BE() == 0x1234)
+        XCTAssert(reader.uint16BE() == 0x5678)
+        XCTAssert(reader.uint16BE() == 0x1234)
+        XCTAssert(reader.uint16BE() == 0x5678)
+        
+        reader.reset()
+        XCTAssert(reader.uint16BE() == 0x1234)
+        XCTAssert(reader.uint16BE() == 0x5678)
+        XCTAssert(reader.uint16BE() == 0x1234)
+        XCTAssert(reader.uint16BE() == 0x5678)
+        
+        reader.reset()
+        XCTAssert(reader.uint32() == 0x78563412)
+        XCTAssert(reader.uint32() == 0x78563412)
+        
+        reader.reset()
+        XCTAssert(reader.uint32BE() == 0x12345678)
+        XCTAssert(reader.uint32BE() == 0x12345678)
+        
+        reader.reset()
+        XCTAssert(reader.uint64() == 0x7856341278563412)
+        
+        reader.reset()
+        XCTAssert(reader.uint64BE() == 0x1234567812345678)
+        
+        reader.reset()
+        XCTAssert(reader.uint8Array() == [0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78])
+        
+        reader.reset()
+        reader.advance(by: 2)
+        XCTAssert(reader.uint8Array() == [0x56, 0x78, 0x12, 0x34, 0x56, 0x78])
+        
+        reader.reset()
+        reader.advance(by: 3)
+        XCTAssert(reader.uint8Array(count: 3) == [0x78, 0x12, 0x34])
+        XCTAssert(reader.uint8Array() == [0x56, 0x78])
+        
+        reader.reset()
+        XCTAssert(reader.uint16Array() == [0x3412, 0x7856, 0x3412, 0x7856])
+        reader.reset()
+        XCTAssert(reader.uint32Array() == [0x78563412, 0x78563412])
+        reader.reset()
+        XCTAssert(reader.uint64Array() == [0x7856341278563412])
+        
+        reader.reset()
+        reader.advance(by: 2)
+        XCTAssert(reader.uint16Array() == [0x7856, 0x3412, 0x7856])
+        reader.reset()
+        reader.advance(by: 3)
+        XCTAssert(reader.uint16Array() == [0x1278, 0x5634])
+        XCTAssert(reader.uint8() == 0x78)
+        reader.reset()
+        reader.advance(by: 4)
+        XCTAssert(reader.uint16Array() == [0x3412, 0x7856])
+        
+        reader.reset()
+        reader.advance(by: 1)
+        XCTAssert(reader.uint16Array(count: 2) == [0x5634, 0x1278])
+        
+        reader.reset()
+        XCTAssert(reader.uint16BEArray() == [0x1234, 0x5678, 0x1234, 0x5678])
+        reader.reset()
+        XCTAssert(reader.uint32BEArray() == [0x12345678, 0x12345678])
+        reader.reset()
+        XCTAssert(reader.uint64BEArray() == [0x1234567812345678])
+        
+        reader.reset()
+        reader.advance(by: 2)
+        XCTAssert(reader.uint16BEArray() == [0x5678, 0x1234, 0x5678])
+        reader.reset()
+        reader.advance(by: 3)
+        XCTAssert(reader.uint16BEArray() == [0x7812, 0x3456])
+        XCTAssert(reader.uint8() == 0x78)
+        reader.reset()
+        reader.advance(by: 4)
+        XCTAssert(reader.uint16BEArray() == [0x1234, 0x5678])
+        
+        reader.reset()
+        reader.advance(by: 1)
+        XCTAssert(reader.uint16BEArray(count: 2) == [0x3456, 0x7812])
+        reader.reset()
+        reader.advance(by: 2)
+        XCTAssert(reader.uint16BEArray( count: 2) == [0x5678, 0x1234])
     }
     
     func testBitfield8() {
