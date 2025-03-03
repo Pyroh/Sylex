@@ -28,14 +28,14 @@
 import Foundation
 
 public final class BufferReader {
-    public var offset: Data.Index
-    
     public let data: Data
     public let count: Int
     
-    @usableFromInline var readItemCount: Int = 0
-    @usableFromInline var readByteCount: Int = 0
+    @usableFromInline var offset: Data.Index
+    @usableFromInline var readItemCount: Int
+    @usableFromInline var readByteCount: Int
     
+    public var currentOffset: Data.Index { offset }
     public var remainingBytes: Int { count - offset }
     public var isFinished: Bool { offset >= count }
     public var lastReadItemCount: Int { readItemCount }
