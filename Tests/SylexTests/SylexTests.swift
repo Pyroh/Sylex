@@ -240,6 +240,12 @@ final class SylexTests: XCTestCase {
         XCTAssert(br.uint8() == 0x00)
         XCTAssert(br.string(count: 4) == "Hell")
         XCTAssert(br.string() == "o")
+        
+        let data = Data([72, 101, 108, 108, 111, 0, 0, 0, 0, 0, 0])
+        let br2 = BufferReader(data)
+        print(br2.string())
+        br2.reset()
+        print(br2.string(count: 7))
     }
     
     func testBitfield8() {

@@ -77,7 +77,11 @@ public final class BufferReader {
     @inlinable public func string(_ encoding: String.Encoding = .utf8, count: Int? = nil) -> String? {
         if let count {
             let data = data(count: count)
-            return data.string(encoding: encoding)
+            if let index = data.firstIndex(of: 0x00) {
+                return String(cString: data.int8Array(count: index+), encoding: encoding)
+            } else {
+                return data.string(encoding: encoding)
+            }
         } else {
             if let index = data[offset...].firstIndex(of: 0x00) {
                 let count = index - offset + 1
