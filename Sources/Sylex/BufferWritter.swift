@@ -62,4 +62,36 @@ public final class BufferWritter {
     public func append<T: DataEncodable>(_ subject: T) -> Int {
         append(subject.dataRepresentation)
     }
+    
+    @discardableResult
+    public func append<S: StringProtocol>(_ string: S,
+                                          encoding: String.Encoding = .utf8,
+                                          count: Int? = nil,
+                                          allowLossyConversion lcFlag: Bool = false,
+                                          nullTerminated ntFlag: Bool = true) -> Int {
+        if string.isEmpty, !!!count {
+            if ntFlag { return append(UInt8.zero) }
+            else { return 0 }
+        } else if let count {
+            var data = Data(count: count)
+            if let strData = string.data(using: encoding, allowLossyConversion: lcFlag) {
+                if strData.count < count {
+                    data[.init(startIndex: offset, count: strData.count)] = strData
+                } else {
+                    if ntFlag {
+                        data[.init(startIndex: offset, count: count-)] = strData[.init(startIndex: 0, count: count-)]
+                    } else {
+                        data[.init(startIndex: offset, count: count)] = strData[.init(startIndex: 0, count: count-)]
+                    }
+                }
+            }
+            return append(data)
+        } else {
+            if let strData = string.data(using: encoding, allowLossyConversion: lcFlag) {
+                return append(strData + (ntFlag ? [0x00] : []))
+            } else {
+                return 0
+            }
+        }
+    }
 }

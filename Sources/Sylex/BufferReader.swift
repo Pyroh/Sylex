@@ -74,6 +74,23 @@ public final class BufferReader {
         return subject
     }
     
+    @inlinable public func string(_ encoding: String.Encoding = .utf8, count: Int? = nil) -> String? {
+        if let count {
+            let data = data(count: count)
+            return data.string(encoding: encoding)
+        } else {
+            if let index = data[offset...].firstIndex(of: 0x00) {
+                let count = index - offset + 1
+                let data = data(count: count)
+                
+                return String(cString: data.int8Array(), encoding: encoding)
+            } else {
+                let data = data()
+                return data.string(encoding: encoding)
+            }
+        }
+    }
+    
     /// Reads an unsigned 8-bit integer from the data at the given offset.
     ///
     /// - Returns: The UInt8 value at the specified offset.
@@ -229,7 +246,7 @@ extension BufferReader {
         }
         
         readItemCount = data.count
-        readItemCount = data.count
+        readByteCount = data.count
         offset += readByteCount
         
         return data

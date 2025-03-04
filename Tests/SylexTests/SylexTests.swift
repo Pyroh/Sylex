@@ -221,6 +221,27 @@ final class SylexTests: XCTestCase {
         XCTAssert(br.uint8() == b)
     }
     
+    func testBufferString() {
+        let bw = BufferWritter()
+        bw.append(UInt16(0x1234))
+        bw.append("Hello", count: 8)
+        bw.append("Hello", nullTerminated: false)
+        print(bw.data.array() as [UInt8])
+        
+        let br = BufferReader(bw.bufferData)
+        br.advance(by: 2)
+        XCTAssert(br.string() == "Hello")
+        XCTAssert(br.string() == "")
+        XCTAssert(br.uint8() == 0x00)
+        XCTAssert(br.string() == "Hello")
+        br.reset()
+        _ = br.string()
+        XCTAssert(br.uint8() == 0x00)
+        XCTAssert(br.uint8() == 0x00)
+        XCTAssert(br.string(count: 4) == "Hell")
+        XCTAssert(br.string() == "o")
+    }
+    
     func testBitfield8() {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
         var bf = Bitfield8()
