@@ -352,27 +352,27 @@ extension BufferReader {
         return array
     }
     
-    @inlinable func uint16BEArray(count: Int? = nil) -> [UInt16] {
+    @inlinable public func uint16BEArray(count: Int? = nil) -> [UInt16] {
         uint16Array(count: count).map(\.bigEndian)
     }
     
-    @inlinable func int16BEArray(count: Int? = nil) -> [Int16] {
+    @inlinable public func int16BEArray(count: Int? = nil) -> [Int16] {
         int16Array(count: count).map(\.bigEndian)
     }
     
-    @inlinable func uint32BEArray(count: Int? = nil) -> [UInt32] {
+    @inlinable public func uint32BEArray(count: Int? = nil) -> [UInt32] {
         uint32Array(count: count).map(\.bigEndian)
     }
     
-    @inlinable func int16BEArray(count: Int? = nil) -> [Int32] {
+    @inlinable public func int16BEArray(count: Int? = nil) -> [Int32] {
         int32Array(count: count).map(\.bigEndian)
     }
     
-    @inlinable func uint64BEArray(count: Int? = nil) -> [UInt64] {
+    @inlinable public func uint64BEArray(count: Int? = nil) -> [UInt64] {
         uint64Array(count: count).map(\.bigEndian)
     }
     
-    @inlinable func int16BEArray(count: Int? = nil) -> [Int64] {
+    @inlinable public func int16BEArray(count: Int? = nil) -> [Int64] {
         int64Array(count: count).map(\.bigEndian)
     }
 }
