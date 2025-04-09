@@ -280,6 +280,7 @@ public extension Data {
     @_disfavoredOverload
     init<T: DataEncodable>(_ value: T) { self = value.dataRepresentation }
     
+    @_disfavoredOverload
     init<T>(_ value: T) { self = .data(value) }
     
     /// Creates a `Data` instance from the bytes of the given value.
