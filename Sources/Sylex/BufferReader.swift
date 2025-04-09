@@ -32,21 +32,15 @@ public final class BufferReader {
     public let count: Int
     
     @usableFromInline var offset: Data.Index
-    @usableFromInline var readItemCount: Int
-    @usableFromInline var readByteCount: Int
     
     public var currentOffset: Data.Index { offset }
     public var remainingBytes: Int { count - offset }
     public var isFinished: Bool { offset >= count }
-    public var lastReadItemCount: Int { readItemCount }
-    public var lastReadByteCount: Int { readByteCount }
     
     public init(_ data: Data) {
         self.data = data
         self.count = data.count
         self.offset = 0
-        self.readItemCount = 0
-        self.readByteCount = 0
     }
     
     @inlinable public func reset() {
@@ -64,12 +58,8 @@ public final class BufferReader {
     
     @inlinable public func subject<T: DataDecodable>() throws -> T {
         checkAdvancePrecondition(T.dataRepresentationSize)
-        
-        let subject: T = try data.subject(at: offset)
-        
-        offset += T.dataRepresentationSize
-        readItemCount = 1
-        readByteCount = T.dataRepresentationSize
+
+        let subject: T = try T.init(from: self)
         
         return subject
     }
@@ -100,11 +90,7 @@ public final class BufferReader {
     /// - Returns: The UInt8 value at the specified offset.
     @inlinable public func uint8() -> UInt8 {
         checkAdvancePrecondition(MemoryLayout<UInt8>.size)
-        defer {
-            offset += MemoryLayout<UInt8>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<UInt8>.size
-        }
+        defer { offset += MemoryLayout<UInt8>.size }
         return data[offset]
     }
     
@@ -113,11 +99,7 @@ public final class BufferReader {
     /// - Returns: The UInt16 value at the specified offset.
     @inlinable public func uint16() -> UInt16 {
         checkAdvancePrecondition(MemoryLayout<UInt16>.size)
-        defer {
-            offset += MemoryLayout<UInt16>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<UInt16>.size
-        }
+        defer { offset += MemoryLayout<UInt16>.size }
         return data.object(at: offset)
     }
     
@@ -131,11 +113,7 @@ public final class BufferReader {
     /// - Returns: The UInt32 value at the specified offset.
     @inlinable public func uint32() -> UInt32 {
         checkAdvancePrecondition(MemoryLayout<UInt32>.size)
-        defer {
-            offset += MemoryLayout<UInt32>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<UInt32>.size
-        }
+        defer { offset += MemoryLayout<UInt32>.size }
         return data.object(at: offset)
     }
     
@@ -149,11 +127,7 @@ public final class BufferReader {
     /// - Returns: The UInt64 value at the specified offset.
     @inlinable public func uint64() -> UInt64 {
         checkAdvancePrecondition(MemoryLayout<UInt64>.size)
-        defer {
-            offset += MemoryLayout<UInt64>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<UInt64>.size
-        }
+        defer { offset += MemoryLayout<UInt64>.size }
         return data.object(at: offset)
     }
     
@@ -167,11 +141,7 @@ public final class BufferReader {
     /// - Returns: The Int8 value at the specified offset.
     @inlinable public func int8() -> Int8 {
         checkAdvancePrecondition(MemoryLayout<Int8>.size)
-        defer {
-            offset += MemoryLayout<Int8>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<Int8>.size
-        }
+        defer { offset += MemoryLayout<Int8>.size }
         return Int8(bitPattern: data[offset])
     }
     
@@ -180,11 +150,7 @@ public final class BufferReader {
     /// - Returns: The Int16 value at the specified offset.
     @inlinable public func int16() -> Int16 {
         checkAdvancePrecondition(MemoryLayout<Int16>.size)
-        defer {
-            offset += MemoryLayout<Int16>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<Int16>.size
-        }
+        defer { offset += MemoryLayout<Int16>.size }
         return data.object(at: offset)
     }
     
@@ -198,11 +164,7 @@ public final class BufferReader {
     /// - Returns: The Int32 value at the specified offset.
     @inlinable public func int32() -> Int32 {
         checkAdvancePrecondition(MemoryLayout<Int32>.size)
-        defer {
-            offset += MemoryLayout<Int32>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<Int32>.size
-        }
+        defer { offset += MemoryLayout<Int32>.size }
         return data.object(at: offset)
     }
     
@@ -216,11 +178,7 @@ public final class BufferReader {
     /// - Returns: The Int64 value at the specified offset.
     @inlinable public func int64() -> Int64 {
         checkAdvancePrecondition(MemoryLayout<Int64>.size)
-        defer {
-            offset += MemoryLayout<Int64>.size
-            readItemCount = 1
-            readByteCount = MemoryLayout<Int64>.size
-        }
+        defer { offset += MemoryLayout<Int64>.size }
         return data.object(at: offset)
     }
     
@@ -249,9 +207,7 @@ extension BufferReader {
             data = self.data.subdata(in: .init(startIndex: offset, count: remainingBytes))
         }
         
-        readItemCount = data.count
-        readByteCount = data.count
-        offset += readByteCount
+        offset += data.count
         
         return data
     }
@@ -261,9 +217,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<UInt8>.size) }
         
         let array = data.uint8Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<UInt8>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<UInt8>.size
         
         return array
     }
@@ -273,9 +227,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<Int8>.size) }
         
         let array = data.int8Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<Int8>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<Int8>.size
         
         return array
     }
@@ -285,9 +237,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<UInt16>.size) }
         
         let array = data.uint16Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<UInt16>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<UInt16>.size
         
         return array
     }
@@ -297,9 +247,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<Int16>.size) }
         
         let array = data.int16Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<Int16>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<Int16>.size
         
         return array
     }
@@ -309,9 +257,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<UInt32>.size) }
         
         let array = data.uint32Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<UInt32>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<UInt32>.size
         
         return array
     }
@@ -321,9 +267,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<Int32>.size) }
         
         let array = data.int32Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<Int32>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<Int32>.size
         
         return array
     }
@@ -333,9 +277,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<UInt64>.size) }
         
         let array = data.uint64Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<UInt64>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<UInt64>.size
         
         return array
     }
@@ -345,9 +287,7 @@ extension BufferReader {
         else { checkAtleastOnePrecondition(MemoryLayout<Int64>.size) }
         
         let array = data.int64Array(at: offset, count: count)
-        readItemCount = array.count
-        readByteCount = readItemCount * MemoryLayout<Int64>.size
-        offset += readByteCount
+        offset += array.count * MemoryLayout<Int64>.size
         
         return array
     }

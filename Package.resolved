@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Pyroh/Consequences.git",
       "state" : {
-        "revision" : "a0f82b26377d0f167da8de5aa305dff3ea98c8e5",
-        "version" : "2.0.0"
+        "revision" : "741bd5708f1dcf3e87269374e49b2deacbbc5d65",
+        "version" : "2.1.2"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-algorithms.git",
       "state" : {
-        "revision" : "f6919dfc309e7f1b56224378b11e28bab5bccc42",
-        "version" : "1.2.0"
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
       }
     },
     {

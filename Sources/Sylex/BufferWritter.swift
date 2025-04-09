@@ -9,27 +9,16 @@ import Foundation
 
 public final class BufferWritter {
     @usableFromInline var data: Data
-    @usableFromInline var offset: Int
-    @usableFromInline var writtenItemCount: Int
-    @usableFromInline var writtenByteCount: Int
     
-    public var currentOffset: Int { offset }
-    public var lastWrittenItemCount: Int { writtenItemCount }
-    public var lastWrittenByteCount: Int { writtenByteCount }
+    public var currentOffset: Int { data.count }
     public var bufferData: Data { data }
     
     public init() {
         self.data = Data()
-        self.offset = 0
-        self.writtenItemCount = 0
-        self.writtenByteCount = 0
     }
     
     public init(appendingTo data: Data) {
         self.data = data
-        self.offset = data.count
-        self.writtenItemCount = 0
-        self.writtenByteCount = 0
     }
     
     @discardableResult
@@ -49,18 +38,18 @@ public final class BufferWritter {
     }
     
     @discardableResult
-    public func append<I: FixedWidthInteger>(_ value: [I]) -> Int {
-        append(Data(value))
+    public func append<I: FixedWidthInteger>(_ array: [I]) -> Int {
+        append(Data(array))
     }
     
     @discardableResult
-    public func append<I: FixedWidthInteger>(be value: [I]) -> Int {
-        append(Data(be: value))
+    public func append<I: FixedWidthInteger>(be array: [I]) -> Int {
+        append(Data(be: array))
     }
     
     @discardableResult
     public func append<T: DataEncodable>(_ subject: T) -> Int {
-        append(subject.dataRepresentation)
+        subject.append(to: self)
     }
     
     @discardableResult
@@ -76,12 +65,12 @@ public final class BufferWritter {
             var data = Data(count: count)
             if let strData = string.data(using: encoding, allowLossyConversion: lcFlag) {
                 if strData.count < count {
-                    data[.init(startIndex: offset, count: strData.count)] = strData
+                    data[.init(startIndex: 0, count: strData.count)] = strData
                 } else {
                     if ntFlag {
-                        data[.init(startIndex: offset, count: count-)] = strData[.init(startIndex: 0, count: count-)]
+                        data[.init(startIndex: 0, count: count-)] = strData[.init(startIndex: 0, count: count-)]
                     } else {
-                        data[.init(startIndex: offset, count: count)] = strData[.init(startIndex: 0, count: count-)]
+                        data[.init(startIndex: 0, count: count)] = strData[.init(startIndex: 0, count: count-)]
                     }
                 }
             }

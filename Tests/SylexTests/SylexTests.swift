@@ -97,6 +97,16 @@ final class SylexTests: XCTestCase {
         
         XCTAssert(Data([UInt16]([0x1234, 0x5678])) == Data([0x34, 0x12, 0x78, 0x56]))
         XCTAssert(Data(be: [UInt16]([0x1234, 0x5678])) == Data([0x12, 0x34, 0x56, 0x78]))
+        
+        let uuid = UUID()
+        let bw = BufferWritter()
+        
+        bw.append(uuid)
+        XCTAssert(bw.bufferData.count == MemoryLayout.size(ofValue: uuid))
+        
+        let br = BufferReader(bw.bufferData)
+        let decodedUuid = try! UUID(from: br)
+        XCTAssert(uuid == decodedUuid)
     }
     
     func testBufferReader() {
@@ -223,9 +233,11 @@ final class SylexTests: XCTestCase {
     
     func testBufferString() {
         let bw = BufferWritter()
-        bw.append(UInt16(0x1234))
-        bw.append("Hello", count: 8)
-        bw.append("Hello", nullTerminated: false)
+        print(bw.currentOffset, bw.append(UInt16(0x1234)), bw.currentOffset)
+        print(bw.data.array() as [UInt8])
+        print(bw.currentOffset, bw.append("Hello", count: 8), bw.currentOffset)
+        print(bw.data.array() as [UInt8])
+        print(bw.currentOffset, bw.append("Hello", nullTerminated: false), bw.currentOffset)
         print(bw.data.array() as [UInt8])
         
         let br = BufferReader(bw.bufferData)

@@ -29,16 +29,31 @@ import Foundation
 
 public protocol DataEncodable {
     var dataRepresentation: Data { get }
+    @discardableResult func append(to bw: BufferWritter) -> Int
+}
+
+public extension DataEncodable {
+    @discardableResult func append(to bw: BufferWritter) -> Int {
+        let data = dataRepresentation
+        bw.append(dataRepresentation)
+        return data.count
+    }
 }
 
 public protocol DataDecodable {
     associatedtype DecodeError: Error
     static var dataRepresentationSize: Int { get }
+    
     init(from data: Data) throws
+    init(from br: BufferReader) throws
 }
 
 public extension DataDecodable {
     static var dataRepresentationSize: Int { MemoryLayout<Self>.size }
+    init(from br: BufferReader) throws {
+        let data = br.data(count: Self.dataRepresentationSize)
+        try self.init(from: data)
+    }
 }
 
 public typealias DataCodable = DataEncodable&DataDecodable
