@@ -277,6 +277,11 @@ public extension Data {
     ///   ```
     init<T: BinaryFloatingPoint>(_ value: T) { self = Self.data(value) }
     
+    @_disfavoredOverload
+    init<T: DataEncodable>(_ value: T) { self = value.dataRepresentation }
+    
+    init<T>(_ value: T) { self = .data(value) }
+    
     /// Creates a `Data` instance from the bytes of the given value.
     ///
     /// This method uses `withUnsafePointer` to safely access the bytes of the value
