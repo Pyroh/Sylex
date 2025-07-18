@@ -11,7 +11,7 @@ public final class BufferWritter {
     @usableFromInline var data: Data
     
     public var currentOffset: Int { data.count }
-    public var bufferData: Data { data }
+    public var bufferData: Data { Data(data[0..<currentOffset]) }
     
     public init() {
         self.data = Data()
