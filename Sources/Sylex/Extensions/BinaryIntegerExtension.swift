@@ -114,3 +114,221 @@ public extension BinaryInteger {
     let wrappedOffset = ((offset % width) + width) % width
     return wrappedOffset + range.lowerBound
 }
+
+/// Extension providing convenient conversion properties and rounding utilities for binary integer types.
+///
+/// This extension adds type conversion shortcuts and methods for rounding integers to the nearest
+/// multiple of a specified value, useful for alignment operations, quantization, and working with
+/// fixed intervals.
+public extension BinaryInteger {
+    
+    // MARK: - Type Conversion Properties
+    
+    /// Converts the integer value to a `Double`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a floating-point `Double` value.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int = 42
+    /// let doubleValue = value.d // 42.0
+    /// ```
+    @inline(__always) var d: Double { Double(self) }
+    
+    /// Converts the integer value to a `UInt`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// an unsigned integer. Note that converting a negative value will trap.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value to `UInt` will result in a runtime error.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int64 = 100
+    /// let unsignedValue = value.u // UInt(100)
+    /// ```
+    @inline(__always) var u: UInt { UInt(self) }
+    
+    /// Converts the integer value to an `Int`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a signed integer.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a value outside the `Int` range will trap.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: UInt8 = 50
+    /// let signedValue = value.i // Int(50)
+    /// ```
+    @inline(__always) var i: Int { Int(self) }
+    
+    // MARK: - Rounding Methods
+    
+    /// Rounds the value to the nearest multiple of the specified value using the default rounding rule.
+    ///
+    /// This method modifies the integer in place, rounding it to the nearest multiple of the given
+    /// value using the `.toNearestOrEven` rounding rule (banker's rounding).
+    ///
+    /// - Parameter value: The multiple to round to. Must be non-zero.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Note: Uses banker's rounding (.toNearestOrEven) by default. When equidistant from two
+    ///   multiples, rounds to the even multiple.
+    ///
+    /// # Example
+    /// ```swift
+    /// var number = 23
+    /// number.roundToNearest(10) // number is now 20
+    ///
+    /// var value = 25
+    /// value.roundToNearest(10) // value is now 20 (banker's rounding)
+    /// ```
+    @inlinable
+    mutating func roundToNearest(_ value: Self) {
+        self = Self((Double(self) / Double(value)).rounded() * Double(value))
+    }
+    
+    /// Returns the value rounded to the nearest multiple of the specified value using the default rounding rule.
+    ///
+    /// This method returns a new integer rounded to the nearest multiple of the given value using
+    /// the `.toNearestOrEven` rounding rule (banker's rounding), without modifying the original value.
+    ///
+    /// - Parameter value: The multiple to round to. Must be non-zero.
+    ///
+    /// - Returns: A new integer rounded to the nearest multiple of `value`.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Note: Uses banker's rounding (.toNearestOrEven) by default. When equidistant from two
+    ///   multiples, rounds to the even multiple.
+    ///
+    /// # Example
+    /// ```swift
+    /// let number = 23
+    /// let rounded = number.roundedToNearest(10) // 20
+    ///
+    /// let value = 25
+    /// let result = value.roundedToNearest(10) // 20 (banker's rounding)
+    /// ```
+    @inlinable
+    func roundedToNearest(_ value: Self) -> Self {
+        Self((Double(self) / Double(value)).rounded() * Double(value))
+    }
+    
+    /// Rounds the value to the nearest multiple of the specified value using a custom rounding rule.
+    ///
+    /// This method modifies the integer in place, rounding it to the nearest multiple of the given
+    /// value using the specified rounding rule.
+    ///
+    /// - Parameters:
+    ///   - value: The multiple to round to. Must be non-zero.
+    ///   - rule: The rounding rule to apply (e.g., `.up`, `.down`, `.toNearestOrAwayFromZero`).
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// # Example
+    /// ```swift
+    /// var number = 23
+    /// number.roundToNearest(10, rule: .up) // number is now 30
+    ///
+    /// var value = 23
+    /// value.roundToNearest(10, rule: .down) // value is now 20
+    /// ```
+    @inlinable
+    mutating func roundToNearest(_ value: Self, rule: FloatingPointRoundingRule) {
+        self = Self((Double(self) / Double(value)).rounded(rule) * Double(value))
+    }
+    
+    /// Returns the value rounded to the nearest multiple of the specified value using a custom rounding rule.
+    ///
+    /// This method returns a new integer rounded to the nearest multiple of the given value using
+    /// the specified rounding rule, without modifying the original value.
+    ///
+    /// - Parameters:
+    ///   - value: The multiple to round to. Must be non-zero.
+    ///   - rule: The rounding rule to apply (e.g., `.up`, `.down`, `.toNearestOrAwayFromZero`).
+    ///
+    /// - Returns: A new integer rounded to the nearest multiple of `value` according to `rule`.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// # Example
+    /// ```swift
+    /// let number = 23
+    /// let roundedUp = number.roundedToNearest(10, rule: .up) // 30
+    /// let roundedDown = number.roundedToNearest(10, rule: .down) // 20
+    /// let roundedAway = number.roundedToNearest(10, rule: .toNearestOrAwayFromZero) // 20
+    /// ```
+    @inlinable
+    func roundedToNearest(_ value: Self, rule: FloatingPointRoundingRule) -> Self {
+        Self((Double(self) / Double(value)).rounded(rule) * Double(value))
+    }
+}
+
+/// Rounds an integer value to the nearest multiple of a specified step using the default rounding rule.
+///
+/// This function returns a new integer rounded to the nearest multiple of the given step
+/// using the `.toNearestOrEven` rounding rule (banker's rounding). This is useful for aligning values
+/// to specific boundaries, quantizing to fixed intervals, or working with memory alignment requirements.
+///
+/// - Parameters:
+///   - value: The integer value to round.
+///   - step: The multiple to round to. Must be non-zero.
+///
+/// - Returns: A new integer rounded to the nearest multiple of `step`.
+///
+/// - Complexity: O(1)
+///
+/// - Note: Uses banker's rounding (.toNearestOrEven) by default. When equidistant from two
+///   multiples, rounds to the even multiple.
+///
+/// # Example
+/// ```swift
+/// let rounded = round(23, toNearest: 10) // 20
+/// let aligned = round(25, toNearest: 10) // 20 (banker's rounding)
+/// let size = round(137, toNearest: 16) // 136 (memory alignment)
+/// ```
+@inlinable public func round<T: BinaryInteger>(_ value: T, toNearest step: T) -> T {
+    T((Double(value) / Double(step)).rounded() * Double(step))
+}
+
+/// Rounds an integer value to the nearest multiple of a specified step using a custom rounding rule.
+///
+/// This function returns a new integer rounded to the nearest multiple of the given step
+/// using the specified rounding rule. This provides fine-grained control over rounding behavior for
+/// alignment operations, quantization, or boundary calculations.
+///
+/// - Parameters:
+///   - value: The integer value to round.
+///   - step: The multiple to round to. Must be non-zero.
+///   - rule: The rounding rule to apply. Common rules include:
+///     - `.up`: Round toward positive infinity (round up)
+///     - `.down`: Round toward negative infinity (round down)
+///     - `.toNearestOrAwayFromZero`: Round to nearest, ties away from zero
+///     - `.toNearestOrEven`: Round to nearest, ties to even (default)
+///     - `.towardZero`: Round toward zero (truncate)
+///     - `.awayFromZero`: Round away from zero
+///
+/// - Returns: A new integer rounded to the nearest multiple of `step` according to `rule`.
+///
+/// - Complexity: O(1)
+///
+/// # Example
+/// ```swift
+/// let roundedUp = round(23, toNearest: 10, rule: .up) // 30
+/// let roundedDown = round(23, toNearest: 10, rule: .down) // 20
+/// let aligned = round(137, toNearest: 16, rule: .up) // 144 (memory alignment)
+/// let toZero = round(-23, toNearest: 10, rule: .towardZero) // -20
+/// ```
+@inlinable public func round<T: BinaryInteger>(_ value: T, toNearest step: T, rule: FloatingPointRoundingRule) -> T {
+    T((Double(value) / Double(step)).rounded(rule) * Double(step))
+}

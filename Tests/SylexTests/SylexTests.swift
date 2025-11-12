@@ -530,3 +530,296 @@ final class SylexTests: XCTestCase {
         XCTAssert(p3 == .init(x: 42, y: 42))
     }
 }
+
+// MARK: - BinaryInteger Extension Tests
+
+final class BinaryIntegerExtensionTests: XCTestCase {
+    
+    // MARK: - Type Conversion Tests
+    
+    func testDoubleConversion() {
+        let intValue: Int = 42
+        XCTAssertEqual(intValue.d, 42.0)
+        
+        let int64Value: Int64 = -100
+        XCTAssertEqual(int64Value.d, -100.0)
+        
+        let uint8Value: UInt8 = 255
+        XCTAssertEqual(uint8Value.d, 255.0)
+    }
+    
+    func testUIntConversion() {
+        let intValue: Int = 100
+        XCTAssertEqual(intValue.u, UInt(100))
+        
+        let int64Value: Int64 = 50
+        XCTAssertEqual(int64Value.u, UInt(50))
+    }
+    
+    func testIntConversion() {
+        let uintValue: UInt = 200
+        XCTAssertEqual(uintValue.i, Int(200))
+        
+        let uint8Value: UInt8 = 50
+        XCTAssertEqual(uint8Value.i, Int(50))
+    }
+    
+    // MARK: - Mutating Round to Nearest Tests
+    
+    func testMutatingRoundToNearest() {
+        var value = 23
+        value.roundToNearest(10)
+        XCTAssertEqual(value, 20)
+        
+        var value2 = 25
+        value2.roundToNearest(10)
+        XCTAssertEqual(value2, 30)
+        
+        var value3 = 27
+        value3.roundToNearest(10)
+        XCTAssertEqual(value3, 30)
+        
+        var value4 = 13
+        value4.roundToNearest(5)
+        XCTAssertEqual(value4, 15)
+    }
+    
+    func testMutatingRoundToNearestNegative() {
+        var value = -23
+        value.roundToNearest(10)
+        XCTAssertEqual(value, -20)
+        
+        var value2 = -25
+        value2.roundToNearest(10)
+        XCTAssertEqual(value2, -30)
+    }
+    
+    func testMutatingRoundToNearestWithRule() {
+        var value = 23
+        value.roundToNearest(10, rule: .up)
+        XCTAssertEqual(value, 30)
+        
+        var value2 = 23
+        value2.roundToNearest(10, rule: .down)
+        XCTAssertEqual(value2, 20)
+        
+        var value3 = 25
+        value3.roundToNearest(10, rule: .toNearestOrAwayFromZero)
+        XCTAssertEqual(value3, 30)
+        
+        var value4 = 23
+        value4.roundToNearest(10, rule: .towardZero)
+        XCTAssertEqual(value4, 20)
+    }
+    
+    // MARK: - Non-Mutating Round to Nearest Tests
+    
+    func testRoundedToNearest() {
+        let value = 23
+        XCTAssertEqual(value.roundedToNearest(10), 20)
+        XCTAssertEqual(value, 23) // Original unchanged
+        
+        XCTAssertEqual(25.roundedToNearest(10), 30) // Banker's rounding
+        XCTAssertEqual(27.roundedToNearest(10), 30)
+        XCTAssertEqual(13.roundedToNearest(5), 15)
+    }
+    
+    func testRoundedToNearestNegative() {
+        XCTAssertEqual((-23).roundedToNearest(10), -20)
+        XCTAssertEqual((-25).roundedToNearest(10), -30) // Banker's rounding
+    }
+    
+    func testRoundedToNearestWithRule() {
+        XCTAssertEqual(23.roundedToNearest(10, rule: .up), 30)
+        XCTAssertEqual(23.roundedToNearest(10, rule: .down), 20)
+        XCTAssertEqual(25.roundedToNearest(10, rule: .toNearestOrAwayFromZero), 30)
+        XCTAssertEqual(23.roundedToNearest(10, rule: .towardZero), 20)
+        XCTAssertEqual((-23).roundedToNearest(10, rule: .towardZero), -20)
+        XCTAssertEqual((-27).roundedToNearest(10, rule: .awayFromZero), -30)
+    }
+}
+
+// MARK: - BinaryFloatingPoint Extension Tests
+
+final class BinaryFloatingPointExtensionTests: XCTestCase {
+    
+    // MARK: - Type Conversion Tests
+    
+    func testDoubleConversion() {
+        let floatValue: Float = 3.14
+        XCTAssertEqual(floatValue.d, Double(3.14), accuracy: 0.0001)
+        
+        let doubleValue: Double = 42.5
+        XCTAssertEqual(doubleValue.d, 42.5)
+    }
+    
+    func testUIntConversion() {
+        let doubleValue: Double = 42.7
+        XCTAssertEqual(doubleValue.u, UInt(42))
+        
+        let floatValue: Float = 100.9
+        XCTAssertEqual(floatValue.u, UInt(100))
+    }
+    
+    func testIntConversion() {
+        let doubleValue: Double = -17.8
+        XCTAssertEqual(doubleValue.i, Int(-17))
+        
+        let floatValue: Float = 42.3
+        XCTAssertEqual(floatValue.i, Int(42))
+    }
+    
+    // MARK: - Mutating Round to Nearest Tests
+    
+    func testMutatingRoundToNearest() {
+        var value = 23.7
+        value.roundToNearest(5.0)
+        XCTAssertEqual(value, 25.0, accuracy: 0.0001)
+        
+        var value2 = 2.5
+        value2.roundToNearest(1.0)
+        XCTAssertEqual(value2, 3.0, accuracy: 0.0001)
+        
+        var value3 = 3.5
+        value3.roundToNearest(1.0)
+        XCTAssertEqual(value3, 4.0, accuracy: 0.0001)
+        
+        var value4 = 0.123
+        value4.roundToNearest(0.05)
+        XCTAssertEqual(value4, 0.10, accuracy: 0.0001)
+    }
+    
+    func testMutatingRoundToNearestNegative() {
+        var value = -23.7
+        value.roundToNearest(5.0)
+        XCTAssertEqual(value, -25.0, accuracy: 0.0001)
+        
+        var value2 = -2.5
+        value2.roundToNearest(1.0)
+        XCTAssertEqual(value2, -3.0, accuracy: 0.0001)
+    }
+    
+    func testMutatingRoundToNearestWithRule() {
+        var value = 23.3
+        value.roundToNearest(5.0, rule: .up)
+        XCTAssertEqual(value, 25.0, accuracy: 0.0001)
+        
+        var value2 = 23.7
+        value2.roundToNearest(5.0, rule: .down)
+        XCTAssertEqual(value2, 20.0, accuracy: 0.0001)
+        
+        var value3 = 2.5
+        value3.roundToNearest(1.0, rule: .toNearestOrAwayFromZero)
+        XCTAssertEqual(value3, 3.0, accuracy: 0.0001)
+    }
+    
+    // MARK: - Non-Mutating Round to Nearest Tests
+    
+    func testRoundedToNearest() {
+        let value = 23.7
+        XCTAssertEqual(value.roundedToNearest(5.0), 25.0, accuracy: 0.0001)
+        XCTAssertEqual(value, 23.7, accuracy: 0.0001) // Original unchanged
+        
+        XCTAssertEqual(2.5.roundedToNearest(1.0), 3.0, accuracy: 0.0001)
+        XCTAssertEqual(0.123.roundedToNearest(0.05), 0.10, accuracy: 0.0001)
+    }
+    
+    func testRoundedToNearestNegative() {
+        XCTAssertEqual((-23.7).roundedToNearest(5.0), -25.0, accuracy: 0.0001)
+        XCTAssertEqual((-2.5).roundedToNearest(1.0), -3.0, accuracy: 0.0001) // Banker's rounding
+    }
+    
+    func testRoundedToNearestWithRule() {
+        XCTAssertEqual(23.3.roundedToNearest(5.0, rule: .up), 25.0, accuracy: 0.0001)
+        XCTAssertEqual(23.7.roundedToNearest(5.0, rule: .down), 20.0, accuracy: 0.0001)
+        XCTAssertEqual(2.5.roundedToNearest(1.0, rule: .toNearestOrAwayFromZero), 3.0, accuracy: 0.0001)
+        XCTAssertEqual(0.5.roundedToNearest(0.5, rule: .toNearestOrAwayFromZero), 0.5, accuracy: 0.0001)
+    }
+}
+
+// MARK: - Global Round Function Tests (BinaryFloatingPoint)
+
+final class GlobalRoundFloatingPointTests: XCTestCase {
+    
+    func testRoundToNearest() {
+        XCTAssertEqual(round(23.7, toNearest: 5.0), 25.0, accuracy: 0.0001)
+        XCTAssertEqual(round(2.5, toNearest: 1.0), 3.0, accuracy: 0.0001) // Banker's rounding
+        XCTAssertEqual(round(0.123, toNearest: 0.05), 0.10, accuracy: 0.0001)
+    }
+    
+    func testRoundToNearestNegative() {
+        XCTAssertEqual(round(-23.7, toNearest: 5.0), -25.0, accuracy: 0.0001)
+        XCTAssertEqual(round(-2.5, toNearest: 1.0), -3.0, accuracy: 0.0001) // Banker's rounding
+    }
+    
+    func testRoundToNearestWithRule() {
+        XCTAssertEqual(round(23.3, toNearest: 5.0, rule: .up), 25.0, accuracy: 0.0001)
+        XCTAssertEqual(round(23.7, toNearest: 5.0, rule: .down), 20.0, accuracy: 0.0001)
+        XCTAssertEqual(round(2.5, toNearest: 1.0, rule: .toNearestOrAwayFromZero), 3.0, accuracy: 0.0001)
+        XCTAssertEqual(round(-7.3, toNearest: 5.0, rule: .towardZero), -5.0, accuracy: 0.0001)
+        XCTAssertEqual(round(-7.3, toNearest: 5.0, rule: .awayFromZero), -10.0, accuracy: 0.0001)
+    }
+    
+    func testRoundToNearestFloat() {
+        let floatValue: Float = 23.7
+        let rounded: Float = round(floatValue, toNearest: 5.0)
+        XCTAssertEqual(rounded, 25.0, accuracy: 0.0001)
+    }
+}
+
+// MARK: - Global Round Function Tests (BinaryInteger)
+
+final class GlobalRoundIntegerTests: XCTestCase {
+    
+    func testRoundToNearest() {
+        XCTAssertEqual(round(23, toNearest: 10), 20)
+        XCTAssertEqual(round(25, toNearest: 10), 30)
+        XCTAssertEqual(round(137, toNearest: 16), 144)
+    }
+    
+    func testRoundToNearestNegative() {
+        XCTAssertEqual(round(-23, toNearest: 10), -20)
+        XCTAssertEqual(round(-25, toNearest: 10), -30)
+    }
+    
+    func testRoundToNearestWithRule() {
+        XCTAssertEqual(round(23, toNearest: 10, rule: .up), 30)
+        XCTAssertEqual(round(23, toNearest: 10, rule: .down), 20)
+        XCTAssertEqual(round(137, toNearest: 16, rule: .up), 144)
+        XCTAssertEqual(round(-23, toNearest: 10, rule: .towardZero), -20)
+        XCTAssertEqual(round(-23, toNearest: 10, rule: .awayFromZero), -30)
+    }
+    
+    func testRoundToNearestDifferentIntegerTypes() {
+        let int64Value: Int64 = 123
+        XCTAssertEqual(round(int64Value, toNearest: 50), 100)
+        
+        let uintValue: UInt = 47
+        XCTAssertEqual(round(uintValue, toNearest: 10), 50)
+    }
+}
+
+// MARK: - Edge Cases Tests
+
+final class EdgeCasesTests: XCTestCase {
+    
+    func testRoundingToOne() {
+        XCTAssertEqual(42.roundedToNearest(1), 42)
+        XCTAssertEqual(42.7.roundedToNearest(1.0), 43.0, accuracy: 0.0001)
+    }
+    
+    func testRoundingZero() {
+        XCTAssertEqual(0.roundedToNearest(10), 0)
+        XCTAssertEqual(0.0.roundedToNearest(5.0), 0.0, accuracy: 0.0001)
+    }
+    
+    func testSmallSteps() {
+        XCTAssertEqual(0.123.roundedToNearest(0.01), 0.12, accuracy: 0.0001)
+        XCTAssertEqual(0.127.roundedToNearest(0.01), 0.13, accuracy: 0.0001)
+    }
+    
+    func testLargeValues() {
+        XCTAssertEqual(1000000.roundedToNearest(1000), 1000000)
+        XCTAssertEqual(1000499.roundedToNearest(1000), 1000000)
+    }
+}
