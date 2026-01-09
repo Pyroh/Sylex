@@ -300,10 +300,10 @@ public extension Data {
 public extension Data {
     @_disfavoredOverload
     init<T: FixedWidthInteger>(_ array: [T]) {
-        self = array.withUnsafeBufferPointer(Data.init(buffer:))
+        self = array.withUnsafeBufferPointer { Data(buffer: $0) }
     }
     
     init<T: FixedWidthInteger>(be array: [T]) {
-        self = array.lazy.map(\.bigEndian).withUnsafeBufferPointer(Data.init(buffer:))
+        self = array.lazy.map(\.bigEndian).withUnsafeBufferPointer { Data(buffer: $0) }
     }
 }

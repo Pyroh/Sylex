@@ -98,13 +98,14 @@ public extension Task where Success == Void, Failure == Error {
     static func every<C: Clock>(_ duration: C.Instant.Duration,
                                 tolerance: C.Instant.Duration? = nil,
                                 clock: C = ContinuousClock(),
+                                name: String? = nil,
                                 priority: TaskPriority? = nil,
                                 fireFirst flag: Bool = false,
                                 @_inheritActorContext @_implicitSelfCapture
-                                operations: @Sendable @escaping @isolated(any) () async -> Success) -> Self {
-        Task(priority: priority) {
+                                operations: sending @escaping @isolated(any) () async -> Success) -> Self {
+        Task(name: name, priority: priority) {
             if flag { await operations() }
-            try await withRecurrence(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await recurrentOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
     }
     
@@ -122,13 +123,14 @@ public extension Task where Success == Void, Failure == Error {
     static func every<C: Clock>(_ duration: C.Instant.Duration,
                                 tolerance: C.Instant.Duration? = nil,
                                 clock: C = ContinuousClock(),
+                                name: String? = nil,
                                 priority: TaskPriority? = nil,
                                 fireFirst flag: Bool = false,
                                 @_inheritActorContext @_implicitSelfCapture
-                                operations: @Sendable @escaping @isolated(any) () async throws -> Success) -> Self {
-        Task(priority: priority) {
+                                operations: sending @escaping @isolated(any) () async throws -> Success) -> Self {
+        Task(name: name, priority: priority) {
             if flag { try await operations() }
-            try await withRecurrence(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await recurrentOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
     }
     
@@ -146,13 +148,14 @@ public extension Task where Success == Void, Failure == Error {
     static func delay<C: Clock>(_ duration: C.Instant.Duration,
                                 tolerance: C.Instant.Duration? = nil,
                                 clock: C = ContinuousClock(),
+                                name: String? = nil,
                                 priority: TaskPriority? = nil,
                                 fireFirst flag: Bool = false,
                                 @_inheritActorContext @_implicitSelfCapture
-                                operations: @Sendable @escaping @isolated(any) () async -> Success) -> Self {
-        Task(priority: priority) {
+                                operations: sending @escaping @isolated(any) () async -> Success) -> Self {
+        Task(name: name, priority: priority) {
             if flag { await operations() }
-            try await withDelay(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await delayedOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
     }
     
@@ -170,13 +173,14 @@ public extension Task where Success == Void, Failure == Error {
     static func delay<C: Clock>(_ duration: C.Instant.Duration,
                                 tolerance: C.Instant.Duration? = nil,
                                 clock: C = ContinuousClock(),
+                                name: String? = nil,
                                 priority: TaskPriority? = nil,
                                 fireFirst flag: Bool = false,
                                 @_inheritActorContext @_implicitSelfCapture
-                                operations: @Sendable @escaping @isolated(any) () async throws -> Success) -> Self {
-        Task(priority: priority) {
+                                operations: sending @escaping @isolated(any) () async throws -> Success) -> Self {
+        Task(name: name, priority: priority) {
             if flag { try await operations() }
-            try await withDelay(duration, tolerance: tolerance, clock: clock, body: operations)
+            try await delayedOperation(duration, tolerance: tolerance, clock: clock, body: operations)
         }
     }
 }
@@ -195,11 +199,13 @@ public extension Task where Failure == Error {
     static func timeout<C: Clock>(_ duration: C.Instant.Duration,
                                   tolerance: C.Instant.Duration? = nil,
                                   clock: C = ContinuousClock(),
+                                  name: String? = nil,
                                   priority: TaskPriority? = nil,
                                   @_inheritActorContext @_implicitSelfCapture
-                                  operations: @Sendable @escaping @isolated(any) () async -> Success) -> Self {
-        Task(priority: priority) {
-            try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+                                  operations: sending @escaping @isolated(any) () async -> Success) -> Self {
+        Task(name: name, priority: priority) {
+            let box = { operations }
+            return try await timeoutOperation(duration, tolerance: tolerance, clock: clock, boxedOperations: box)
         }
     }
     
@@ -216,16 +222,40 @@ public extension Task where Failure == Error {
     static func timeout<C: Clock>(_ duration: C.Instant.Duration,
                                   tolerance: C.Instant.Duration? = nil,
                                   clock: C = ContinuousClock(),
+                                  name: String? = nil,
                                   priority: TaskPriority? = nil,
                                   @_inheritActorContext @_implicitSelfCapture
-                                  operations: @Sendable @escaping @isolated(any) () async throws -> Success) -> Self {
-        Task(priority: priority) {
-            try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+                                  operations: sending @escaping @isolated(any) () async throws -> Success) -> Self {
+        Task(name: name, priority: priority) {
+            let box = { operations }
+            return try await timeoutOperation(duration, tolerance: tolerance, clock: clock, boxedOperations: box)
         }
     }
 }
 
 public extension Task where Success == Never, Failure == Never {
+    @inlinable
+    static func withInterval<C: Clock>(_ duration: C.Instant.Duration,
+                                       tolerance: C.Instant.Duration? = nil,
+                                       clock: C = ContinuousClock(),
+                                       fireFirst flag: Bool = false,
+                                       @_inheritActorContext @_implicitSelfCapture
+                                       operations: sending @escaping @isolated(any) () async -> ()) async throws {
+        if flag { await operations() }
+        try await recurrentOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+    }
+    
+    @inlinable
+    static func withInterval<C: Clock>(_ duration: C.Instant.Duration,
+                                       tolerance: C.Instant.Duration? = nil,
+                                       clock: C = ContinuousClock(),
+                                       fireFirst flag: Bool = false,
+                                       @_inheritActorContext @_implicitSelfCapture
+                                       operations: sending @escaping @isolated(any) () async throws -> ()) async throws {
+        if flag { try await operations() }
+        try await recurrentOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+    }
+    
     /// Executes an operation with a specified timeout duration using a static method.
     ///
     /// This static method provides a convenient way to run an async operation with a timeout
@@ -255,8 +285,9 @@ public extension Task where Success == Never, Failure == Never {
                                                    tolerance: C.Instant.Duration? = nil,
                                                    clock: C = ContinuousClock(),
                                                    @_inheritActorContext @_implicitSelfCapture
-                                                   operations: @Sendable @escaping @isolated(any) () async -> T) async throws -> T {
-        try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+                                                   operations: sending @escaping @isolated(any) () async -> T) async throws -> T {
+        let box = { operations }
+        return try await timeoutOperation(duration, tolerance: tolerance, clock: clock, boxedOperations: box)
     }
     
     /// Executes a throwing operation with a specified timeout duration using a static method.
@@ -289,8 +320,9 @@ public extension Task where Success == Never, Failure == Never {
                                                    tolerance: C.Instant.Duration? = nil,
                                                    clock: C = ContinuousClock(),
                                                    @_inheritActorContext @_implicitSelfCapture
-                                                   operations: @Sendable @escaping @isolated(any) () async throws -> T) async throws -> T {
-        try await timeoutOperation(duration, tolerance: tolerance, clock: clock, body: operations)
+                                                   operations: sending @escaping @isolated(any) () async throws -> T) async throws -> T {
+        let box = { operations }
+        return try await timeoutOperation(duration, tolerance: tolerance, clock: clock, boxedOperations: box)
     }
 }
 
@@ -311,10 +343,12 @@ public extension Task where Success == Never, Failure == Never {
 func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
                                              tolerance: C.Instant.Duration?,
                                              clock: C,
-                                             body: @Sendable @escaping @isolated(any) () async -> T) async throws -> T  {
+                                             boxedOperations: () -> @isolated(any) () async -> T) async throws -> T  {
     try await withThrowingTaskGroup(of: T.self, returning: T.self) { tg in
+        let operations = boxedOperations()
+        
         guard tg.addTaskUnlessCancelled(operation: {
-            let result = await body()
+            let result = await operations()
             try Task.checkCancellation()
             return result
         }) else { throw CancellationError() }
@@ -350,10 +384,12 @@ func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
 func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
                                              tolerance: C.Instant.Duration?,
                                              clock: C,
-                                             body: @Sendable @escaping @isolated(any) () async throws -> T) async throws -> T  {
+                                             boxedOperations: () -> @isolated(any) () async throws -> T) async throws -> T  {
     try await withThrowingTaskGroup(of: T.self, returning: T.self) { tg in
+        let operations = boxedOperations()
+        
         guard tg.addTaskUnlessCancelled(operation: {
-            let result = try await body()
+            let result = try await operations()
             try Task.checkCancellation()
             return result
         }) else { throw CancellationError() }
@@ -382,10 +418,10 @@ func timeoutOperation<C: Clock, T: Sendable>(_ duration: C.Instant.Duration,
 ///   - body: The closure to execute repeatedly.
 /// - Throws: Any error thrown by the waiting stream or the body.
 @usableFromInline
-func withRecurrence<C: Clock>(_ duration: C.Instant.Duration,
-                              tolerance: C.Instant.Duration?,
-                              clock: C,
-                              body: @Sendable @escaping @isolated(any) () async -> ()) async throws {
+func recurrentOperation<C: Clock>(_ duration: C.Instant.Duration,
+                                  tolerance: C.Instant.Duration?,
+                                  clock: C,
+                                  body: () async -> ()) async throws {
     for try await _ in waitingStream(duration, tolerance: tolerance, clock: clock) {
         await body()
     }
@@ -402,10 +438,10 @@ func withRecurrence<C: Clock>(_ duration: C.Instant.Duration,
 ///   - body: The throwing closure to execute repeatedly.
 /// - Throws: Any error thrown by the waiting stream or the body.
 @usableFromInline
-func withRecurrence<C: Clock>(_ duration: C.Instant.Duration,
-                              tolerance: C.Instant.Duration?,
-                              clock: C,
-                              body: @Sendable @escaping @isolated(any) () async throws -> ()) async throws {
+func recurrentOperation<C: Clock>(_ duration: C.Instant.Duration,
+                                  tolerance: C.Instant.Duration?,
+                                  clock: C,
+                                  body: () async throws -> ()) async throws {
     for try await _ in waitingStream(duration, tolerance: tolerance, clock: clock) {
         try await body()
     }
@@ -422,10 +458,10 @@ func withRecurrence<C: Clock>(_ duration: C.Instant.Duration,
 ///   - body: The closure to execute after the delay.
 /// - Throws: `CancellationError` if the task is cancelled during the delay.
 @usableFromInline
-func withDelay<C: Clock>(_ duration: C.Instant.Duration,
-                         tolerance: C.Instant.Duration?,
-                         clock: C,
-                         body: @Sendable @escaping @isolated(any) () async -> ()) async throws {
+func delayedOperation<C: Clock>(_ duration: C.Instant.Duration,
+                                tolerance: C.Instant.Duration?,
+                                clock: C,
+                                body: () async -> ()) async throws {
     try await Task.sleep(for: duration, tolerance: tolerance, clock: clock)
     try Task.checkCancellation()
     await body()
@@ -443,10 +479,10 @@ func withDelay<C: Clock>(_ duration: C.Instant.Duration,
 /// - Throws: `CancellationError` if the task is cancelled during the delay,
 ///           or any error thrown by the body.
 @usableFromInline
-func withDelay<C: Clock>(_ duration: C.Instant.Duration,
-                         tolerance: C.Instant.Duration?,
-                         clock: C,
-                         body: @Sendable @escaping @isolated(any)  () async throws -> ()) async throws {
+func delayedOperation<C: Clock>(_ duration: C.Instant.Duration,
+                                tolerance: C.Instant.Duration?,
+                                clock: C,
+                                body: () async throws -> ()) async throws {
     try await Task.sleep(for: duration, tolerance: tolerance, clock: clock)
     try Task.checkCancellation()
     try await body()

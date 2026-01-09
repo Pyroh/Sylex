@@ -255,9 +255,7 @@ final class SylexTests: XCTestCase {
         
         let data = Data([72, 101, 108, 108, 111, 0, 0, 0, 0, 0, 0])
         let br2 = BufferReader(data)
-        print(br2.string())
         br2.reset()
-        print(br2.string(count: 7))
     }
     
     func testBitfield8() {
@@ -821,5 +819,16 @@ final class EdgeCasesTests: XCTestCase {
     func testLargeValues() {
         XCTAssertEqual(1000000.roundedToNearest(1000), 1000000)
         XCTAssertEqual(1000499.roundedToNearest(1000), 1000000)
+    }
+}
+
+final class TaskExtensionTests: XCTestCase {
+    func testEvery() async {
+        let expectation = XCTestExpectation()
+        expectation.expectedFulfillmentCount = 10
+        Task.every(.milliseconds(100), fireFirst: true) {
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: 1.1)
     }
 }
