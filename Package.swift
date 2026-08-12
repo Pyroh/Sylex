@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/Pyroh/ZeroableProtocol.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Pyroh/OptionalType.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/Pyroh/SwizzleIMD.git", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/Pyroh/CoreGeometry.git", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/Pyroh/CoreGeometry.git", .upToNextMajor(from: "7.1.0")),
         .package(url: "https://github.com/Pyroh/Consequences.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/apple/swift-algorithms.git", .upToNextMajor(from: "1.2.0")),
     ],
