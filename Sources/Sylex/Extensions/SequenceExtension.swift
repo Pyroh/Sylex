@@ -27,6 +27,22 @@
 
 import Foundation
 
+extension Sequence where Element == Character {
+    /// Builds a `String` from the sequence's characters.
+    ///
+    /// This is a convenience for initializing a `String` from any sequence of
+    /// `Character` (such as `[Character]` or `ArraySlice<Character>`) without
+    /// having to call `String.init<S>(_:)` explicitly.
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   let characters: [Character] = ["S", "w", "i", "f", "t"]
+    ///   let word = characters.string
+    ///   print(word) // Prints: Swift
+    ///   ```
+    var string: String { .init(self) }
+}
+
 extension Sequence where Element: AdditiveArithmetic {
     /// Calculates the sum of all elements in the sequence.
     ///

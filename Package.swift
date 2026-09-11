@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
     name: "Sylex",
     platforms: [
-        .iOS(.v16),
-        .macOS(.v13),
-        .tvOS(.v16),
+        .iOS(.v18),
+        .macOS(.v15),
+        .tvOS(.v18),
         .watchOS(.v9)
     ],
     products: [

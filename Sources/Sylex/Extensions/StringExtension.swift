@@ -2,6 +2,27 @@
 //  StringExtension.swift
 //  Sylex
 //
+//  MIT License
+//
+//  Copyright (c) 2025 Pierre Tacchi
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 //
 
 import Foundation
@@ -121,5 +142,91 @@ public extension String {
         } else {
             self = "\(prefix ? representation.prefix : "")\(bytes)"
         }
+    }
+}
+
+/// An extension to `String` that provides utilities for line/word analysis and character padding.
+public extension String {
+    /// Splits the string into its constituent lines, as determined by `enumerateLines(_:)`.
+    ///
+    /// This relies on `Foundation`'s line enumeration, which recognizes `"\n"`, `"\r"`,
+    /// `"\r\n"`, and other Unicode line/paragraph separators as line boundaries, and does
+    /// not produce a trailing empty line after a final line terminator. `lines.count` and
+    /// `lineCount` therefore always agree.
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   "a\nb\n".lines // ["a", "b"]
+    ///   ```
+    var lines: [String] {
+        var result: [String] = []
+        enumerateLines { line, _ in result.append(line) }
+        return result
+    }
+    
+    /// The number of lines in the string, as determined by `enumerateLines(_:)`.
+    ///
+    /// This relies on `Foundation`'s line enumeration, which recognizes `"\n"`, `"\r"`,
+    /// `"\r\n"`, and other Unicode line/paragraph separators as line boundaries, and does
+    /// not count a trailing empty line after a final line terminator.
+    var lineCount: Int {
+        var count = 0
+        enumerateLines { _, _ in ++count }
+        return count
+    }
+    
+    #if !os(Linux)
+    /// The number of words in the string, as determined by locale-aware word enumeration.
+    ///
+    /// Word boundaries are computed using `enumerateSubstrings(in:options:)` with the
+    /// `.byWords` option, matching the same word-tokenization Foundation uses elsewhere
+    /// (e.g. text views), rather than a simple whitespace split.
+    var wordCount: Int {
+        var count = 0
+        enumerateSubstrings(in: ..<endIndex, options: .byWords) { _, _, _, _ in ++count }
+        return count
+    }
+    #endif
+    
+    /// Pads the string on the left with a repeated character until it reaches a minimum length.
+    ///
+    /// If the string's character count is already `count` or greater, it's returned unchanged.
+    /// Otherwise, enough copies of `prefix` are prepended to bring the total length up to `count`.
+    ///
+    /// - Parameters:
+    ///   - prefix: The character to repeat and prepend.
+    ///   - count: The minimum character count the result should have.
+    /// - Returns: The padded string, or the original string if it already meets `count`.
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   "7".prefix(with: "0", ifCharCountIsUnder: 3) // "007"
+    ///   ```
+    func prefix(with prefix: Character, ifCharCountIsUnder count: Int) -> String {
+        guard self.count < count else { return string }
+        let lead = Array(repeating: prefix, count: count - self.count)
+        
+        return lead.string + self
+    }
+    
+    /// Pads the string on the right with a repeated character until it reaches a minimum length.
+    ///
+    /// If the string's character count is already `count` or greater, it's returned unchanged.
+    /// Otherwise, enough copies of `suffix` are appended to bring the total length up to `count`.
+    ///
+    /// - Parameters:
+    ///   - suffix: The character to repeat and append.
+    ///   - count: The minimum character count the result should have.
+    /// - Returns: The padded string, or the original string if it already meets `count`.
+    ///
+    /// - Example:
+    ///   ```swift
+    ///   "7".suffix(with: "0", ifCharCountIsUnder: 3) // "700"
+    ///   ```
+    func suffix(with suffix: Character, ifCharCountIsUnder count: Int) -> String {
+        guard self.count < count else { return string }
+        let trail = Array(repeating: suffix, count: count - self.count)
+        
+        return self + trail.string
     }
 }
