@@ -233,7 +233,21 @@ public extension BinaryFloatingPoint {
     /// let doubleValue = value.d // 3.14 (as Double)
     /// ```
     @inline(__always) var d: Double { Double(self) }
-    
+
+    /// Converts the floating-point value to a `Float`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a `Float` value. Precision may be lost when converting from a wider type.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Double = 3.14
+    /// let floatValue = value.f // 3.14 (as Float)
+    /// ```
+    @inline(__always) var f: Float { Float(self) }
+
     /// Converts the floating-point value to a `UInt`.
     ///
     /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
@@ -252,7 +266,83 @@ public extension BinaryFloatingPoint {
     /// let unsignedValue = value.u // UInt(42)
     /// ```
     @inline(__always) var u: UInt { UInt(self) }
-    
+
+    /// Converts the floating-point value to a `UInt8`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// an 8-bit unsigned integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value to `UInt8` will result in a runtime error. Values outside
+    ///   the `UInt8` range will also trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Double = 42.7
+    /// let unsignedValue = value.u8 // UInt8(42)
+    /// ```
+    @inline(__always) var u8: UInt8 { UInt8(self) }
+
+    /// Converts the floating-point value to a `UInt16`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 16-bit unsigned integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value to `UInt16` will result in a runtime error. Values outside
+    ///   the `UInt16` range will also trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Double = 42.7
+    /// let unsignedValue = value.u16 // UInt16(42)
+    /// ```
+    @inline(__always) var u16: UInt16 { UInt16(self) }
+
+    /// Converts the floating-point value to a `UInt32`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 32-bit unsigned integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value to `UInt32` will result in a runtime error. Values outside
+    ///   the `UInt32` range will also trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Double = 42.7
+    /// let unsignedValue = value.u32 // UInt32(42)
+    /// ```
+    @inline(__always) var u32: UInt32 { UInt32(self) }
+
+    /// Converts the floating-point value to a `UInt64`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 64-bit unsigned integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value to `UInt64` will result in a runtime error. Values outside
+    ///   the `UInt64` range will also trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Double = 42.7
+    /// let unsignedValue = value.u64 // UInt64(42)
+    /// ```
+    @inline(__always) var u64: UInt64 { UInt64(self) }
+
     /// Converts the floating-point value to an `Int`.
     ///
     /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
@@ -270,7 +360,79 @@ public extension BinaryFloatingPoint {
     /// let signedValue = value.i // Int(-17)
     /// ```
     @inline(__always) var i: Int { Int(self) }
-    
+
+    /// Converts the floating-point value to an `Int8`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// an 8-bit signed integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Values outside the `Int8` range will trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Float = -17.8
+    /// let signedValue = value.i8 // Int8(-17)
+    /// ```
+    @inline(__always) var i8: Int8 { Int8(self) }
+
+    /// Converts the floating-point value to an `Int16`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 16-bit signed integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Values outside the `Int16` range will trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Float = -17.8
+    /// let signedValue = value.i16 // Int16(-17)
+    /// ```
+    @inline(__always) var i16: Int16 { Int16(self) }
+
+    /// Converts the floating-point value to an `Int32`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 32-bit signed integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Values outside the `Int32` range will trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Float = -17.8
+    /// let signedValue = value.i32 // Int32(-17)
+    /// ```
+    @inline(__always) var i32: Int32 { Int32(self) }
+
+    /// Converts the floating-point value to an `Int64`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryFloatingPoint` type to
+    /// a 64-bit signed integer, truncating any fractional part.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Values outside the `Int64` range will trap.
+    ///
+    /// - Note: The fractional part is truncated, not rounded.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Float = -17.8
+    /// let signedValue = value.i64 // Int64(-17)
+    /// ```
+    @inline(__always) var i64: Int64 { Int64(self) }
+
     // MARK: - Rounding Methods
     
     /// Rounds the value to the nearest multiple of the specified value using the default rounding rule.

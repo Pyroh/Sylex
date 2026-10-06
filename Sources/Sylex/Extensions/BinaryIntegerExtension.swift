@@ -136,7 +136,21 @@ public extension BinaryInteger {
     /// let doubleValue = value.d // 42.0
     /// ```
     @inline(__always) var d: Double { Double(self) }
-    
+
+    /// Converts the integer value to a `Float`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a floating-point `Float` value. Large values may lose precision.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int = 42
+    /// let floatValue = value.f // 42.0
+    /// ```
+    @inline(__always) var f: Float { Float(self) }
+
     /// Converts the integer value to a `UInt`.
     ///
     /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
@@ -152,7 +166,71 @@ public extension BinaryInteger {
     /// let unsignedValue = value.u // UInt(100)
     /// ```
     @inline(__always) var u: UInt { UInt(self) }
-    
+
+    /// Converts the integer value to a `UInt8`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// an 8-bit unsigned integer. Note that converting a negative value will trap.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value or a value outside the `UInt8` range will result in a runtime error.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int64 = 100
+    /// let unsignedValue = value.u8 // UInt8(100)
+    /// ```
+    @inline(__always) var u8: UInt8 { UInt8(self) }
+
+    /// Converts the integer value to a `UInt16`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 16-bit unsigned integer. Note that converting a negative value will trap.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value or a value outside the `UInt16` range will result in a runtime error.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int64 = 100
+    /// let unsignedValue = value.u16 // UInt16(100)
+    /// ```
+    @inline(__always) var u16: UInt16 { UInt16(self) }
+
+    /// Converts the integer value to a `UInt32`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 32-bit unsigned integer. Note that converting a negative value will trap.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value or a value outside the `UInt32` range will result in a runtime error.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int64 = 100
+    /// let unsignedValue = value.u32 // UInt32(100)
+    /// ```
+    @inline(__always) var u32: UInt32 { UInt32(self) }
+
+    /// Converts the integer value to a `UInt64`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 64-bit unsigned integer. Note that converting a negative value will trap.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a negative value or a value outside the `UInt64` range will result in a runtime error.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: Int64 = 100
+    /// let unsignedValue = value.u64 // UInt64(100)
+    /// ```
+    @inline(__always) var u64: UInt64 { UInt64(self) }
+
     /// Converts the integer value to an `Int`.
     ///
     /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
@@ -168,7 +246,71 @@ public extension BinaryInteger {
     /// let signedValue = value.i // Int(50)
     /// ```
     @inline(__always) var i: Int { Int(self) }
-    
+
+    /// Converts the integer value to an `Int8`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// an 8-bit signed integer.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a value outside the `Int8` range will trap.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: UInt8 = 50
+    /// let signedValue = value.i8 // Int8(50)
+    /// ```
+    @inline(__always) var i8: Int8 { Int8(self) }
+
+    /// Converts the integer value to an `Int16`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 16-bit signed integer.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a value outside the `Int16` range will trap.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: UInt8 = 50
+    /// let signedValue = value.i16 // Int16(50)
+    /// ```
+    @inline(__always) var i16: Int16 { Int16(self) }
+
+    /// Converts the integer value to an `Int32`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 32-bit signed integer.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a value outside the `Int32` range will trap.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: UInt8 = 50
+    /// let signedValue = value.i32 // Int32(50)
+    /// ```
+    @inline(__always) var i32: Int32 { Int32(self) }
+
+    /// Converts the integer value to an `Int64`.
+    ///
+    /// This property provides a convenient shorthand for converting any `BinaryInteger` type to
+    /// a 64-bit signed integer.
+    ///
+    /// - Complexity: O(1)
+    ///
+    /// - Warning: Converting a value outside the `Int64` range will trap.
+    ///
+    /// # Example
+    /// ```swift
+    /// let value: UInt8 = 50
+    /// let signedValue = value.i64 // Int64(50)
+    /// ```
+    @inline(__always) var i64: Int64 { Int64(self) }
+
     // MARK: - Rounding Methods
     
     /// Rounds the value to the nearest multiple of the specified value using the default rounding rule.
