@@ -413,6 +413,24 @@ public extension BinaryInteger {
     func roundedToNearest(_ value: Self, rule: FloatingPointRoundingRule) -> Self {
         Self((Double(self) / Double(value)).rounded(rule) * Double(value))
     }
+    
+    /// Returns the quotient of this value divided by the given value, rounded toward positive infinity.
+    ///
+    /// Unlike `(self + divisor - 1) / divisor`, this never overflows and is correct for negative operands.
+    ///
+    /// ```swift
+    /// 70_000.divided(roundingUpBy: 65_536) // 2
+    /// (-7).divided(roundingUpBy: 2)        // -3
+    /// ```
+    ///
+    /// - Parameter divisor: The value to divide this value by. Must not be zero.
+    /// - Returns: The smallest integer greater than or equal to `self / divisor`.
+    /// - Precondition: `divisor != 0`, otherwise a runtime trap occurs.
+    @inlinable
+    func divided(roundingUpBy divisor: Self) -> Self {
+        let (q, r) = quotientAndRemainder(dividingBy: divisor)
+        return r == 0 ? q : q+
+    }
 }
 
 /// Rounds an integer value to the nearest multiple of a specified step using the default rounding rule.
